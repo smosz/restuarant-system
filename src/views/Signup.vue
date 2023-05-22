@@ -110,6 +110,7 @@
               {{ v$.password.$errors[0].$message }}</span
             >
             <foodtypes :foods="state.foods" />
+            
             <div class="checkbox-wrapper-4">
               <input class="inp-cbx" id="term" v-model="state.terms" type="checkbox" />
               <label class="cbx" for="term">
@@ -128,10 +129,7 @@
                 </symbol>
               </svg>
             </div>
-            <span class="error-text" v-if="v$.terms.$error">
-              <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
-              {{ v$.terms.$errors[0].$message }}</span
-            >
+            
             <div class="mt-5">
               <button @click.prevent="register" class="btn-reg">
                 <Vue3Lottie v-if="loading" :animationData="load" :height="200" />
@@ -146,6 +144,7 @@
               >
             </p>
             <div v-if="error" class="error-text">{{ errorMsg }}</div>
+    
           </form>
           <br />
         </div>
@@ -169,7 +168,7 @@ import {
   minLength,
   numeric,
   maxLength,
-  minValue,
+
   alpha,
   helpers,
 } from "@vuelidate/validators";
@@ -185,7 +184,7 @@ components:{
       email: "",
       number: "",
       password: "",
-      terms: "",
+      terms: false,
       gender: "",
       foods:[]
     });
@@ -246,16 +245,12 @@ components:{
           required: helpers.withMessage("Gender required", required),
           $autoDirty: true,
         },
-        terms: {
-          required: helpers.withMessage("Terms required", required),
-          $autoDirty: true,
-        },
       };
     });
     const v$ = useValidate(rules, state);
     const register = async () => {
       const userData = await v$.value.$validate();
-      if (userData) {
+      if (userData && state.terms) {
         loading.value = true;
         try {
           const firebaseAuth = await firebase.auth();
@@ -305,10 +300,13 @@ components:{
               break;
           }
         }
-      } else if (!userData) {
+      } else if (!userData ) {
         alert("Please fill in to proceed");
-      } else {
-        alert("form invaild");
+      } else if(!state.terms){
+        alert("Please Check terms to proceed");
+      }
+      else{
+        alert("Invalid form")
       }
     };
     return {

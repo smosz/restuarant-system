@@ -145,9 +145,13 @@
 .text-fields-error {
   @apply appearance-none block w-full border border-red-500 rounded-md text-sm sm:text-sm h-9 px-4 mt-2
 }
+.text-field-error {
+  /* @apply appearance-none border-red-500 rounded-md text-sm sm:text-sm h-9 py-1 px-2 mr-3 */
+  @apply appearance-none bg-slate-200 border border-red-500 text-gray-700 pl-2 leading-tight focus:border focus:outline-0
+}
 
 .error-text {
-  @apply text-red-600
+  @apply text-red-600 w-max
 }
 
 .drp-btn {
@@ -161,7 +165,16 @@
 .input-fields {
   @apply appearance-none bg-transparent border-t-0 border-x-0 border-b w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:border-none focus:outline-0
 }
-
+.input-field {
+  @apply appearance-none bg-transparent border-t-0 border-x-0 border-b pl-2 text-gray-700 leading-tight focus:border-none focus:outline-0
+}
+input[disabled] {
+  cursor: not-allowed;
+}
+button[disabled] {
+  cursor: not-allowed;
+  display:none
+}
 .checkbox-wrapper-4 {
   box-sizing: border-box;
   margin-top: 0.5rem;

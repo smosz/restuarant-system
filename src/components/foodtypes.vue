@@ -62,9 +62,10 @@ export default {
     };
 
     const deleteFood = (food) => {
-      props.foods = props.foods.filter((item) => {
-        return food != item;
-      });
+      const index = props.foods.indexOf(food);
+      if (index !== -1) {
+        props.foods.splice(index, 1);
+      }
     };
 
     return {
