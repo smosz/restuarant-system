@@ -23,6 +23,14 @@
   overflow: hidden;
   margin: 0;
 }
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  user-select: none;
+}
 .dropzone {
   width: 400px;
   height: 200px;
@@ -167,6 +175,9 @@
 }
 .input-field {
   @apply appearance-none bg-transparent border-t-0 border-x-0 border-b pl-2 text-gray-700 leading-tight focus:border-none focus:outline-0
+}
+.input-field-email {
+  @apply appearance-none bg-transparent border-t-0 border-x-0 border-b pl-2 text-gray-700 leading-loose focus:border-none focus:outline-0
 }
 input[disabled] {
   cursor: not-allowed;

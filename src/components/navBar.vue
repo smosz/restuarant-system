@@ -66,24 +66,24 @@
             <div @click="toggle = !toggle">
               <button type="button" class="drp-btn" id="user-menu-button">
                 <span class="sr-only">Open user menu</span>
-                <img
-                  class="h-8 w-8 rounded-full"
-                  src="src/assets/avatar.jpg"
+                <!-- <img
+                  class="h-8 rounded-full object-contain w-full"
+                  :src="state.profilePhotoUrl"
                   alt=""
-                />
+                /> -->
+                <img
+            v-if="state.profilePhotoUrl"
+            class="h-8 rounded-full object-contain w-fulll"
+            :src="state.profilePhotoUrl"
+          />
+          <img
+            v-else
+            class="h-8 rounded-full object-contain w-full"
+            src="../assets/avatar.jpg"
+            alt="Default Cover Photo"
+          />
               </button>
             </div>
-
-            <!--
-                  Dropdown menu, show/hide based on menu state.
-      
-                  Entering: "transition ease-out duration-100"
-                    From: "transform opacity-0 scale-95"
-                    To: "transform opacity-100 scale-100"
-                  Leaving: "transition ease-in duration-75"
-                    From: "transform opacity-100 scale-100"
-                    To: "transform opacity-0 scale-95"
-                -->
             <div
               id="drp"
               class="dropdown"
@@ -135,19 +135,40 @@
 
 <script>
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, computed, reactive } from "vue";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 import { firebaseApp } from "../firebase/firebaseInit";
 export default {
   name: "navBar",
   setup() {
+    const user = ref(null);
+  const state = reactive({
+    profilePhotoUrl:''
+  });
+
     const router = useRouter();
     const toggle = ref(false);
+    firebase.auth().onAuthStateChanged((firebaseUser) => {
+    user.value = firebaseUser;
+    if (user.value) {
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(user.value.uid)
+        .get()
+        .then((doc) => {
+          state.profilePhotoUrl =  doc.data().profilePhotoUrl
+        });
+    }
+  });
     const signOut = async () => {
       firebaseApp.auth().signOut();
       router.push("/");
     };
 
-    return { signOut, toggle };
+    return { signOut, toggle,user,
+    state, };
   },
 };
 </script>

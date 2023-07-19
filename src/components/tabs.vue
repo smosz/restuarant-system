@@ -54,10 +54,10 @@
               <bio/>
             </div>
             <div v-if="tab === 2">
-              <p class="text-lg text-gray-700">Tab 2 Content</p>
+             <emailTab />
             </div>
             <div v-if="tab === 3">
-              <p class="text-lg text-gray-700">Tab 3 Content</p>
+              <passwordTab />
             </div>
           </div>
         </div>
@@ -72,10 +72,14 @@ import email from "../assets/email.json";
 import password from "../assets/password.json";
 import { ref } from "vue";
 import bio from "./bio.vue";
+import emailTab from "./emailTab.vue";
+import passwordTab from "./passwordTab.vue";
 export default {
     name:"tabs",
     components:{
-bio
+bio,
+emailTab,
+passwordTab
     },
   setup() {
     const tab = ref(1);

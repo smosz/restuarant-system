@@ -159,7 +159,7 @@
       <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
       {{ v$.newNumber.$errors[0].$message }}
     </span>
-
+    <div id="recaptcha-container"></div>
     
     
   </div>
@@ -177,7 +177,7 @@ import {
   maxLength,
   helpers,
 } from "@vuelidate/validators";
-import { getMultiFactorResolver } from 'firebase/auth';
+import { getMultiFactorResolver } from "firebase/auth";
 
 export default {
   name: "number",
@@ -288,19 +288,28 @@ export default {
     let appVerifier = null;
 
     const renderRecaptcha = () => {
-  if (!isRecaptchaRendered) {
-    appVerifier =
-      appVerifier ||
-      new firebase.auth.RecaptchaVerifier("recaptcha-container", {
-        size: "invisible",
-      });
-    appVerifier.render().then(() => {
-      isRecaptchaRendered = true;
-    }).catch((error) => {
-      console.log("Error rendering reCAPTCHA:", error);
-    });
-  }
-};
+      if (!isRecaptchaRendered) {
+        appVerifier =
+          new firebase.auth.RecaptchaVerifier("recaptcha-container", {
+            size: "invisible",
+          });
+
+        // Render the reCAPTCHA only if the container element is present in the DOM
+        const recaptchaContainer = document.getElementById(
+          "recaptcha-container"
+        );
+        if (recaptchaContainer) {
+          appVerifier
+            .render()
+            .then(() => {
+              isRecaptchaRendered = true;
+            })
+            .catch((error) => {
+              console.log("Error rendering reCAPTCHA:", error);
+            });
+        }
+      }
+    };
 
     const startCountdownnumber = () => {
       countdown.value = countdownInterval;
@@ -351,7 +360,7 @@ export default {
       }
     };
     const sentCode = ref(""); // add new variable to store sent code
-   const sentCodenew = ref("");
+    const sentCodenew = ref("");
     const cancelVerificationCode = () => {
       stopCountdownAndHideRecaptchanumber();
       if (sentCode.value) {
@@ -381,7 +390,7 @@ export default {
           .signInWithPhoneNumber(phoneNumber, appVerifier);
         sentCode.value = confirmationResult.verificationId; // store sent code
         isChangeNumberMode.value = false;
-        console.log(sentCode.value)
+        console.log(sentCode.value);
       } catch (error) {
         if (error.code === "auth/too-many-requests") {
           console.log(
@@ -450,7 +459,7 @@ export default {
       isChangeButtonDisabled.value = true;
     };
     const verifynewNumber = async () => {
-      state.confirmationCode = ''
+      state.confirmationCode = "";
       const userData = await v$.value.newNumber.$validate();
       if (userData) {
         try {
@@ -462,14 +471,13 @@ export default {
           isVerifyNewButtonDisabled.value = true;
           isconfirmationModenewNumber.value = true;
 
-              const phoneNumbernew = `+256${state.newNumber}`;
-              renderRecaptcha();
-              console.log(phoneNumbernew)
-              const confirmationResultnew = await firebase
-                .auth()
-                .signInWithPhoneNumber(phoneNumbernew, appVerifier);
-              sentCodenew.value = confirmationResultnew.verificationId;
-          
+          const phoneNumbernew = `+256${state.newNumber}`;
+          renderRecaptcha();
+          console.log(phoneNumbernew);
+          const confirmationResultnew = await firebase
+            .auth()
+            .signInWithPhoneNumber(phoneNumbernew, appVerifier);
+          sentCodenew.value = confirmationResultnew.verificationId;
         } catch (error) {
           if (error.code === "auth/too-many-requests") {
             console.log(
@@ -501,9 +509,9 @@ export default {
           });
           isPhoneVerified.value = true;
           isChangeNumberMode.value = false;
-          isChangeButtonDisabled.value = false
+          isChangeButtonDisabled.value = false;
           isverifyMode.value = false;
-          state.number = state.newNumber
+          state.number = state.newNumber;
         } catch (error) {
           if (error.code === "auth/invalid-verification-code") {
             console.log("Invalid verification code. Please try again.");

@@ -24,6 +24,20 @@
           {{ v$.username.$errors[0].$message }}</span
         >
       </div>
+      <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6">
+        <dt class="text-sm font-medium text-gray-500">Favourite Food Types</dt>
+        <input
+          v-model="state.foodTypes"
+          class="input-fields"          
+          id="food"
+          type="text"
+          placeholder="List down your Favourite Food Types"
+        />
+        <br />
+  <span class="error-text" v-if="v$.foodTypes.$error">
+    <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+    {{ v$.foodTypes.$errors[0].$message }}</span>
+      </div>
       <number  />
       <div class="bg-white flex justify-end ">
         <button
@@ -61,6 +75,7 @@ export default {
   const user = ref(null);
   const state = reactive({
     username: "",
+    foodTypes:'',
   });
 
   const rules = computed(() => {
@@ -71,6 +86,13 @@ export default {
         alpha: helpers.withMessage("Contains only alphabetical letters", alpha),
         $autoDirty: true,
       },
+      foodTypes: {
+      validFormat: helpers.withMessage(
+        "Use only letters and a single comma for separating food types.",
+        (value) => value === "" || /^[a-zA-Z]+(,[a-zA-Z]+)*$/.test(value)
+      ),
+      $autoDirty: true,
+    },
     };
   });
   const v$ = useValidate(rules, state);
@@ -85,6 +107,7 @@ export default {
         .get()
         .then((doc) => {
           state.username = doc.data().Username;
+          state.foodTypes = doc.data().Food_Types
         });
     }
   });
@@ -92,16 +115,19 @@ export default {
   const saveSettings = async () => {
     
     const userData = await v$.value.username.$validate();
+    const userDataFood = await v$.value.foodTypes.$validate();
     // Update the user's document in Firestore
     
-    if (userData) {
-      console.log('me')
+    if (userData && userDataFood) {
+      const foodTypesArray = state.foodTypes.trim().replace(/\s+/g, ',').split(',');
+    const cleanedFoodTypesArray = foodTypesArray.filter(type => type !== '');
       firebase
         .firestore()
         .collection("users")
         .doc(user.value.uid)
         .update({
           Username: state.username,
+          Food_Types: cleanedFoodTypesArray
         })
         .then(() => {
           const alert = document.createElement("div");
