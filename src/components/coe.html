@@ -1,0 +1,50 @@
+ <div class="p-4 bgColor">
+      <div class="flex justify-between items-center no-print">
+        <h2 class="text-2xl font-semibold mb-4">Order List</h2>
+        <router-link to="/pos">
+          <button
+            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            <div class="flex items-center">
+              <Icon icon="majesticons:plus-line" />
+              <span class="pl-2">Add Order</span>
+            </div>
+          </button>
+        </router-link>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+        <!-- Loop through order items and display each order as a card -->
+        <div v-for="(orderItem, index) in orderItems" :key="index" class="bg-white shadow-md rounded-lg overflow-hidden">
+          <div class="px-6 py-4">
+            <p class="text-lg font-semibold mb-2">#000{{ orderItem.orderReceiptNumber }}</p>
+            <p class="text-gray-600">{{ orderItem.date }} | {{ orderItem.time }}</p>
+            <p class="text-gray-600">{{ orderItem.customer.name }} | {{ orderItem.customer.number }}</p>
+          </div>
+          <table class="min-w-full border-collapse border border-gray-300">
+            <thead>
+              <tr>
+                <th class="py-2 px-4 bg-gray-200">SKU</th>
+                <th class="py-2 px-4 bg-gray-200">Product</th>
+                <th class="py-2 px-4 bg-gray-200">Qty</th>
+                <th class="py-2 px-4 bg-gray-200">Price (UGX)</th>
+                <th class="py-2 px-4 bg-gray-200">Amount (UGX)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(cartItem, cartIndex) in orderItem.cart" :key="cartIndex">
+                <td class="py-2 px-4 border border-gray-300">{{ cartItem.product.sku }}</td>
+                <td class="py-2 px-4 border border-gray-300">{{ cartItem.product.name }}</td>
+                <td class="py-2 px-4 border border-gray-300">{{ cartItem.quantity }}</td>
+                <td class="py-2 px-4 border border-gray-300">{{ cartItem.product.price.toLocaleString() }}</td>
+                <td class="py-2 px-4 border border-gray-300">{{ calculateTotalPrice(cartItem).toLocaleString() }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="px-6 py-4">
+            <p class="text-lg font-semibold">Total Items: {{ orderItem.totalItems }}</p>
+            <p class="text-lg font-semibold">Total Price: {{ orderItem.totalAmount }}</p>
+          </div>
+        </div>
+        <!-- End of order card -->
+      </div>
+    </div>

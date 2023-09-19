@@ -1,38 +1,112 @@
 <template>
-  <nav class="bg-gray-800">
+  <nav class="bg-gray-800 no-print">
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
-        <div
-          class="nav-item"
-        >
+        <div class="nav-item">
           <div class="flex flex-shrink-0 items-center">
-            <img class="block h-8 w-auto" src="../assets/res.png" alt="Your Company" />
+            <img
+              class="block h-8 w-auto"
+              src="../assets/res.png"
+              alt="Your Company"
+            />
           </div>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
               <router-link
-              :to="{ name: 'Dashboard' }"
-                class=" text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                :to="{ name: 'Dashboard' }"
+                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Dashboard</router-link
               >
-
-              <a
-                href="#"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                >Team</a
+              <div
+                :class="{
+                  'active-products': isAllProductsActive,
+                  'active-add-product': isAddProductActive,
+                  'active-categories': isCategoriesActive,
+                  'active-add-category': isAddCategoryActive,
+                }"
+                class="crelative group text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                @mouseover="isHovered = true"
+                @mouseleave="isHovered = false"
               >
+                <a class="flex cursor-pointer"
+                  ><span>Products</span>
+                  <!-- SVG dropdown icon -->
+                  <svg
+                    class="w-4 h-4 ml-1 text-gray-300 mt-[3px] transition-transform transform rotate-0 group-hover:rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path></svg
+                ></a>
 
-              <a
-                href="#"
+                <!-- Dropdown menu -->
+                <div
+                  class="hidden absolute left-[12rem] mt-0 rounded-md bg-white divide-y divide-gray-100 shadow dark:bg-gray-700"
+                >
+                  <ul
+                    class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="productsDropdownButton"
+                  >
+                    <!-- Menu items -->
+                    <li class="mb-4">
+                      <router-link
+                        :to="{ name: 'Allproducts' }"
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        >All Products</router-link
+                      >
+                    </li>
+                    <li class="mb-4">
+                      <router-link
+                        :to="{ name: 'Addproduct' }"
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        >Add Product</router-link
+                      >
+                    </li>
+                    <li class="mb-4">
+                      <router-link
+                        :to="{ name: 'Categories' }"
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        >Categories</router-link
+                      >
+                    </li>
+                    <!-- <li class="mb-4">
+                      <router-link
+                        :to="{ name: 'Addcategory' }"
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        >Add Category</router-link
+                      >
+                    </li> -->
+                  </ul>
+                </div>
+              </div>
+
+              <router-link
+                :to="{ name: 'Customers' }"
                 class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                >Projects</a
+                >Customers</router-link
               >
-
-              <a
-                href="#"
+              <router-link
+                :to="{ name: 'Pos' }"
                 class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                >Calendar</a
+                >Pos</router-link
+              >
+              <router-link
+                :to="{ name: 'Orders' }"
+                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >Orders</router-link
+              >
+              <router-link
+                :to="{ name: 'Roles' }"
+                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >Roles</router-link
               >
             </div>
           </div>
@@ -72,16 +146,16 @@
                   alt=""
                 /> -->
                 <img
-            v-if="state.profilePhotoUrl"
-            class="h-8 rounded-full object-contain w-fulll"
-            :src="state.profilePhotoUrl"
-          />
-          <img
-            v-else
-            class="h-8 rounded-full object-contain w-full"
-            src="../assets/avatar.jpg"
-            alt="Default Cover Photo"
-          />
+                  v-if="state.profilePhotoUrl"
+                  class="h-8 rounded-full object-contain w-fulll"
+                  :src="state.profilePhotoUrl"
+                />
+                <img
+                  v-else
+                  class="h-8 rounded-full object-contain w-full"
+                  src="../assets/avatar.jpg"
+                  alt="Default Cover Photo"
+                />
               </button>
             </div>
             <div
@@ -122,8 +196,10 @@
                 class="drp-item"
                 role="menuitem"
                 tabindex="-1"
-                ><Icon icon="mdi:logout" class="inline-block mx-1 mb-1 w-5 text-lg" />Sign
-                out</a
+                ><Icon
+                  icon="mdi:logout"
+                  class="inline-block mx-1 mb-1 w-5 text-lg"
+                />Sign out</a
               >
             </div>
           </div>
@@ -135,7 +211,7 @@
 
 <script>
 import { useRouter } from "vue-router";
-import { ref, computed, reactive } from "vue";
+import { ref, computed, reactive, onMounted } from "vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { firebaseApp } from "../firebase/firebaseInit";
@@ -143,32 +219,56 @@ export default {
   name: "navBar",
   setup() {
     const user = ref(null);
-  const state = reactive({
-    profilePhotoUrl:''
-  });
+    const state = reactive({
+      profilePhotoUrl: "",
+    });
 
     const router = useRouter();
     const toggle = ref(false);
+    const isHovered = ref(false);
+    const isAllProductsActive = ref(false);
+    const isAddProductActive = ref(false);
+    const isCategoriesActive = ref(false);
+    const isAddCategoryActive = ref(false);
+
+    onMounted(() => {
+      const currentRouteName = router.currentRoute.value.name;
+
+      // Check if the current route matches each route
+      isAllProductsActive.value = currentRouteName === "Allproducts";
+      isAddProductActive.value = currentRouteName === "Addproduct";
+      isCategoriesActive.value = currentRouteName === "Categories";
+      isAddCategoryActive.value = currentRouteName === "Addcategory";
+    });
     firebase.auth().onAuthStateChanged((firebaseUser) => {
-    user.value = firebaseUser;
-    if (user.value) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(user.value.uid)
-        .get()
-        .then((doc) => {
-          state.profilePhotoUrl =  doc.data().profilePhotoUrl
-        });
-    }
-  });
+      user.value = firebaseUser;
+      if (user.value) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user.value.uid)
+          .get()
+          .then((doc) => {
+            state.profilePhotoUrl = doc.data().profilePhotoUrl;
+          });
+      }
+    });
     const signOut = async () => {
       firebaseApp.auth().signOut();
       router.push("/");
     };
 
-    return { signOut, toggle,user,
-    state, };
+    return {
+      signOut,
+      toggle,
+      user,
+      state,
+      isHovered,
+      isAllProductsActive,
+      isAddProductActive,
+      isCategoriesActive,
+      isAddCategoryActive,
+    };
   },
 };
 </script>

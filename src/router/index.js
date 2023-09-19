@@ -7,6 +7,14 @@ import Signup from '../views/Signup.vue'
 import firebase from 'firebase/compat/app'
 import NotFound from '../components/NotFound.vue'
 import Modal from '../components/Modal.vue'
+import Allproducts from '../views/products/Allproducts.vue'
+import Addproduct from '../views/products/Addproduct.vue'
+import Categories from '../views/products/Categories.vue'
+import Customers from '../views/Customers.vue'
+import Pos from '../views/pos.vue'
+import Orders from '../views/orders.vue'
+import roles from '../views/roles.vue'
+// import Addcategory from '../views/products/Addcategory.vue'
 
 
 const router = createRouter({
@@ -57,6 +65,70 @@ const router = createRouter({
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/pos',
+      name: 'Pos',
+      component: Pos,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/roles',
+      name: 'Roles',
+      component: roles,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/oders',
+      name: 'Orders',
+      component: Orders,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/customers',
+      name: 'Customers',
+      component: Customers,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/all-products',
+      name: 'Allproducts',
+      component: Allproducts,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/categories',
+      name: 'Categories',
+      component: Categories,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    // {
+    //   path: '/Addcategory',
+    //   name: 'Addcategory',
+    //   component: Addcategory,
+    //   meta: {
+    //     requiresAuth: true
+    //   }
+    // },
+    {
+      path: '/add-product',
+      name: 'Addproduct',
+      component: Addproduct,
       meta: {
         requiresAuth: true
       }

@@ -1,0 +1,745 @@
+<template>
+  <div class="p-4">
+    <div class="flex justify-between items-center no-print">
+      <h2 class="text-2xl font-semibold mb-4">Product List</h2>
+      <router-link to="/add-product">
+        <button
+          class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+        >
+          <div class="flex items-center">
+            <Icon icon="majesticons:plus-line" />
+            <span class="pl-2">Register Product</span>
+          </div>
+        </button>
+      </router-link>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden tab">
+      <div class="overflow-x-auto px-6">
+        <div
+          class="mt-2 mb-4 flex items-center font-['monospace'] space-x-2 justify-between no-print"
+        >
+          <div class="flex items-center">
+            <!-- Search input field -->
+            <input
+              v-model="searchQuery"
+              type="text"
+              class="search-input"
+              @keyup.enter="searchProducts"
+              placeholder="Search products..."
+            />
+            <Icon
+              icon="mi:filter"
+              class="mx-2 cursor-pointer"
+              :height="30"
+              @click="toggleFilter"
+              v-if="filterclose"
+            />
+            <Icon
+              icon="mdi:close-box"
+              color="red"
+              class="mx-2 cursor-pointer"
+              :height="30"
+              @click="toggleFilter"
+              v-if="filterShow"
+            />
+            <div v-if="filterShow" class="flex items-center">
+              <!-- Stock Quantity Filter Range -->
+              <div class="mt-2">
+                <h1 class="ml-2">Filter by Quantity</h1>
+                <div class="flex">
+                  <input
+                    v-model="minStock"
+                    type="number"
+                    class="num"
+                    placeholder="Min Qty"
+                  />
+                  <h1 class="ml-2">-</h1>
+                  <input
+                    v-model="maxStock"
+                    type="number"
+                    class="num"
+                    placeholder="Max Qty"
+                  />
+                </div>
+              </div>
+              <!-- Price Filter Range -->
+              <div class="mt-2 ml-10">
+                <h1 class="ml-2">Filter by Price</h1>
+                <div class="flex">
+                  <input
+                    v-model="minPrice"
+                    type="number"
+                    class="num"
+                    placeholder="Min Price"
+                  />
+                  <h1 class="ml-2">-</h1>
+                  <input
+                    v-model="maxPrice"
+                    type="number"
+                    class="num"
+                    placeholder="Max Price"
+                  />
+                </div>
+              </div>
+              <!-- Category Filter -->
+              <div class="mt-2 ml-10">
+                <div>
+                  <h1 class="ml-2">Filter by Category</h1>
+                  <select
+                    v-model="selectedCategory"
+                    class="search-input ml-2 !overflow-y-auto"
+                  >
+                    <option value="">All Categories</option>
+                    <option
+                      v-for="category in availableCategories"
+                      :key="category"
+                      :value="category"
+                      class="p-2 border-b"
+                    >
+                      {{ category }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <button
+                @click="filterProducts"
+                class="ml-10 px-3 py-2 bg-blue-500 text-white hover:bg-blue-700 rounded-md cursor-pointer"
+              >
+                Filter
+              </button>
+            </div>
+          </div>
+
+          <div class="flex ml-auto">
+            <Icon
+              icon="vscode-icons:file-type-pdf2"
+              @click="exportToPDF"
+              class="mx-2 cursor-pointer"
+              :height="30"
+            />
+            <Icon
+              icon="vscode-icons:file-type-excel2"
+              @click="exportToExcel"
+              class="mx-2 cursor-pointer"
+              :height="30"
+            />
+            <Icon
+              icon="flat-color-icons:print"
+              @click="printTable"
+              class="mx-2 cursor-pointer"
+              :height="30"
+            />
+          </div>
+        </div>
+        <table
+          class="min-w-full border-collapse border border-gray-300"
+          id="product-table"
+        >
+          <!-- Table header  -->
+          <thead>
+            <tr>
+              <th
+                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span>Product Name</span>
+                </div>
+              </th>
+              <th
+                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span>Product Description</span>
+                </div>
+              </th>
+              <th
+                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span>Product SKU</span>
+                </div>
+              </th>
+              <th
+                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span>Product Category</span>
+                </div>
+              </th>
+              <th
+                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span>Product Price</span>
+                  <span class="ml-2 no-print">
+                    <Icon
+                      icon="fa6-solid:sort-up"
+                      class="mx-1 mb-[-8px] w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('price', 'asc')"
+                    />
+                    <Icon
+                      icon="fa6-solid:sort-down"
+                      class="mx-1 mb-0 w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('price', 'desc')"
+                    />
+                  </span>
+                </div>
+              </th>
+
+              <th
+                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span>Stock Quantity</span>
+                  <span class="ml-2 no-print">
+                    <Icon
+                      icon="fa6-solid:sort-up"
+                      class="mx-1 mb-[-8px] w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('stockQuantity', 'asc')"
+                    />
+                    <Icon
+                      icon="fa6-solid:sort-down"
+                      class="mx-1 mb-0 w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('stockQuantity', 'desc')"
+                    />
+                  </span>
+                </div>
+              </th>
+              <th
+                class="px-1 py-3 w-[13%] bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span>Amount</span>
+                  <span class="ml-2 no-print">
+                    <Icon
+                      icon="fa6-solid:sort-up"
+                      class="mx-1 mb-[-8px] w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('amount', 'asc')"
+                    />
+                    <Icon
+                      icon="fa6-solid:sort-down"
+                      class="mx-1 mb-0 w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('amount', 'desc')"
+                    />
+                  </span>
+                </div>
+              </th>
+              <th
+                class="no-print px-1 py-3 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="product in paginatedProducts" :key="product.sku">
+              <td class="text-center py-4 border border-gray-300">
+                <div class="flex items-center justify-center">
+                  <img
+                    :src="product.productImage"
+                    alt="Product Image"
+                    class="w-10 h-10 mr-2"
+                  />
+                  <span>{{ product.name }}</span>
+                </div>
+              </td>
+              <td class="text-center py-4 border border-gray-300">
+                {{ product.description }}
+              </td>
+              <td class="text-center py-4 border border-gray-300">
+                {{ product.sku }}
+              </td>
+              <td class="text-center py-4 border border-gray-300">
+                <!-- Display Categories as Pills -->
+                <div class="flex justify-center mt-2">
+                  <div
+                    v-for="category in product.category"
+                    :key="category"
+                    class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full mr-2 mb-2"
+                  >
+                    {{ category }}
+                  </div>
+                </div>
+              </td>
+              <td class="text-center py-4 border border-gray-300">
+                UGX {{ product.price.toLocaleString() }}
+              </td>
+
+              <td
+                class="pl-12 py-4 border border-gray-300"
+                :class="{ 'text-red-500': product.stockQuantity <= 20 }"
+              >
+                <span class="flex justify-between items-center">
+                  {{ product.stockQuantity }}
+                  <Vue3Lottie
+                    v-if="product.stockQuantity <= 20"
+                    :animationData="low"
+                    :height="47"
+                  />
+                </span>
+              </td>
+              <td class="text-center py-4 border border-gray-300">
+                UGX {{ product.amount.toLocaleString() }}
+              </td>
+              <td class="no-print py-4 border border-gray-300">
+                <div class="flex space-x-2 justify-center">
+                  <button
+                    @click="openEditModal(product)"
+                    class="text-blue-500 hover:text-blue-700 px-3 py-1 underline"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    @click="deleteProduct(product)"
+                    class="text-red-500 hover:text-red-700 px-3 py-1"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Pagination controls -->
+        <div class="mt-4 button-pagination no-print">
+          <button
+            @click="previousPage"
+            :disabled="currentPage === 1"
+            class="px-3 py-[10px] mr-[25px] bg-blue-500 text-white hover:bg-blue-700 rounded-md cursor-pointer"
+          >
+            Previous
+          </button>
+          <!-- Display page numbers -->
+          <div class="flex justify-center space-x-2 no-print">
+            <span v-for="pageNumber in totalPages" :key="pageNumber">
+              <button
+                @click="goToPage(pageNumber)"
+                :class="{
+                  'bg-blue-500 text-white hover:bg-blue-700 rounded-md cursor-pointer':
+                    currentPage === pageNumber,
+                  'bg-gray-200 text-gray-500 hover:bg-gray-300 rounded-md cursor-pointer':
+                    currentPage !== pageNumber,
+                }"
+                class="px-3 py-2 transition duration-300 ease-in-out"
+              >
+                {{ pageNumber }}
+              </button>
+            </span>
+          </div>
+
+          <button
+            @click="nextPage"
+            :disabled="currentPage * itemsPerPage >= sortedProducts.length"
+            class="no-print px-3 py-[10px] ml-[25px] bg-blue-500 text-white hover:bg-blue-700 rounded-md cursor-pointer"
+          >
+            Next
+          </button>
+        </div>
+        <div class="bg-gray-200 p-4 rounded-lg shadow-lg flex justify-center mt-4">
+    <p class="text-2xl font-semibold text-gray-700">
+      Total Products:<span class="ml-4 text-3xl font-semibold text-orange-500">{{ sortedProducts.length }}</span>
+    </p>
+    <p class="ml-4 text-3xl font-semibold text-black">
+      Total Stock:<span class="ml-4 text-3xl font-semibold text-orange-500"> {{ totalStockQuantity }}</span>
+    </p>
+    <p class="ml-4 text-2xl font-semibold text-black">
+      Total Amount:<span class="ml-4 text-3xl font-semibold text-orange-500">UGX {{ totalAmount.toLocaleString() }}</span> 
+    </p>
+  </div>
+      </div>
+    </div>
+    
+    <!-- Use the EditProductModal component with a prop -->
+    <editProductModal
+      :editingProduct="editingProduct"
+      @close="closeEditModal"
+    />
+    <!-- Use the DeleteConfirmationModal component -->
+    <deleteConfirmationModal
+      v-if="showDeleteConfirmation"
+      @confirm="deleteConfirmed"
+      @cancel="cancelDelete"
+    />
+  </div>
+</template>
+
+
+  
+  <script setup>
+import { ref, onMounted, computed, watch } from "vue";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import editProductModal from "../components/editProductModal.vue";
+import deleteConfirmationModal from "../components/deleteConfirmationModal.vue";
+import low from "../assets/low.json";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import * as XLSX from "xlsx";
+
+// Define the Firestore database reference
+const db = firebase.firestore();
+// Define a ref to control the visibility of the delete confirmation modal
+const showDeleteConfirmation = ref(false);
+// Define a ref to store the product being deleted
+const deletingProduct = ref(null);
+// Define pagination state
+const currentPage = ref(1); // Current page
+const itemsPerPage = 5; // Number of items to display per page
+const searchQuery = ref("");
+const filterShow = ref(false);
+const filterclose = ref(true);
+
+const sortColumnRef = ref(null);
+const sortDirection = ref("asc"); // Default sorting direction
+// Define a ref to track the product being edited
+const editingProduct = ref(null);
+const selectedCategory = ref("");
+const availableCategories = ref([]);
+const minStock = ref(null);
+const maxStock = ref(null);
+const minPrice = ref(null);
+const maxPrice = ref(null);
+const toggleFilter = () => {
+  filterShow.value = !filterShow.value;
+  filterclose.value = !filterclose.value;
+  fetchProducts();
+};
+// Method to export the table content to PDF
+const exportToPDF = () => {
+  // Create a new jsPDF instance
+  const pdf = new jsPDF();
+
+  // Define columns for the table
+  const columns = [
+    "Product SKU",
+    "Product Name",
+    "Product Category",
+    "Product Price",
+    "Stock Quantity",
+  ];
+
+  // Define the rows of the table by mapping over your product data
+  const rows = products.value.map((product) => [
+    product.sku,
+    product.name,
+    product.category,
+    product.price,
+    product.stockQuantity,
+  ]);
+
+  // Set the title for the PDF
+  pdf.setFontSize(16);
+  pdf.text("Product List", 10, 10);
+
+  // Define a callback function to customize cell styling
+  const didParseCell = function (data) {
+    // Check if the current column is for the "Stock Quantity"
+    if (data.column.index == 4) {
+      // Convert the cell text to a number
+      const cellValue = Number(data.cell.text);
+
+      // Check if the cell value is less than or equal to 20
+      if (cellValue <= 20) {
+        // Apply red color to text
+        data.cell.styles.textColor = "#FF0000";
+
+        // Log the cell value (for debugging)
+        console.log(cellValue);
+      }
+    }
+  };
+
+  // AutoTable is a jsPDF plugin for creating tables
+  pdf.autoTable({
+    head: [columns],
+    body: rows,
+    didParseCell: didParseCell, // Apply custom styling
+  });
+
+  // Save the PDF with a filename
+  pdf.save("product-list.pdf");
+};
+// Define a ref to store the list of products
+const products = ref([]);
+const exportToExcel = () => {
+  // Check if 'products' is an array
+  if (!Array.isArray(products.value)) {
+    console.error("Products is not an array.");
+    return;
+  }
+
+  // Create a new workbook
+  const workbook = XLSX.utils.book_new();
+
+  // Create a worksheet and add data to it
+  const worksheet = XLSX.utils.aoa_to_sheet([
+    [
+      "Product SKU",
+      "Product Name",
+      "Product Category",
+      "Product Price",
+      "Stock Quantity",
+    ],
+    // Map your product data to rows here
+    ...products.value.map((product) => [
+      product.sku,
+      product.name,
+      product.category,
+      product.price,
+      product.stockQuantity,
+    ]),
+  ]);
+
+  // Add the worksheet to the workbook
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Product List");
+  const workbookOutput = XLSX.write(workbook, {
+    bookType: "xlsx",
+    type: "array",
+  });
+  const blob = new Blob([workbookOutput], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+
+  // Create a download link and trigger the download
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "product-list.xlsx";
+  a.click();
+
+  // Clean up the URL.createObjectURL
+  window.URL.revokeObjectURL(url);
+};
+
+const fetchCategoryNames = async () => {
+  try {
+    const categoriesSnapshot = await db.collection("categories").get();
+    const categoryNames = categoriesSnapshot.docs.map((doc) => doc.data().name);
+    return categoryNames;
+  } catch (error) {
+    console.error("Error fetching category names:", error);
+    return [];
+  }
+};
+// Function to fetch and populate the available categories
+const fetchAvailableCategories = async () => {
+  try {
+    const categoryNames = await fetchCategoryNames();
+    availableCategories.value = categoryNames;
+  } catch (error) {
+    console.error("Error fetching available categories:", error);
+  }
+};
+//Create a computed property that returns the products to display on the current page:
+const paginatedProducts = computed(() => {
+  sortProducts(); // Apply sorting to the entire list
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return sortedProducts.value.slice(startIndex, endIndex);
+});
+const totalStockQuantity = computed(() => {
+  return products.value.reduce(
+    (total, product) => total + product.stockQuantity,
+    0
+  );
+});
+const totalAmount = computed(() => {
+  return products.value.reduce((total, product) => total + product.amount, 0);
+});
+const searchProducts = () => {
+  if (searchQuery.value.trim() === "") {
+    // Reset the product list if the search query is empty
+    fetchProducts();
+  } else {
+    // Filter products based on the search query
+    const query = searchQuery.value.toLowerCase().trim();
+    products.value = sortedProducts.value.filter((product) => {
+      const productName = product.name.toLowerCase();
+      const productSku = product.sku.toLowerCase();
+      return productName.includes(query) || productSku.includes(query);
+    });
+  }
+};
+const filterProducts = () => {
+  try {
+    // Filter products based on search query, stock quantity range, and price range
+    products.value = sortedProducts.value.filter((product) => {
+      const productStockQuantity = product.stockQuantity;
+      const productPrice = product.price;
+      const productCategory = product.category;
+      // Check both stock quantity and price criteria
+      const stockQuantityFilter =
+        (minStock.value === null || productStockQuantity >= minStock.value) &&
+        (maxStock.value === null || productStockQuantity <= maxStock.value);
+
+      const priceFilter =
+        (minPrice.value === null || productPrice >= minPrice.value) &&
+        (maxPrice.value === null || productPrice <= maxPrice.value);
+
+      const categoryFilter =
+        selectedCategory.value === "" ||
+        productCategory.includes(selectedCategory.value);
+
+      return stockQuantityFilter && priceFilter && categoryFilter; // Include the product in the filtered list if both criteria are met
+    });
+  } catch (error) {
+    console.error("Error during filtering:", error);
+  }
+};
+const printTable = () => {
+  // Trigger the browser's print dialog
+  window.print();
+};
+// Function to go to the previous page
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+const totalPages = computed(() => {
+  return Math.ceil(sortedProducts.value.length / itemsPerPage);
+});
+const goToPage = (pageNumber) => {
+  currentPage.value = pageNumber;
+};
+
+// Function to go to the next page
+const nextPage = () => {
+  const totalPages = Math.ceil(sortedProducts.value.length / itemsPerPage);
+  if (currentPage.value < totalPages) {
+    currentPage.value++;
+  }
+};
+// Function to open the edit modal and populate it with the selected product's data
+const openEditModal = (product) => {
+  editingProduct.value = { ...product };
+};
+// Function to close the delete confirmation modal
+const cancelDelete = () => {
+  deletingProduct.value = null;
+  showDeleteConfirmation.value = false;
+};
+// Function to close the edit modal
+const closeEditModal = () => {
+  editingProduct.value = null;
+};
+// Function to open the delete confirmation modal
+const deleteProduct = (product) => {
+  // Set the product to be deleted
+  deletingProduct.value = product;
+  // Open the delete confirmation modal
+  showDeleteConfirmation.value = true;
+};
+
+// Function to delete the product
+const deleteConfirmed = async () => {
+  if (deletingProduct.value) {
+    const { sku } = deletingProduct.value;
+    try {
+      // Use Firebase to delete the product from Firestore
+      await db.collection("products").doc(sku).delete();
+      // Show a success message or perform any other actions if needed
+      console.log("Product deleted successfully");
+    } catch (error) {
+      // Handle the error
+      console.error("Error deleting product:", error);
+    } finally {
+      // Close the delete confirmation modal
+      showDeleteConfirmation.value = false;
+      // Fetch the updated list of products (if needed)
+      fetchProducts();
+    }
+  }
+};
+// Function to fetch and populate the products list
+const fetchProducts = async () => {
+  try {
+    const productsSnapshot = await db.collection("products").get();
+    products.value = productsSnapshot.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
+
+const sortProducts = () => {
+  if (sortColumnRef.value && sortDirection.value) {
+    products.value.sort((a, b) => {
+      let aValue = a[sortColumnRef.value];
+      let bValue = b[sortColumnRef.value];
+
+      // Convert values to numbers for sorting the "Total Items" column
+      if (sortColumnRef.value === "amount" || sortColumnRef.value === "price") {
+        aValue = parseFloat(aValue);
+        bValue = parseFloat(bValue);
+        console.log(typeof aValue);
+        console.log(aValue);
+      }
+
+      if (sortDirection.value === "asc") {
+        return aValue - bValue; // Sort in ascending order
+      } else {
+        return bValue - aValue; // Sort in descending order
+      }
+    });
+  }
+};
+
+const sortedProducts = computed(() => {
+  sortProducts();
+  // return products.value;
+  // Clone the original products array to avoid sorting the original data
+  const clonedProducts = [...products.value];
+  sortProducts(clonedProducts); // Apply sorting to the cloned array
+  return clonedProducts;
+});
+
+const sortColumn = (column, direction) => {
+  sortColumnRef.value = column;
+  sortDirection.value = direction;
+};
+// Watch for changes in minStock and set it to null if it's an empty string
+watch(minStock, (newMin) => {
+  if (newMin === "") {
+    minStock.value = null;
+  }
+});
+watch(minPrice, (newMin) => {
+  if (newMin === "") {
+    minPrice.value = null;
+  }
+});
+// Watch for changes in maxStock and set it to null if it's an empty string
+watch(maxStock, (newMax) => {
+  if (newMax === "") {
+    maxStock.value = null;
+  }
+});
+watch(maxPrice, (newMax) => {
+  if (newMax === "") {
+    maxPrice.value = null;
+  }
+});
+// Watch for changes in stockFilter and fetch products when both min and max are null or empty strings
+watch(
+  [minStock, maxStock, minPrice, maxPrice, selectedCategory, searchQuery],
+  () => {
+    if (
+      ((minStock.value === null || minStock.value === "") &&
+        (maxStock.value === null || maxStock.value === "")) ||
+      ((minPrice.value === null || minPrice.value === "") &&
+        (maxPrice.value === null || maxPrice.value === "")) ||
+      selectedCategory.value === "" ||
+      searchQuery.value === ""
+    ) {
+      fetchProducts();
+    }
+  }
+);
+
+// Fetch products and available categories when the component is mounted
+onMounted(async () => {
+  await fetchProducts();
+  await fetchAvailableCategories();
+});
+</script>
