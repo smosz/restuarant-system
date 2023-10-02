@@ -44,12 +44,11 @@
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M19 9l-7 7-7-7"
-                    ></path></svg
-                ></a>
+                    ></path></svg></a>
 
                 <!-- Dropdown menu -->
                 <div
-                  class="hidden absolute left-[12rem] mt-0 rounded-md bg-white divide-y divide-gray-100 shadow dark:bg-gray-700"
+                  class="hidden z-10 absolute left-[12rem] mt-0 rounded-md bg-white divide-y divide-gray-100 shadow dark:bg-gray-700"
                 >
                   <ul
                     class="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -108,6 +107,11 @@
                 class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Roles</router-link
               >
+              <router-link
+                :to="{ name: 'Users' }"
+                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >Users</router-link
+              >
             </div>
           </div>
         </div>
@@ -146,9 +150,9 @@
                   alt=""
                 /> -->
                 <img
-                  v-if="state.profilePhotoUrl"
+                  v-if="loggedInUserState.profilePhotoUrl"
                   class="h-8 rounded-full object-contain w-fulll"
-                  :src="state.profilePhotoUrl"
+                  :src="loggedInUserState.profilePhotoUrl"
                 />
                 <img
                   v-else
@@ -191,7 +195,7 @@
                 />Settings</router-link
               >
               <a
-                @click.prevent="signOut"
+                @click.prevent="userStore.signOut()"
                 id="user-menu-item-2"
                 class="drp-item"
                 role="menuitem"
@@ -209,19 +213,19 @@
   </nav>
 </template>
 
-<script>
+<script setup>
 import { useRouter } from "vue-router";
-import { ref, computed, reactive, onMounted } from "vue";
-import firebase from "firebase/compat/app";
+import { ref,  onMounted } from "vue";
+
 import "firebase/compat/auth";
 import { firebaseApp } from "../firebase/firebaseInit";
-export default {
-  name: "navBar",
-  setup() {
-    const user = ref(null);
-    const state = reactive({
-      profilePhotoUrl: "",
-    });
+import {useUserStore} from "../stores/user";
+
+const userStore = useUserStore();
+    // State for the logged-in user
+
+const loggedInUserState = userStore.loggedInUserData
+
 
     const router = useRouter();
     const toggle = ref(false);
@@ -231,7 +235,8 @@ export default {
     const isCategoriesActive = ref(false);
     const isAddCategoryActive = ref(false);
 
-    onMounted(() => {
+    onMounted(async  () => {
+      await userStore.initializeUser();
       const currentRouteName = router.currentRoute.value.name;
 
       // Check if the current route matches each route
@@ -240,35 +245,5 @@ export default {
       isCategoriesActive.value = currentRouteName === "Categories";
       isAddCategoryActive.value = currentRouteName === "Addcategory";
     });
-    firebase.auth().onAuthStateChanged((firebaseUser) => {
-      user.value = firebaseUser;
-      if (user.value) {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(user.value.uid)
-          .get()
-          .then((doc) => {
-            state.profilePhotoUrl = doc.data().profilePhotoUrl;
-          });
-      }
-    });
-    const signOut = async () => {
-      firebaseApp.auth().signOut();
-      router.push("/");
-    };
-
-    return {
-      signOut,
-      toggle,
-      user,
-      state,
-      isHovered,
-      isAllProductsActive,
-      isAddProductActive,
-      isCategoriesActive,
-      isAddCategoryActive,
-    };
-  },
-};
+    
 </script>

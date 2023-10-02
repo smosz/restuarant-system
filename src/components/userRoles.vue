@@ -252,7 +252,7 @@ const exportToPDF = () => {
 const exportToExcel = () => {
   // Check if 'roles' is an array
   if (!Array.isArray(roles.value)) {
-    console.error("roles is not an array.");
+    window.alert("roles is not an array.");
     return;
   }
 
@@ -371,7 +371,7 @@ const deleteConfirmed = async () => {
       console.log("Role deleted successfully");
     } catch (error) {
       // Handle the error
-      console.error("Error deleting Role:", error);
+      window.alert("Error deleting Role");
     } finally {
       // Close the delete confirmation modal
       showDeleteConfirmation.value = false;
@@ -387,7 +387,7 @@ const fetchroles = async () => {
     const rolesSnapshot = await db.collection("roles").get();
     roles.value = rolesSnapshot.docs.map((doc) => doc.data())
   } catch (error) {
-    console.error("Error fetching roles:", error);
+    window.alert("Error fetching roles");
   }
 };
 

@@ -273,10 +273,15 @@
                 <span class="flex justify-between items-center">
                   {{ product.stockQuantity }}
                   <Vue3Lottie
-                    v-if="product.stockQuantity <= 20"
+                    v-if="product.stockQuantity <= 20  && product.stockQuantity > 0"
                     :animationData="low"
                     :height="47"
                   />
+                  <Vue3Lottie
+              v-if="product.stockQuantity === 0"
+              :animationData="empty"
+              :height="47"
+            />
                 </span>
               </td>
               <td class="text-center py-4 border border-gray-300">
@@ -373,6 +378,7 @@ import "firebase/compat/firestore";
 import editProductModal from "../components/editProductModal.vue";
 import deleteConfirmationModal from "../components/deleteConfirmationModal.vue";
 import low from "../assets/low.json";
+import empty from "../assets/empty.json";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
@@ -443,9 +449,6 @@ const exportToPDF = () => {
       if (cellValue <= 20) {
         // Apply red color to text
         data.cell.styles.textColor = "#FF0000";
-
-        // Log the cell value (for debugging)
-        console.log(cellValue);
       }
     }
   };
@@ -465,7 +468,7 @@ const products = ref([]);
 const exportToExcel = () => {
   // Check if 'products' is an array
   if (!Array.isArray(products.value)) {
-    console.error("Products is not an array.");
+    window.alert("Products is not an array.");
     return;
   }
 
@@ -518,7 +521,7 @@ const fetchCategoryNames = async () => {
     const categoryNames = categoriesSnapshot.docs.map((doc) => doc.data().name);
     return categoryNames;
   } catch (error) {
-    console.error("Error fetching category names:", error);
+    window.alert("Error fetching category names");
     return [];
   }
 };
@@ -528,7 +531,7 @@ const fetchAvailableCategories = async () => {
     const categoryNames = await fetchCategoryNames();
     availableCategories.value = categoryNames;
   } catch (error) {
-    console.error("Error fetching available categories:", error);
+    window.alert("Error fetching available categories");
   }
 };
 //Create a computed property that returns the products to display on the current page:
@@ -584,7 +587,7 @@ const filterProducts = () => {
       return stockQuantityFilter && priceFilter && categoryFilter; // Include the product in the filtered list if both criteria are met
     });
   } catch (error) {
-    console.error("Error during filtering:", error);
+    window.alert("Error during filtering");
   }
 };
 const printTable = () => {
@@ -640,10 +643,10 @@ const deleteConfirmed = async () => {
       // Use Firebase to delete the product from Firestore
       await db.collection("products").doc(sku).delete();
       // Show a success message or perform any other actions if needed
-      console.log("Product deleted successfully");
+      window.alert("Product deleted successfully");
     } catch (error) {
       // Handle the error
-      console.error("Error deleting product:", error);
+      window.alert("Error deleting product");
     } finally {
       // Close the delete confirmation modal
       showDeleteConfirmation.value = false;
@@ -658,7 +661,7 @@ const fetchProducts = async () => {
     const productsSnapshot = await db.collection("products").get();
     products.value = productsSnapshot.docs.map((doc) => doc.data());
   } catch (error) {
-    console.error("Error fetching products:", error);
+    window.alert("Error fetching products");
   }
 };
 
@@ -672,8 +675,6 @@ const sortProducts = () => {
       if (sortColumnRef.value === "amount" || sortColumnRef.value === "price") {
         aValue = parseFloat(aValue);
         bValue = parseFloat(bValue);
-        console.log(typeof aValue);
-        console.log(aValue);
       }
 
       if (sortDirection.value === "asc") {

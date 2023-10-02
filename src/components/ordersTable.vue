@@ -50,6 +50,21 @@
                 @click="toggleFilter"
                 v-if="filterShow"
               />
+              <Icon
+                icon="mdi:discount"
+                class="mx-2 cursor-pointer"
+                :height="30"
+                @click="toggleDiscount"
+                v-if="showDiscounts"
+              />
+              <Icon
+                icon="tabler:discount-2-off"
+                color="red"
+                class="mx-2 cursor-pointer"
+                :height="30"
+                @click="toggleDiscount"
+                v-if="hideDiscounts"
+              />
             </div>
 
             <div class="flex ml-auto">
@@ -82,7 +97,7 @@
             <thead>
               <tr>
                 <th
-                  class="px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]"
+                  class="px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]"
                 >
                   <div class="flex items-center justify-center">
                     <span>Date Time</span>
@@ -112,7 +127,13 @@
                   </div>
                 </th>
                 <th
-                  class="px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]"
+                :class="{
+          'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]':
+          hideDiscounts,
+            'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]':
+            showDiscounts,
+        }"
+              
                 >
                   <div class="flex items-center justify-center">
                     <span>Total Items</span>
@@ -131,7 +152,12 @@
                   </div>
                 </th>
                 <th
-                  class="px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]"
+                :class="{
+          'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]':
+          hideDiscounts,
+            'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[12%]':
+            showDiscounts,
+        }"
                 >
                   <div class="flex items-center justify-center">
                     <span>Total Amount</span>
@@ -147,6 +173,24 @@
                         class="mx-1 mb-0 w-5 text-lg hover:text-blue-500 cursor-pointer"
                       />
                     </span>
+                  </div>
+                </th>
+                <th
+                v-if="hideDiscounts"
+                  class="px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]"
+                >
+                  <div class="flex items-center justify-center">
+                    <span>% Discount</span>
+                    
+                  </div>
+                </th>
+                <th
+                v-if="hideDiscounts"
+                  class="px-1 py-1 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[7%]"
+                >
+                  <div class="flex items-center justify-center">
+                    <span>Discount Amount</span>
+                    
                   </div>
                 </th>
               </tr>
@@ -226,6 +270,12 @@
                 <td class="px-1 py-4 border border-gray-300 text-center">
                   {{ orderItem.totalAmount }}
                 </td>
+                <td v-if="hideDiscounts" class="px-1 py-4 border border-gray-300 text-center">
+                  {{ orderItem.discount }}
+                </td>
+                <td v-if="hideDiscounts" class="px-1 py-4 border border-gray-300 text-center">
+                  {{ discountAmountWithCommas[index] }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -265,16 +315,49 @@
             </button>
           </div>
           <div class="mt-2 text-center no-print">
-  <div class="bg-gray-200 p-4 rounded-lg shadow-lg inline-flex items-center">
-    <p class="text-2xl font-semibold text-gray-700">
-      Total Orders:<span class="ml-4 text-3xl font-semibold text-orange-500">{{ sortedOrders.length }}</span>
+  <div
+  :class="{
+          'bg-gray-200 p-4 rounded-lg shadow-lg flex items-center text-2xl  justify-between':
+          filterclose,
+          'bg-gray-200 p-4 rounded-sm shadow-sm flex items-center text-[20px] justify-between':
+            filterShow,
+        }"
+ >
+    <p class=" font-semibold text-gray-700">
+      Total Orders:<span 
+      :class="{
+          'ml-4 text-3xl font-semibold text-orange-500':
+          filterclose,
+          'ml-2 text-2xl font-semibold text-orange-500':
+            filterShow,
+        }"
+      >{{ sortedOrders.length }}</span>
     </p>
-    <p class="ml-4 text-3xl font-semibold text-black">
-      Total Orders Price:<span class="ml-4 text-3xl font-semibold text-orange-500">UGX {{ totalOrdersPrice }}</span>
+    <p class="  font-semibold text-gray-700">
+      Total Discounted Orders:<span :class="{
+          'ml-4 text-3xl font-semibold text-orange-500':
+          filterclose,
+          'ml-2 text-2xl font-semibold text-orange-500':
+            filterShow,
+        }">{{ totalDiscountedOrders }}</span>
     </p>
-    <p class="ml-4 text-2xl font-semibold text-black">
-      Total Items Ordered:<span class="ml-4 text-3xl font-semibold text-orange-500"> {{ totalItemsOrdered }}</span> 
+    <p class=" font-semibold text-gray-700">
+      Total Items Ordered:<span :class="{
+          'ml-4 text-3xl font-semibold text-orange-500':
+          filterclose,
+          'ml-2 text-2xl font-semibold text-orange-500':
+            filterShow,
+        }"> {{ totalItemsOrdered }}</span> 
     </p>
+    <p class=" font-semibold text-black">
+      Total Orders Price:<span :class="{
+          'ml-4 text-3xl font-semibold text-orange-500':
+          filterclose,
+          'ml-2 text-2xl font-semibold text-orange-500':
+            filterShow,
+        }">UGX {{ totalOrdersPrice }}</span>
+    </p>
+    
   </div>
 </div>
 
@@ -397,9 +480,17 @@ const minItems = ref(null);
 const maxItems = ref(null);
 const minAmount = ref(null);
 const maxAmount = ref(null);
+const showDiscounts = ref(false);
+const hideDiscounts = ref(true);
 const toggleFilter = () => {
   filterShow.value = !filterShow.value;
   filterclose.value = !filterclose.value;
+  orderStore.fetchOrders();
+  orderItems.value = orderStore.orders;
+};
+const toggleDiscount = () => {
+  showDiscounts.value = !showDiscounts.value;
+  hideDiscounts.value = !hideDiscounts.value;
   orderStore.fetchOrders();
   orderItems.value = orderStore.orders;
 };
@@ -592,7 +683,7 @@ const filterBtn = () => {
         return totalItemsFilter && totalAmountFilter;
       });
     } catch (error) {
-      console.error("Error during filtering:", error);
+     window.alert("Error during filtering");
     }
   }
 };
@@ -601,20 +692,38 @@ const filterBtn = () => {
 const totalOrdersPrice = computed(() => {
   return orderItems.value
     .reduce((total, orderItem) => {
-      return (
-        total +
-        orderItem.cart.reduce((cartTotal, cartItem) => {
-          return cartTotal + calculateTotalPrice(cartItem);
-        }, 0)
-      );
+      // Check if the discounted amount is greater than zero
+      if (orderItem.discountAmount > 0) {
+        // If greater than zero, use the discounted amount
+        return total + orderItem.discountAmount;
+      } else {
+        // If not greater than zero, use the total price for this order
+        return (
+          total +
+          orderItem.cart.reduce((cartTotal, cartItem) => {
+            return cartTotal + calculateTotalPrice(cartItem);
+          }, 0)
+        );
+      }
     }, 0)
     .toLocaleString();
 });
+
 // Computed property to calculate total items ordered
 const totalItemsOrdered = computed(() => {
   return orderItems.value.reduce((total, orderItem) => {
     return total + orderItem.totalItems;
   }, 0);
+});
+// Computed property to calculate total items ordered
+const totalDiscountedOrders = computed(() => {
+  return orderItems.value.reduce((count, orderItem) => {
+      // Assuming you have a property like "discount" in each order object
+      if (orderItem.discountAmount > 0) {
+        count++;
+      }
+      return count;
+    }, 0);
 });
 // Calculate the total number of pages based on itemsPerPage and orderItems
 const totalPages = computed(() => {
@@ -668,6 +777,18 @@ const nextPage = () => {
     currentPage.value++;
   }
 };
+const discountAmountWithCommas = computed(() => {
+  return orderItems.value.map((orderItem) => {
+    // Check if the discount amount is greater than zero
+    if (orderItem.discountAmount > 0) {
+      // Format the discount amount with commas
+      return orderItem.discountAmount.toLocaleString();
+    } else {
+      // If discount amount is zero or negative, return an empty string
+      return 0;
+    }
+  });
+});
 
 const sortOrders = () => {
   if (sortColumnRef.value && sortDirection.value) {
@@ -700,7 +821,7 @@ const printTable = () => {
 const exportToExcel = () => {
   // Check if 'orderItems' is an array
   if (!Array.isArray(orderItems.value)) {
-    console.error("orderItems is not an array.");
+   window.alert("orderItems is not an array.");
     return;
   }
 

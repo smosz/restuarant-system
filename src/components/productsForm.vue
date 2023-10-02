@@ -264,11 +264,6 @@ const product = ref({
   productImage: "",
  amount: rawAmount,
 });
-
-// Access the formatted amount with currency symbol
-console.log(amount.value); // Output: "UGX 1,014,000"
-// Define the calculateTotalPrice function
-
 const toggleCategory = (category) => {
   const index = selectedCategories.value.indexOf(category);
   if (index === -1) {
@@ -284,7 +279,7 @@ const fetchCategoryNames = async () => {
     const categoryNames = categoriesSnapshot.docs.map((doc) => doc.data().name);
     return categoryNames;
   } catch (error) {
-    console.error("Error fetching category names:", error);
+    window.alert("Error fetching category names");
     return [];
   }
 };
@@ -373,7 +368,7 @@ const registerNewCategory = () => {
         newCategory.value = ""; // Clear the input
       })
       .catch((error) => {
-        console.error("Error registering new category:", error);
+        window.alert("Error registering new category");
       });
   }
 };
@@ -409,7 +404,7 @@ const registerProduct = async () => {
   } catch (error) {
     updating.value = false;
     message.value = "Product registration Failed.Try Again";
-    console.error("Error registering product:", error);
+    window.alert("Error registering product");
   }
 };
 onMounted(async () => {

@@ -121,7 +121,7 @@
     } catch (error) {
       updating.value = false;
        message.value = "role registration failed";
-      console.error("Error registering product:", error);
+       window.alert("Error registering product");
     }
   }
   

@@ -14,17 +14,13 @@ import Customers from '../views/Customers.vue'
 import Pos from '../views/pos.vue'
 import Orders from '../views/orders.vue'
 import roles from '../views/roles.vue'
+import users from '../views/users.vue'
 // import Addcategory from '../views/products/Addcategory.vue'
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/signup',
-      name: 'Signup',
-      component: Signup
-    },
     {
       path: '/',
       name: 'Login',
@@ -94,6 +90,14 @@ const router = createRouter({
       }
     },
     {
+      path: '/users',
+      name: 'Users',
+      component: users,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/customers',
       name: 'Customers',
       component: Customers,
@@ -154,7 +158,7 @@ router.beforeEach((to, from, next) => {
     }
   } else if (firebase.auth().currentUser) {
     next({
-      path: '/dashboard',
+      path: '/pos',
       query: {
         redirect: to.fullPath
       }

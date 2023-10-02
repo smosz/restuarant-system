@@ -80,19 +80,20 @@
 </template>
 
 
-<script>
-import { ref, reactive,computed} from "vue";
+<script setup>
+import { ref, reactive,computed,onMounted} from "vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import useValidate from "@vuelidate/core";
 import { required, helpers, minLength } from "@vuelidate/validators";
+import { useUserStore } from "../stores/user";
 
-export default {
-  name: "passwordTab",
-  setup() {
-    const user = ref(null);
+const userStore = useUserStore();
+const loggedInUserPassword = userStore.loggedInUserData;
+
+
     const state = reactive({
-      password: "",
+      password: loggedInUserPassword.Password,
       currentPassword: '',
       newPassword: '',
       isUpdating: false,
@@ -134,19 +135,7 @@ export default {
     });
 
     const v$ = useValidate(rules, state);
-    firebase.auth().onAuthStateChanged((firebaseUser) => {
-      user.value = firebaseUser;
-      if (user.value) {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(user.value.uid)
-          .get()
-          .then((doc) => {
-            state.password = doc.data().Password;
-          });
-      }
-    });
+    
     const updateButton = ()=>{
       currentPasswordInput.value = true
       isupdateButton.value = false
@@ -190,36 +179,20 @@ export default {
           });
           
           state.updateMessage = "Password updated successfully.";
-    console.log("Password updated successfully.");
+          window.alert("Password updated successfully.");
     setTimeout(() => {
             location.reload();
           }, 500);
     
   } catch (error) {
-    console.error("Error updating password:", error);
+    window.alert("Error updating password");
   }finally {
           state.isUpdating = false;
         }
       }
   
 };
-    return {
-      state,
-      user,
-      v$,
-      currentPasswordInput,
-      updateButton,
-      isupdateButton,
-      proceedButton,
-      updatePassword,
-      isproceedButton,
-      newPasswordInput,
-      isConfirm,
-      visible,
-      invisible,
-      passwordVisible,
-      passwordInvisible
-    };
-  },
-};
+onMounted(async () => {
+  await userStore.initializeUser();
+});
 </script>

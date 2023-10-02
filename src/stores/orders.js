@@ -34,7 +34,7 @@ export const useOrdersStore = defineStore('order', {
         //   console.log(product.name);
         // });
       } catch (error) {
-        console.error('Error fetching orders:', error);
+        window.alert('Error fetching orders');
       }
     },
 

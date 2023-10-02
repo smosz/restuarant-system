@@ -307,7 +307,7 @@ const toggleCategory = (category) => {
 // Function to update the product
 const updateProduct = async () => {
   try {
-    console.log(props.editingProduct.category);
+
     if (props.editingProduct) {
       updating.value = true;
       const { sku, ...updatedProductData } = props.editingProduct;
@@ -340,7 +340,7 @@ const fetchCategoryNames = async () => {
     const categoryNames = categoriesSnapshot.docs.map((doc) => doc.data().name);
     return categoryNames;
   } catch (error) {
-    console.error("Error fetching category names:", error);
+    window.alert("Error fetching category names");
     return [];
   }
 };
@@ -362,7 +362,7 @@ const displayImagePreview = (event) => {
       };
       reader.readAsDataURL(file);
     } else {
-      console.log("Please select a valid image file (SVG, PNG, JPG).");
+      window.alert("Please select a valid image file (SVG, PNG, JPG).");
     }
   }
 };

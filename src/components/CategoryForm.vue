@@ -121,7 +121,7 @@ updating.value = false;
     } catch (error) {
       updating.value = false;
        message.value = "Category registered failed";
-      console.error("Error registering product:", error);
+       window.alert("Error registering product");
     }
   }
   

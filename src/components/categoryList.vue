@@ -260,7 +260,7 @@ const deletingCategory = ref(null);
 const db = firebase.firestore();
 // Define pagination state
 const currentPage = ref(1); // Current page
-const itemsPerPage = 5; // Number of items to display per page
+const itemsPerPage = 20 // Number of items to display per page
 const searchQuery = ref("");
 const minCount = ref(null);
 const maxCount = ref(null);
@@ -306,7 +306,7 @@ const exportToPDF = () => {
 const exportToExcel = () => {
   // Check if 'products' is an array
   if (!Array.isArray(categories.value)) {
-    console.error("categories is not an array.");
+    window.alert("categories is not an array.");
     return;
   }
 
@@ -370,7 +370,7 @@ const filterProductCount = () => {
       return countFilter 
     });
   } catch (error) {
-    console.error("Error during filtering:", error);
+    window.alert("Error during filtering");
   }
 };
 const searchCategories = () => {
@@ -442,11 +442,10 @@ const deleteConfirmed = async () => {
     try {
       // Use Firebase to delete the product from Firestore
       await db.collection("categories").doc(id).delete();
-      // Show a success message or perform any other actions if needed
-      console.log("Category deleted successfully");
+      window.location.reload();
     } catch (error) {
       // Handle the error
-      console.error("Error deleting category:", error);
+      window.alert("Error deleting category");
     } finally {
       // Close the delete confirmation modal
       showDeleteConfirmation.value = false;
@@ -463,11 +462,11 @@ const fetchCategories = async () => {
     categories.value = categoriesSnapshot.docs.map((doc) => ({
       ...doc.data(),
       productCount: 0, // Initialize productCount
-    }));
+    }))
     // Update productCount after fetching the categories
     updateProductCount();
   } catch (error) {
-    console.error("Error fetching categories:", error);
+    window.alert("Error fetching categories");
   }
 };
 const updateProductCount = async () => {
@@ -479,10 +478,8 @@ const updateProductCount = async () => {
         .get();
       category.productCount = productsSnapshot.docs.length;
     } catch (error) {
-      console.error(
-        "Error counting products for category",
-        category.name,
-        error
+      window.alert(
+        "Error counting products for category"
       );
     }
   }

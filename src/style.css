@@ -11,7 +11,31 @@
 ::-webkit-scrollbar {
   display: none;
 }
+/* Add CSS for the slider container and animation */
+.slider-container {
+  max-width: 100%;
+  overflow: hidden;
+  position: relative;
+  display:flex
+}
 
+.slider {
+  display: flex;
+  animation: slide 200s linear infinite; /* Adjust the animation duration as needed */
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%); /* Adjust the percentage based on your content */
+  }
+}
+/* Add a CSS rule to pause the animation when sliderPaused is true */
+.slider-container.slider-paused .slider {
+  animation-play-state: paused;
+}
 .num{
   @apply border-solid border-[1px] ml-2 border-black w-16
 }

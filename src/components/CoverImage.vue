@@ -1,95 +1,3 @@
-<!-- <template>
-  <div class="flex items-center ml-[-124px]">
-    <div class="relative mr-4">
-      <label for="image" class="cursor-pointer">
-        <span :class="{'opacity-50': isLoading}" class="bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded flex items-center">
-          <span v-if="!isLoading">
-            Choose an Image
-          </span>
-          <span v-else>
-            <svg class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.352 5.814 3.494 7.709l2.506-2.418zm2.345 3.319A8 8 0 0112 4v8h8a8 8 0 01-11.65 7.155l-2.005-2.54z"></path>
-            </svg>
-            Uploading...
-          </span>
-        </span>
-      </label>
-      <input id="image" type="file" class="hidden form-input" @change="loadImage" />
-    </div>
-    <div class="mt-4">
-      <img
-        v-if="CoverImage"
-        :src="CoverImage"
-        alt="Cover Image"
-        class="h-48 w-full object-cover rounded-md shadow-md"
-      />
-    </div>
-  </div>
-</template>
-
-<script>
-import { ref, computed } from "vue";
-// import { useFirestore } from 'vuefire';
-import firebase from "firebase/compat/app";
-// import 'firebase/compat/firestore';
-import "firebase/compat/storage";
-import "firebase/compat/auth";
-import { db } from "../firebase/firebaseInit";
-
-export default {
-  name: "CoverImage",
-  setup() {
-    const userId = ref(null);
-    const CoverImage = ref(null);
-    const isLoading = ref(false);
-    const storageRef = firebase.storage().ref();
-    const loadImage = async (event) => {
-      isLoading.value = true;
-      const fil = event.target.files[0];
-      const userId = firebase.auth().currentUser.uid;
-      try {
-        const snapshot = await storageRef.child(`users/${userId}/Cover.jpg`).put(fil);
-        const coverURL = await snapshot.ref.getDownloadURL();
-        await db.collection("users").doc(userId).set({ CoverImage: coverURL }, { merge: true });
-        isLoading.value = false;
-      } catch (error) {
-        isLoading.value = false;
-        console.error(error);
-      }
-    };
-
-    const userProfile = computed(() => {
-      return db.collection("users").doc(userId.value);
-    });
-
-    const fetchUserProfile = async () => {
-      try {
-        const doc = await userProfile.value.get();
-        const data = doc.data();
-        if (data && data.CoverImage) {
-          CoverImage.value = data.CoverImage;
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        userId.value = user.uid;
-        fetchUserProfile();
-      }
-    });
-
-    return {
-      CoverImage,
-      loadImage,
-      isLoading
-    };
-  },
-};
-</script> -->
 <template>
   <div class="flex flex-col space-y-4 w-[80%] ml-[-130px]">
     <div class="flex flex-col space-y-2">
@@ -160,7 +68,6 @@ import { ref } from "vue";
 import "firebase/compat/storage";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { db } from "../firebase/firebaseInit";
 
 export default {
   setup() {
@@ -171,7 +78,7 @@ export default {
     const uploadCoverPhoto = async (file) => {
       const user = firebase.auth().currentUser;
       if (!user) {
-        console.error("User not authenticated.");
+        window.alert("User not authenticated.");
         return;
       }
       const storageRef = firebase
@@ -187,12 +94,12 @@ export default {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         (error) => {
-          console.error(error);
+          window.alert(error);
         },
         () => {
           
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            console.log(`Cover photo uploaded: ${downloadURL}`);
+
             coverPhotoPreviewUrl.value = downloadURL;
             updateCoverPhoto(downloadURL);
           });
@@ -202,7 +109,7 @@ export default {
     const updateCoverPhoto = async (downloadURL) => {
       const user = firebase.auth().currentUser;
       if (!user) {
-        console.error("User not authenticated.");
+        window.alert("User not authenticated.");
         return;
       }
       const userRef = firebase.firestore().collection("users").doc(user.uid);
@@ -210,9 +117,8 @@ export default {
         await userRef.update({
           coverPhotoUrl: downloadURL,
         });
-        console.log("Cover photo URL updated in user's document");
       } catch (error) {
-        console.error(error);
+        window.alert(error);
       }
     };
     const changeCoverPhoto = () => {

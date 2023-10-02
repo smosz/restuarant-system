@@ -5,7 +5,7 @@
       <div class="relative flex items-stretch w-full">
         <input
           v-model="state.email"
-          class="input-field"
+          class="input-field !w-[auto]"
           id="email"
           type="email"
           placeholder="Enter your email"
@@ -103,171 +103,130 @@
 </template>
 
 
-<script>
-import { ref, computed, reactive, watch } from "vue";
+<script setup>
+import { ref, computed, reactive, onMounted } from "vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import useValidate from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
+import { useUserStore } from "../stores/user";
 
-export default {
-  name: "emailTab",
-  setup() {
-    const user = ref(null);
-    const state = reactive({
-      email: "",
-      newEmail: "",
-      password: "",
-    });
-    const linkSent = ref(false);
-    const linkSent2 = ref(false);
-    const isVerifyEmail = ref(true);
-    const isEmailVerified = ref(false);
-    const errorMessage = ref("");
-    const newEmailInput = ref(false);
-    const isVerify = ref(false);
-    const isSave = ref(true);
-    const updateButton = ref(true);
-    const verifyEmailButton = ref(true);
-    const newEmailInputAndPasswordInput = ref(false);
-    // const password = ref(false);
-    const sameAsDefaultEmail = () => {
-      if (state.newEmail === state.email) {
-        return false; // Return false to indicate validation error
-      }
-      return true; // Return true to indicate validation success
-    };
-    const rules = computed(() => {
-      return {
-        newEmail: {
-          required: helpers.withMessage("Email required", required),
-          email: helpers.withMessage("Must be a valid email", email),
-          $autoDirty: true,
-          sameAsDefaultEmail: helpers.withMessage(
-            "Email already Registered! Try another one",
-            sameAsDefaultEmail
-          ),
-        },
-        password: {
-          required: helpers.withMessage("Password required", required),
-        },
-      };
-    });
-
-    const v$ = useValidate(rules, state);
-
-    firebase.auth().onAuthStateChanged((firebaseUser) => {
-      user.value = firebaseUser;
-      if (user.value) {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(user.value.uid)
-          .get()
-          .then((doc) => {
-            state.email = doc.data().Email;
-            isEmailVerified.value = user.value.emailVerified;
-          });
-      }
-    });
-
-    const sendVerificationCode = async () => {
-      if (user.value) {
-        newEmailInputAndPasswordInput.value = false;
-        updateButton.value = true;
-        verifyEmailButton.value = false;
-        linkSent.value = true;
-        isVerifyEmail.value = false;
-        firebase
-          .auth()
-          .currentUser.sendEmailVerification()
-          .then(() => {
-            console.log("Verification code sent to the user's email.");
-          })
-          .catch((error) => {
-            console.error("Error sending verification code:", error);
-          });
-      }
-    };
-    const sendVerificationCode2 = async () => {
-       
-      const userData = await v$.value.password.$validate();
-      if (userData) {
-        const user = firebase.auth().currentUser;
-        newEmailInputAndPasswordInput.value = false;
-        updateButton.value = false;
-        linkSent2.value = true;
-        isVerifyEmail.value = false;
-        
-        const userRef = firebase
-            .firestore()
-            .collection("users")
-            .doc(user.uid);
-          await userRef.update({
-            Email: state.newEmail,
-          });
-         
-          const credential = firebase.auth.EmailAuthProvider.credential(
-          user.email,
-          state.password
-        );
-        user
-          .reauthenticateWithCredential(credential)
-          .then(async () => {
-            user
-              .updateEmail(state.newEmail)
-              .then(() => {
-                user.sendEmailVerification();
-                console.log("Email updated successfully");
-              })
-              .catch((error) => {
-                console.error("Error updating email:", error);
-              });
-              
-          })
-
-          .catch((error) => {
-            console.error("Error re-authenticating user:", error);
-          });
-      }
-    };
-
-    const showNewEmailInput = () => {
-      newEmailInputAndPasswordInput.value = true;
-      newEmailInput.value = true;
-      // password.value = true;
-      updateButton.value = false;
-      linkSent.value = false;
-    };
-    const saveButton = async () => {
-      const userData = await v$.value.newEmail.$validate();
-      if (userData) {
-        isVerify.value = true;
-        isSave.value = false;
-      }
-    };
-
-    return {
-      state,
-      isVerify,
-      linkSent,
-      linkSent2,
-      isSave,
-      user,
-      sendVerificationCode,
-      sendVerificationCode2,
-      newEmailInputAndPasswordInput,
-      newEmailInput,
-      showNewEmailInput,
-      v$,
-      isVerifyEmail,
-      saveButton,
-      updateButton,
-      verifyEmailButton,
-      isEmailVerified,
-      // password,
-      errorMessage,
-    };
-  },
+const userStore = useUserStore();
+const loggedInUserEmail = userStore.loggedInUserData;
+const state = reactive({
+  email: loggedInUserEmail.Email,
+  newEmail: "",
+  password: "",
+});
+const linkSent = ref(false);
+const linkSent2 = ref(false);
+const isVerifyEmail = ref(true);
+const isEmailVerified = ref(false);
+const errorMessage = ref("");
+const newEmailInput = ref(false);
+const isVerify = ref(false);
+const isSave = ref(true);
+const updateButton = ref(true);
+const verifyEmailButton = ref(true);
+const newEmailInputAndPasswordInput = ref(false);
+// const password = ref(false);
+const sameAsDefaultEmail = () => {
+  if (state.newEmail === state.email) {
+    return false; // Return false to indicate validation error
+  }
+  return true; // Return true to indicate validation success
 };
+const rules = computed(() => {
+  return {
+    newEmail: {
+      required: helpers.withMessage("Email required", required),
+      email: helpers.withMessage("Must be a valid email", email),
+      $autoDirty: true,
+      sameAsDefaultEmail: helpers.withMessage(
+        "Email already Registered! Try another one",
+        sameAsDefaultEmail
+      ),
+    },
+    password: {
+      required: helpers.withMessage("Password required", required),
+    },
+  };
+});
+
+const v$ = useValidate(rules, state);
+
+const sendVerificationCode = async () => {
+  if (user.value) {
+    newEmailInputAndPasswordInput.value = false;
+    updateButton.value = true;
+    verifyEmailButton.value = false;
+    linkSent.value = true;
+    isVerifyEmail.value = false;
+    firebase
+      .auth()
+      .currentUser.sendEmailVerification()
+      .then(() => {
+        window.alert("Verification code sent to the user's email.");
+      })
+      .catch((error) => {
+        window.alert("Error sending verification code:", error);
+      });
+  }
+};
+const sendVerificationCode2 = async () => {
+  const userData = await v$.value.password.$validate();
+  if (userData) {
+    const user = firebase.auth().currentUser;
+    newEmailInputAndPasswordInput.value = false;
+    updateButton.value = false;
+    linkSent2.value = true;
+    isVerifyEmail.value = false;
+
+    const userRef = firebase.firestore().collection("users").doc(user.uid);
+    await userRef.update({
+      Email: state.newEmail,
+    });
+
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      state.password
+    );
+    user
+      .reauthenticateWithCredential(credential)
+      .then(async () => {
+        user
+          .updateEmail(state.newEmail)
+          .then(() => {
+            user.sendEmailVerification();
+            window.alert("Email updated successfully");
+          })
+          .catch((error) => {
+            window.alert("Error updating email:", error);
+          });
+      })
+
+      .catch((error) => {
+        window.alert("Error re-authenticating user:", error);
+      });
+  }
+};
+
+const showNewEmailInput = () => {
+  newEmailInputAndPasswordInput.value = true;
+  newEmailInput.value = true;
+  // password.value = true;
+  updateButton.value = false;
+  linkSent.value = false;
+};
+const saveButton = async () => {
+  const userData = await v$.value.newEmail.$validate();
+  if (userData) {
+    isVerify.value = true;
+    isSave.value = false;
+  }
+};
+onMounted(async () => {
+  await userStore.initializeUser();
+  isEmailVerified.value = userStore.emailVerified;
+});
 </script>

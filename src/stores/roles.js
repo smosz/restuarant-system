@@ -8,7 +8,7 @@ export const useRoleStore = defineStore('role', {
   state: () => ({
     roles: [],
     selectedRole: "",
-    availableoRles: [],
+    availableRoles: [],
   }),
 
   actions: {
@@ -18,7 +18,7 @@ export const useRoleStore = defineStore('role', {
         const rolesSnapshot = await db.collection('roles').get();
         this.roles = rolesSnapshot.docs.map((doc) => doc.data());
       } catch (error) {
-        console.error('Error fetching roles:', error);
+        window.alert('Error fetching roles');
       }
     },
     
@@ -28,7 +28,7 @@ export const useRoleStore = defineStore('role', {
         const roleNames = rolesSnapshot.docs.map((doc) => doc.data().name);
         return roleNames;
       } catch (error) {
-        console.error("Error fetching role names:", error);
+        window.alert("Error fetching role names");
         return [];
       }
     },
@@ -38,7 +38,7 @@ export const useRoleStore = defineStore('role', {
         const roleNames = await this.fetchRoleNames(); // Corrected
         this.availableRoles = roleNames;
       } catch (error) {
-        console.error("Error fetching available roles:", error);
+        window.alert("Error fetching available roles");
       }
     },
     

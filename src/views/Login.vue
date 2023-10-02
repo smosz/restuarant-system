@@ -53,13 +53,9 @@
                 <span v-else> Login </span>
               </button>
             </div>
-            <p class="text-blue-900">
+            <p class="text-blue-900 ">
               Don't have an Account?
-              <router-link
-                to="/signup"
-                class="text-blue-500 font-bold underline cursor-pointer"
-                >Signup</router-link
-              >
+              <span class="text-red-500">Contact Admin</span>
             </p>
             <!-- <div v-show="state.error" class="error-text">{{ state.errorMsg }}</div> -->
             <div v-if="state.error" class="error-text">{{ state.errorMsg }}</div>
@@ -68,11 +64,6 @@
       </div>
     </div>
   </div>
-  <!-- <keep-alive>
-    <Modal @close="toggleModal" :modalActive="modalActive">
-      <Vue3Lottie :animationData="thank" :height="200" />
-    </Modal>
-  </keep-alive> -->
 </template>
 
 <script>
@@ -80,10 +71,8 @@ import { ref, reactive, computed } from "vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { useRouter } from "vue-router";
-// import Modal from "../components/Modal.vue";
-// import thank from "../assets/thank.json";
 import load from "../assets/load.json";
-// import { useStore } from "vuex";
+import {useUserStore} from "../stores/user.js";
 import useValidate from "@vuelidate/core";
 import { email, helpers } from "@vuelidate/validators";
 export default {
@@ -96,6 +85,7 @@ export default {
       error: "",
       errorMsg: "",
     });
+    const useUser = useUserStore();
     const router = useRouter();
     const loading = ref(false);
     // const store = useStore();
@@ -116,61 +106,16 @@ export default {
         document.getElementById("btn").style.background = "none";
       }
     };
-    // const modalActive = ref(true);
-    // const toggleModal = () => {
-    //   modalActive.value = !modalActive.value;
-    // };
+
     const v$ = useValidate(rules, state);
-
-    // const loginIn = async () => {
-
-    //   const userData = await v$.value.$validate();
-    //   if (userData) {
-    //     loading.value =true
-    //     try {
-    //       await store.dispatch("logIn", {
-    //         email: state.email,
-    //         password: state.password,
-    //       });
-
-    //       router.push({ name: "Dashboard" });
-    //       alert('hello')
-
-    //     } catch (err) {
-    //       loading.value=false
-    //       state.error = true;
-    //       state.errorMsg = err;
-    //       switch (err.code) {
-    //         case "auth/invalid-email":
-    //           state.errorMsg = "Invalid email";
-    //           break;
-    //         case "auth/user-not-found":
-    //           state.errorMsg = "No account with that email was found";
-    //           break;
-    //         case "auth/wrong-password":
-    //           state.errorMsg = "Incorrect password";
-    //           break;
-    //         default:
-    //           state.errorMsg = "Connection to Server cut down";
-    //           break;
-    //       }
-    //     }
-    //   } else {
-    //     if (state.terms === false) {
-    //       alert("Cant proceed without agreeing on Terms");
-    //     } else {
-    //       alert("form invaild");
-    //     }
-    //   }
-    // };
     const loginIn = async () => {
       const userData = await v$.value.$validate();
       if (userData) {
         loading.value = true;
         try {
           await firebase.auth().signInWithEmailAndPassword(state.email, state.password);
-          router.push({ name: "Dashboard" });
-          console.log(firebase.auth().currentUser.uid);
+          useUser.user = firebase.auth().currentUser;
+          router.replace({ name: "Pos" });
         } catch (err) {
           loading.value = false;
           state.error = true;
@@ -199,11 +144,8 @@ export default {
     return {
       state,
       v$,
-      // modalActive,
       loading,
-      // thank,
       load,
-      // toggleModal,
       btnColor,
       loginIn,
     };

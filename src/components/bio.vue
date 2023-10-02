@@ -25,18 +25,20 @@
         >
       </div>
       <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6">
-        <dt class="text-sm font-medium text-gray-500">Favourite Food Types</dt>
-        <input
-          v-model="state.foodTypes"
-          class="input-fields"          
-          id="food"
-          type="text"
-          placeholder="List down your Favourite Food Types"
-        />
+        <dt class="text-sm font-medium text-gray-500">Role</dt>
+        <select
+      id="role"
+      v-model="state.role"
+      :class="v$.role.$error === true ? 'text-fields-error' : 'input-fields'"
+    >
+      <!-- Populate options from the roles array -->
+      <option value="" disabled>Select a role</option>
+      <option v-for="role in userRoles.availableRoles" :key="role" :value="role">{{ role }}</option>
+    </select>
         <br />
-  <span class="error-text" v-if="v$.foodTypes.$error">
+  <span class="error-text" v-if="v$.role.$error">
     <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
-    {{ v$.foodTypes.$errors[0].$message }}</span>
+    {{ v$.role.$errors[0].$message }}</span>
       </div>
       <number  />
       <div class="bg-white flex justify-end ">
@@ -50,34 +52,31 @@
     </dl>
   </div>
 </template>
-<script>
+<script setup>
 import ProfileImage from "../components/ProfileImage.vue";
 import CoverImage from "../components/CoverImage.vue";
-import { ref, computed, reactive } from "vue";
+import { ref, computed, reactive,onMounted } from "vue";
 import number from "../components/number.vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import useValidate from "@vuelidate/core";
+import {useRoleStore} from "../stores/roles.js";
+import { useUserStore } from "../stores/user";
 import {
   required,
   minLength,
   alpha,
   helpers,
 } from "@vuelidate/validators";
-export default {
-  name: "bio",
-  components: {
-    CoverImage,
-    ProfileImage,
-    number
-  },
-  setup() {
-  const user = ref(null);
+const userRoles = useRoleStore();
+  const userStore = useUserStore();
+  const loggedInUser = userStore.loggedInUserData
   const state = reactive({
-    username: "",
-    foodTypes:'',
+    username: loggedInUser.Username,
+    role:loggedInUser.Role,
   });
 
+ 
   const rules = computed(() => {
     return {
       username: {
@@ -86,48 +85,28 @@ export default {
         alpha: helpers.withMessage("Contains only alphabetical letters", alpha),
         $autoDirty: true,
       },
-      foodTypes: {
-      validFormat: helpers.withMessage(
-        "Use only letters and a single comma for separating food types.",
-        (value) => value === "" || /^[a-zA-Z]+(,[a-zA-Z]+)*$/.test(value)
-      ),
+      role: {
+      required: helpers.withMessage("Role required", required),
       $autoDirty: true,
     },
     };
   });
   const v$ = useValidate(rules, state);
 
-  firebase.auth().onAuthStateChanged((firebaseUser) => {
-    user.value = firebaseUser;
-    if (user.value) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(user.value.uid)
-        .get()
-        .then((doc) => {
-          state.username = doc.data().Username;
-          state.foodTypes = doc.data().Food_Types
-        });
-    }
-  });
-
   const saveSettings = async () => {
     
     const userData = await v$.value.username.$validate();
-    const userDataFood = await v$.value.foodTypes.$validate();
+    const userDataRole = await v$.value.role.$validate();
     // Update the user's document in Firestore
     
-    if (userData && userDataFood) {
-      const foodTypesArray = state.foodTypes.trim().replace(/\s+/g, ',').split(',');
-    const cleanedFoodTypesArray = foodTypesArray.filter(type => type !== '');
+    if (userData && userDataRole) {
       firebase
         .firestore()
         .collection("users")
         .doc(user.value.uid)
         .update({
           Username: state.username,
-          Food_Types: cleanedFoodTypesArray
+          Role: state.role
         })
         .then(() => {
           const alert = document.createElement("div");
@@ -162,13 +141,11 @@ export default {
       displayName: state.username,
     });
   };
+  onMounted(async() => {
+    await userStore.initializeUser();
+    await userRoles.fetchAvailableRoles();
+});
 
-  return {
-    user,
-    state,
-    v$,
-    saveSettings,
-  };
-}
-};
+
+
 </script>

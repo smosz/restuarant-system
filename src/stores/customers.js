@@ -12,11 +12,15 @@ export const useCustomerStore = defineStore('customer', {
       id: '', // Unique ID for the new customer
       name: '',
       number: '',
+      
     },
+    customerWithNa: '', 
   }),
   getters: {
     // Getter methods for accessing customer data
     // You can define getters here if needed
+      // Getter methods for accessing customer data
+      
   },
   actions: {
     // Actions for managing customers
@@ -24,11 +28,12 @@ export const useCustomerStore = defineStore('customer', {
         try {
             const customersSnapshot = await db.collection("customers").get();
             this.customers = customersSnapshot.docs.map((doc) => doc.data())
+            this.customerWithNa = this.customers.filter(customer => customer.number === "N/A");
           } catch (error) {
-            console.error("Error fetching customers:", error);
+            window.alert("Error fetching customers");
           }
     },
-
+  
     async addCustomer() {
       try {
         // Generate a unique ID for the new customer
@@ -50,7 +55,7 @@ export const useCustomerStore = defineStore('customer', {
           number: '',
         };
       } catch (error) {
-        console.error('Error adding customer:', error);
+        window.alert('Error adding customer');
       }
     },
     

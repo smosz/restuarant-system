@@ -16,11 +16,15 @@ export const useCategoryStore = defineStore('category', {
     async fetchCategories() {
       try {
         const categoriesSnapshot = await db.collection('categories').get();
-        this.categories = categoriesSnapshot.docs.map((doc) => doc.data().name);
+        const categoriesData = categoriesSnapshot.docs.map((doc) => doc.data().name);
+        
+        // Sort the categories alphabetically
+        this.categories = categoriesData.sort();
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        window.alert('Error fetching categories');
       }
     },
+    
     
     async fetchCategoryNames() {
       try {
@@ -28,7 +32,7 @@ export const useCategoryStore = defineStore('category', {
         const categoryNames = categoriesSnapshot.docs.map((doc) => doc.data().name);
         return categoryNames;
       } catch (error) {
-        console.error("Error fetching category names:", error);
+        window.alert("Error fetching category names");
         return [];
       }
     },
@@ -36,9 +40,9 @@ export const useCategoryStore = defineStore('category', {
     async fetchAvailableCategories() {
       try {
         const categoryNames = await this.fetchCategoryNames(); // Corrected
-        this.availableCategories = categoryNames;
+        this.availableCategories = categoryNames.sort();
       } catch (error) {
-        console.error("Error fetching available categories:", error);
+        window.alert("Error fetching available categories");
       }
     },
     

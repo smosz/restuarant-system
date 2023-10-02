@@ -108,12 +108,9 @@ const updateCategory = async () => {
         updating.value = false;
       // Set a success message
       successMessage.value = "Category updated successfully";
-      setTimeout(() => {
-        if (props.editingCategory) {
-          // Reload the page
+      
           location.reload();
-        }
-      }, 5000);
+        
     }
   } catch (error) {
     updating.value = false;

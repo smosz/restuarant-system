@@ -1,8 +1,8 @@
 <template>
-    <div class="dashboard-container">
+    <div class="dashboard-container no-print">
       <navBar />
       <div class="flex bg-gradient-to-r from-purple-200 to-blue-200">
-<productDisplay class="pl-4 pt-4  h-screen w-[64%]"/>
+<productDisplay class="pl-4 pt-4  h-screen w-[64%] no-print"/>
   <addCat/>
       </div>
     </div>

@@ -106,7 +106,7 @@ export default {
     const uploadProfilePhoto = async (file) => {
       const user = firebase.auth().currentUser;
       if (!user) {
-        console.error("User not authenticated.");
+        window.alert("User not authenticated.");
         return;
       }
       const storageRef = firebase
@@ -121,11 +121,10 @@ export default {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         (error) => {
-          console.error(error);
+          window.alert(error);
         },
         () => {
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            console.log(`Cover photo uploaded: ${downloadURL}`);
             profilePhotoPreviewUrl.value = downloadURL;
             updateProfilePhoto(downloadURL);
           });
@@ -135,7 +134,7 @@ export default {
     const updateProfilePhoto = async (downloadURL) => {
       const user = firebase.auth().currentUser;
       if (!user) {
-        console.error("User not authenticated.");
+        window.alert("User not authenticated.");
         return;
       }
       const userRef = firebase.firestore().collection("users").doc(user.uid);
@@ -143,9 +142,8 @@ export default {
         await userRef.update({
           profilePhotoUrl: downloadURL,
         });
-        console.log("Profile photo URL updated in user's document");
       } catch (error) {
-        console.error(error);
+        window.alert(error);
       }
     };
     const changeProfilePhoto = () => {

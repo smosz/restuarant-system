@@ -142,7 +142,8 @@
         </button>
       </div>
       <span class="w-max"  v-if=" !v$.confirmationCode.$error"
-        ><p class="font-bold">A 6-Digit Code has been sent to <h1 class="font-bold text-red-500">{{ state.newNumber }}</h1></p>
+        ><p class="font-bold">A 6-Digit Code has been sent to <span><h1 class="font-bold text-red-500">{{ state.newNumber }}</h1></span> 
+        </p>
         </span
       >
       <span
@@ -164,8 +165,8 @@
     
   </div>
 </template>
-<script>
-import { ref, computed, reactive } from "vue";
+<script setup>
+import { ref, computed, reactive,onMounted } from "vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import useValidate from "@vuelidate/core";
@@ -177,14 +178,13 @@ import {
   maxLength,
   helpers,
 } from "@vuelidate/validators";
-import { getMultiFactorResolver } from "firebase/auth";
+import { useUserStore } from "../stores/user";
 
-export default {
-  name: "number",
-  setup() {
+const userStore = useUserStore();
+const loggedInUserNumber = userStore.loggedInUserData;
     const user = ref(null);
     const state = reactive({
-      number: "",
+      number:loggedInUserNumber.Phone_Number,
       newNumber: "",
       confirmationCode: "",
     });
@@ -257,20 +257,6 @@ export default {
 
     const v$ = useValidate(rules, state);
 
-    firebase.auth().onAuthStateChanged((firebaseUser) => {
-      user.value = firebaseUser;
-      if (user.value) {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(user.value.uid)
-          .get()
-          .then((doc) => {
-            state.number = doc.data().Phone_Number;
-            isPhoneVerified.value = doc.data().isPhoneVerified || false;
-          });
-      }
-    });
 
     const verifyButtonText = computed(() => {
       if (isVerifyButtonDisabled.value) {
@@ -305,7 +291,7 @@ export default {
               isRecaptchaRendered = true;
             })
             .catch((error) => {
-              console.log("Error rendering reCAPTCHA:", error);
+              window.alert("Error rendering reCAPTCHA");
             });
         }
       }
@@ -374,7 +360,7 @@ export default {
             sentCode.value = null;
           })
           .catch((error) => {
-            console.log(error);
+            window.alert(error);
           });
       }
     };
@@ -390,14 +376,13 @@ export default {
           .signInWithPhoneNumber(phoneNumber, appVerifier);
         sentCode.value = confirmationResult.verificationId; // store sent code
         isChangeNumberMode.value = false;
-        console.log(sentCode.value);
       } catch (error) {
         if (error.code === "auth/too-many-requests") {
-          console.log(
+          window.alert(
             "Too many verification requests. Please try again later."
           );
         } else {
-          console.log(error);
+          window.alert(error);
         }
       }
     };
@@ -424,20 +409,20 @@ export default {
           isverifyMode.value = false;
         } catch (error) {
           if (error.code === "auth/invalid-verification-code") {
-            console.log("Invalid verification code. Please try again.");
+            window.alert("Invalid verification code. Please try again.");
             stopCountdownAndHideRecaptchanumber();
             isconfirmationModenumber.value = false;
             isPhoneVerified.value = false;
             isretryMode.value = true; // Enable retry mode
             retryCount.value += 1;
             if (retryCount.value > maxRetryCount) {
-              console.log(
+              window.alert(
                 "Exceeded maximum retry count. Please try again later."
               );
               isretryMode.value = false;
             }
           } else {
-            console.log(error);
+            window.alert(error);
           }
         }
       }
@@ -473,18 +458,18 @@ export default {
 
           const phoneNumbernew = `+256${state.newNumber}`;
           renderRecaptcha();
-          console.log(phoneNumbernew);
+         
           const confirmationResultnew = await firebase
             .auth()
             .signInWithPhoneNumber(phoneNumbernew, appVerifier);
           sentCodenew.value = confirmationResultnew.verificationId;
         } catch (error) {
           if (error.code === "auth/too-many-requests") {
-            console.log(
+            window.alert(
               "Too many verification requests. Please try again later."
             );
           } else {
-            console.log(error);
+            window.alert(error);
           }
         }
       }
@@ -514,43 +499,19 @@ export default {
           state.number = state.newNumber;
         } catch (error) {
           if (error.code === "auth/invalid-verification-code") {
-            console.log("Invalid verification code. Please try again.");
+            window.alert("Invalid verification code. Please try again.");
             stopCountdownAndHideRecaptchanew();
             isconfirmationModenewNumber.value = false;
             isPhoneVerified.value = false;
           } else {
-            console.log(error);
+            window.alert(error);
           }
         }
       }
     };
 
-    return {
-      user,
-      state,
-      v$,
-      isPhoneVerified,
-      isretryMode,
-      retryVerification,
-      formatPhoneNumber,
-      isconfirmationModenumber,
-      isconfirmationModenewNumber,
-      isChangeNumberMode,
-      changeNumber,
-      isverifyMode,
-      isChangeButtonDisabled,
-      isVerifyButtonDisabled,
-      cancelVerificationCode,
-      verifynewNumber,
-      verifynumber,
-      verifyCodenewNumber,
-      isVerifyNewButtonDisabled,
-      verifyCodenumber,
-      countdown,
-      verifyButtonText,
-      iscountDown,
-      issame,
-    };
-  },
-};
+    onMounted(async () => {
+  await userStore.initializeUser();
+  isPhoneVerified.value = userStore.isPhoneVerified;
+});
 </script>

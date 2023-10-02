@@ -122,7 +122,7 @@ updating.value = false;
     } catch (error) {
       updating.value = false;
        message.value = "Customer registered failed";
-      console.error("Error registering customer:", error);
+       window.alert("Error registering customer");
     }
   }
   

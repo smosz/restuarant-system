@@ -42,7 +42,7 @@ export const useProductStore = defineStore('product', {
           };
         });
       } catch (error) {
-        console.error("Error fetching products:", error);
+        window.alert("Error fetching products");
       }
     },
     
@@ -60,29 +60,36 @@ export const useProductStore = defineStore('product', {
         });
       }
     },
-    addToCart(product) {
-      // Check if the product is already in the cart based on a unique identifier (e.g., sku)
-      const existingCartItem = this.cart.find(item => item.product.sku === product.sku);
-    
-      if (existingCartItem) {
-        // Check if the quantity is less than the available stock
-        if (existingCartItem.quantity < product.stockQuantity) {
-          // If the quantity is less than the available stock, increase it
-          existingCartItem.quantity += 1;
-        } else {
-          // If the quantity is equal to the available stock, show a message or handle it as needed
-          window.alert(`Cannot add more of ${product.name} to the cart. Stock is exhausted.`);
-        }
+  addToCart(product) {
+    // Check if the product is already in the cart based on a unique identifier (e.g., sku)
+    const existingCartItem = this.cart.find(item => item.product.sku === product.sku);
+  
+    if (existingCartItem) {
+      // Check if the quantity is less than the available stock
+      if (existingCartItem.quantity < product.stockQuantity) {
+        
+        // If the quantity is less than the available stock, increase it
+        existingCartItem.quantity += 1;
+
       } else {
-        // If the product is not in the cart, add it as a new item
+
+        // If the quantity is equal to or less than zero, show a message
+        window.alert(`Cannot add more of ${product.name} to the cart. Stock is exhausted.`);
+      }
+    } else {
+      // If the product is not in the cart and stock quantity is greater than zero, add it as a new item
+      if (product.stockQuantity > 0) {
         this.cart.push({
           product,
           quantity: 1,
         });
+      } else {
+        window.alert(`Cannot add ${product.name} to the cart. Stock is exhausted.`);
       }
-      // Save the updated cart data to localStorage
-      localStorage.setItem('cart', JSON.stringify(this.cart));
-    },
+    }
+    // Save the updated cart data to localStorage
+    localStorage.setItem('cart', JSON.stringify(this.cart));
+  },
     removeFromCart(cartItem) {
       // Remove the specified cart item from the cart
       const index = this.cart.indexOf(cartItem);
