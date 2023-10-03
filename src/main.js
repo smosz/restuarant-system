@@ -4,10 +4,7 @@ import router from './router';
 import { Icon } from '@iconify/vue';
 import Vue3Lottie from 'vue3-lottie';
 import 'vue3-lottie/dist/style.css';
-import 'maz-ui/css/main.css';
 import ElementPlus from 'element-plus';
-import MazInput from 'maz-ui/components/MazInput';
-import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput';
 import './style.css';
 import { createPinia } from 'pinia';
 import firebase from 'firebase/compat/app';
@@ -25,8 +22,6 @@ firebase.auth().onAuthStateChanged((user) => {
       .use(ElementPlus)
       .use(createPinia())
       .component('Icon', Icon)
-      .component('MazInput', MazInput)
-      .component('MazPhoneNumberInput', MazPhoneNumberInput)
       .mount('#app');
 
   }

@@ -114,7 +114,7 @@
               v-model="editingProduct.amount"
               type="text"
               id="amount"
-              class="bg-gray-200 px-2 py-1 rounded-sm w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+              class="bg-gray-200 px-2 py-1 rounded-sm w-full text-gray-700 mr-3leading-tight focus:outline-none"
               readonly
             />
           </div>
