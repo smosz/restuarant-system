@@ -221,13 +221,13 @@
   @apply inline-flex items-center
 }
 .nav-item{
-  @apply flex flex-1 items-center justify-center sm:items-stretch sm:justify-start
+  @apply flex flex-1 items-center justify-center sm:justify-start
 }
 .nav-item .router-link-active{
   @apply bg-gray-900 text-white
 }
 .profile{
-  @apply overflow-hidden h-screen flex flex-col justify-center bg-[url('src/assets/1.jpeg')] bg-no-repeat bg-cover 
+  @apply overflow-hidden h-screen flex flex-col justify-center bg-[url('src/assets/wp.webp')] bg-no-repeat bg-cover 
 }
 .settings{
   @apply  overflow-hidden flex flex-col justify-center bg-[url('src/assets/3.jpg')] bg-no-repeat bg-cover 
@@ -298,7 +298,10 @@
 .dropdown {
   @apply absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none
 }
-
+.dropdown2 {
+  
+  @apply absolute hidden z-10 mt-2 ml-[-11px] w-28 origin-top-right rounded-md bg-white divide-y divide-gray-100 shadow dark:bg-gray-700
+}
 .drp-item {
   @apply block  py-2 text-sm text-gray-700 cursor-pointer
 }

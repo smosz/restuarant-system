@@ -22,8 +22,8 @@
         class="flex flex-col lg:flex-row bg-white rounded-xl mx-auto shadow-lg overflow-hidden"
       >
         <div
-          class="w-full lg:w-1/2 flex flex-col items-center justify-center p-32 bg-cover"
-          style="background-image: url('src/assets/photo.jpg')"
+          class="w-full lg:w-1/2 flex flex-col items-center justify-center p-32 bg-cover bg-center"
+          style="background-image: url('src/assets/49.jpg')"
         ></div>
         <div class="w-full lg:w-1/2 py-16 px-12">
           <h1 class="text-blue-900 font-bold uppercase text-center text-3xl mb-3">

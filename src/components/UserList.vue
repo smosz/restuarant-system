@@ -85,13 +85,13 @@
                   <span>Phone Number</span>
                 </div>
               </th>
-              <th
+              <!-- <th
                 class="px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span>Password</span>
                 </div>
-              </th>
+              </th> -->
               <th
                 class="px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
@@ -99,11 +99,11 @@
                   <span>Role</span>
                 </div>
               </th>
-              <th
+              <!-- <th
                 class="no-print px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Action
-              </th>
+              </th> -->
             </tr>
           </thead>
           <tbody>
@@ -124,13 +124,13 @@
               <td class="px-6 py-4 border border-gray-300">
                 {{ user.Phone_Number }}
               </td>
-              <td class="px-6 py-4 border border-gray-300">
+              <!-- <td class="px-6 py-4 border border-gray-300">
                 {{ user.Password }}
-              </td>
+              </td> -->
               <td class="px-6 py-4 border border-gray-300">
                 {{ user.Role }}
               </td>
-              <td class="no-print py-4 border border-gray-300">
+              <!-- <td class="no-print py-4 border border-gray-300">
                 <div class="flex space-x-2 justify-center">
                   <button
                     @click="deleteUser(user)"
@@ -139,7 +139,7 @@
                     Delete
                   </button>
                 </div>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </table>
@@ -343,44 +343,44 @@ const fetchUsersData = async () => {
   }
 };
 
-// Function to close the delete confirmation modal
-const cancelDelete = () => {
-  deletingUser.value = null;
-  showDeleteConfirmation.value = false;
-};
-// Function to open the delete confirmation modal
-const deleteUser = (userToDelete) => {
-  // Set the User to be deleted
-  deletingUser.value = userToDelete;
-  // Open the delete confirmation modal
-  showDeleteConfirmation.value = true;
-};
+// // Function to close the delete confirmation modal
+// const cancelDelete = () => {
+//   deletingUser.value = null;
+//   showDeleteConfirmation.value = false;
+// };
+// // Function to open the delete confirmation modal
+// const deleteUser = (userToDelete) => {
+//   // Set the User to be deleted
+//   deletingUser.value = userToDelete;
+//   // Open the delete confirmation modal
+//   showDeleteConfirmation.value = true;
+// };
 
-// Function to delete the User
-const deleteConfirmed = () => {
-  const userToDelete = deletingUser.value;
-  if (userToDelete) {
-    const userIdToDelete = userToDelete.uid;
-    firebase.auth()
-      .delete(userIdToDelete)
-      .then(() => {
-        // Use Firebase to delete the specific user from Firestore
-        return db.collection("users").doc(userIdToDelete).delete();
-      })
-      .then(() => {
-        // Show a success message or perform any other actions if needed
-        window.alert("User deleted successfully");
-        // Close the delete confirmation modal
-        showDeleteConfirmation.value = false;
-        // Fetch the updated list of users (if needed)
-        fetchUsersData();
-      })
-      .catch((error) => {
-        // Handle the error
-        window.alert("Error deleting user");
-      });
-  }
-};
+// // Function to delete the User
+// const deleteConfirmed = () => {
+//   const userToDelete = deletingUser.value;
+//   if (userToDelete) {
+//     const userIdToDelete = userToDelete.uid;
+//     firebase.auth()
+//       .delete(userIdToDelete)
+//       .then(() => {
+//         // Use Firebase to delete the specific user from Firestore
+//         return db.collection("users").doc(userIdToDelete).delete();
+//       })
+//       .then(() => {
+//         // Show a success message or perform any other actions if needed
+//         window.alert("User deleted successfully");
+//         // Close the delete confirmation modal
+//         showDeleteConfirmation.value = false;
+//         // Fetch the updated list of users (if needed)
+//         fetchUsersData();
+//       })
+//       .catch((error) => {
+//         // Handle the error
+//         window.alert("Error deleting user");
+//       });
+//   }
+// };
 
 // Function to open the User registration modal
 const openUserRegistrationModal = () => {

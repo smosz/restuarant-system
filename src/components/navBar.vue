@@ -1,21 +1,21 @@
 <template>
-  <nav class="bg-gray-800 no-print">
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+  <nav class="bg-orange-200 no-print shadow-md">
+    <div class="mx-auto  px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
         <div class="nav-item">
           <div class="flex flex-shrink-0 items-center">
             <img
-              class="block h-8 w-auto"
-              src="../assets/res.png"
-              alt="Your Company"
+              class="block h-16 w-auto"
+              src="../assets/imp.png"
+              alt="Company"
             />
           </div>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
-              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+              <!-- Current: "bg-gray-900 text-white", Default: " hover:bg-gray-700 hover:text-white" -->
               <router-link
                 :to="{ name: 'Dashboard' }"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Dashboard</router-link
               >
               <div
@@ -25,7 +25,7 @@
                   'active-categories': isCategoriesActive,
                   'active-add-category': isAddCategoryActive,
                 }"
-                class="crelative group text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class="crelative group  hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 @mouseover="isHovered = true"
                 @mouseleave="isHovered = false"
               >
@@ -33,7 +33,7 @@
                   ><span>Products</span>
                   <!-- SVG dropdown icon -->
                   <svg
-                    class="w-4 h-4 ml-1 text-gray-300 mt-[3px] transition-transform transform rotate-0 group-hover:rotate-180"
+                    class="w-4 h-4 ml-1  mt-[3px] transition-transform transform rotate-0 group-hover:rotate-180"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -48,7 +48,14 @@
 
                 <!-- Dropdown menu -->
                 <div
-                  class="hidden z-10 absolute left-[12rem] mt-0 rounded-md bg-white divide-y divide-gray-100 shadow dark:bg-gray-700"
+                  
+                  id="drp"
+              class="dropdown2"
+              role="menu"
+              
+              aria-orientation="vertical"
+              aria-labelledby="user-menu-button"
+              tabindex="-1"
                 >
                   <ul
                     class="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -58,28 +65,28 @@
                     <li class="mb-4">
                       <router-link
                         :to="{ name: 'Allproducts' }"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         >All Products</router-link
                       >
                     </li>
                     <li class="mb-4">
                       <router-link
                         :to="{ name: 'Addproduct' }"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         >Add Product</router-link
                       >
                     </li>
                     <li class="mb-4">
                       <router-link
                         :to="{ name: 'Categories' }"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         >Categories</router-link
                       >
                     </li>
                     <!-- <li class="mb-4">
                       <router-link
                         :to="{ name: 'Addcategory' }"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         >Add Category</router-link
                       >
                     </li> -->
@@ -89,27 +96,27 @@
 
               <router-link
                 :to="{ name: 'Customers' }"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Customers</router-link
               >
               <router-link
                 :to="{ name: 'Pos' }"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Pos</router-link
               >
               <router-link
                 :to="{ name: 'Orders' }"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Orders</router-link
               >
               <router-link
                 :to="{ name: 'Roles' }"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Roles</router-link
               >
               <router-link
                 :to="{ name: 'Users' }"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Users</router-link
               >
             </div>
@@ -118,7 +125,7 @@
         <div
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
-          <button
+          <!-- <button
             type="button"
             class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
           >
@@ -137,7 +144,7 @@
                 d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
               />
             </svg>
-          </button>
+          </button> -->
 
           <!-- Profile dropdown -->
           <div class="relative ml-3">
