@@ -27,3 +27,22 @@ npm run dev
 ```sh
 npm run build
 ```
+### import data to firestore
+<!-- const importDataToFirestore = async () => {
+  try {
+        const response = await fetch('/category-list.json'); // Specify the correct path to your JSON file
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const jsonData = await response.json();
+
+        for (const category of jsonData) {
+          const docId = category.id; // Use the "id" as the document ID (UID)
+          const categoryData = { ...category };
+          await db.collection('categories').doc(docId).set(categoryData); // Replace with your Firestore collection name
+        }
+        console.log('Data imported into Firestore successfully.');
+      } catch (error) {
+        console.error('Error importing data into Firestore:', error);
+      } -->
+};
