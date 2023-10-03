@@ -301,6 +301,16 @@ const exportToPDF = () => {
 
   // Save the PDF with a filename
   pdf.save("category-list.pdf");
+  // const jsonData = JSON.stringify(categories.value, null, 2); // Convert your data to JSON format
+
+  // // Create a Blob with the JSON data
+  // const blob = new Blob([jsonData], { type: 'application/json' });
+
+  // // Create a download link and trigger a click event to download the JSON file
+  // const a = document.createElement('a');
+  // a.href = URL.createObjectURL(blob);
+  // a.download = 'category-list.json';
+  // a.click();
 };
 
 const exportToExcel = () => {
