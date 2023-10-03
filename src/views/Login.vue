@@ -71,12 +71,13 @@
 import { ref, reactive, computed, onBeforeUnmount } from "vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import "firebase/compat/firestore";
 import { useRouter } from "vue-router";
 import load from "../assets/load.json";
 import { useUserStore } from "../stores/user.js";
 import useValidate from "@vuelidate/core";
 import { email, helpers } from "@vuelidate/validators";
-
+const db = firebase.firestore();
 const state = reactive({
   email: "",
   password: "",
@@ -192,4 +193,5 @@ onBeforeUnmount(() => {
   stopSlideshow(slideshowInterval);
 
 });
+
 </script>

@@ -2,22 +2,20 @@
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore';
 import { getStorage } from "firebase/storage";
-import { getMessaging,getToken,onMessage } from "firebase/messaging";
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCiZ7xUAM0ZJ21cRklz6_gjHDchdI5dAME",
-  authDomain: "test-7f571.firebaseapp.com",
-  projectId: "test-7f571",
-  storageBucket: "test-7f571.appspot.com",
-  messagingSenderId: "205250354337",
-  appId: "1:205250354337:web:9f2e966a7372624388a4e0"
-};
 
+const firebaseConfig = {
+  apiKey: "AIzaSyAi8icuYtYEMqfxHJyDBGvySeWvxoTiP-Q",
+  authDomain: "impress---pos.firebaseapp.com",
+  projectId: "impress---pos",
+  storageBucket: "impress---pos.appspot.com",
+  messagingSenderId: "561877123322",
+  appId: "1:561877123322:web:f10a1e4f1d93ba74c00943"
+};
 // Create a new Firebase project configuration for registration
 const firebaseConfigForRegistration = {
-  apiKey: "AIzaSyCiZ7xUAM0ZJ21cRklz6_gjHDchdI5dAME",
-  authDomain: "test-7f571.firebaseapp.com",
-  projectId: "test-7f571",
+  apiKey: "AIzaSyAi8icuYtYEMqfxHJyDBGvySeWvxoTiP-Q",
+  authDomain: "impress---pos.firebaseapp.com",
+  projectId: "impress---pos",
   // Add other Firebase config options
 };
 
