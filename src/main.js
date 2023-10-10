@@ -12,17 +12,20 @@ import 'firebase/compat/auth';
 import './firebase/firebaseInit';
 
 
-let app;
+const pinia = createPinia(); // Create the Pinia instance
 
-firebase.auth().onAuthStateChanged((user) => {
+let app;
+firebase.auth().onAuthStateChanged(() => {
   if (!app) {
+  
     app = createApp(App)
       .use(router)
+      .use(pinia)
       .use(Vue3Lottie)
       .use(ElementPlus)
-      .use(createPinia())
       .component('Icon', Icon)
       .mount('#app');
-
   }
 });
+
+export { pinia }; // Export the Pinia instance

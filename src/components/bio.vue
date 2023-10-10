@@ -9,7 +9,7 @@
         <div class="text-sm font-medium text-gray-500 w-[90px]">Profile Picture</div>
         <ProfileImage />
       </div>
-      <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6">
+      <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6" v-if="userStore.loggedInUserData.Role === 'Admin'">
         <dt class="text-sm font-medium text-gray-500">Username</dt>
         <input
           v-model="state.username"
@@ -24,7 +24,7 @@
           {{ v$.username.$errors[0].$message }}</span
         >
       </div>
-      <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6">
+      <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6" v-if="userStore.loggedInUserData.Role === 'Admin'">
         <dt class="text-sm font-medium text-gray-500">Role</dt>
         <select
       id="role"
@@ -40,8 +40,8 @@
     <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
     {{ v$.role.$errors[0].$message }}</span>
       </div>
-      <number  />
-      <div class="bg-white flex justify-end ">
+      <number v-if="userStore.loggedInUserData.Role === 'Admin'" />
+      <div class="bg-white flex justify-end " v-if="userStore.loggedInUserData.Role === 'Admin'">
         <button
         @click="saveSettings"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -70,13 +70,12 @@ import {
 } from "@vuelidate/validators";
 const userRoles = useRoleStore();
   const userStore = useUserStore();
-  const loggedInUser = userStore.loggedInUserData
   const state = reactive({
-    username: loggedInUser.Username,
-    role:loggedInUser.Role,
+    username: '',
+    role:'',
   });
 
- 
+const userInfo = ref(null)
   const rules = computed(() => {
     return {
       username: {
@@ -103,7 +102,7 @@ const userRoles = useRoleStore();
       firebase
         .firestore()
         .collection("users")
-        .doc(user.value.uid)
+        .doc(userStore.loggedInUserData.id)
         .update({
           Username: state.username,
           Role: state.role
@@ -141,8 +140,32 @@ const userRoles = useRoleStore();
       displayName: state.username,
     });
   };
+ 
+
+  
+
+   
   onMounted(async() => {
-    await userStore.initializeUser();
+    const user = firebase.auth().currentUser;
+  if (user) {
+try {
+    const db = firebase.firestore();
+        
+    const userDoc = await db.collection("users").doc(user.uid).get();
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          state.username = userData.Username
+          state.role = userData.Role
+        } else {
+          userInfo.value = null;
+        }
+      } catch (error) {
+        // Handle any errors that occur during the fetch
+        window.alert('Error fetching logged-in user data');
+        throw error;
+      }
+  }
+ 
     await userRoles.fetchAvailableRoles();
 });
 

@@ -1,9 +1,9 @@
+import { pinia } from '../main.js';
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
 import Profile from '../views/Profile.vue'
 import Settings from '../views/Settings.vue'
-import Signup from '../views/Signup.vue'
 import firebase from 'firebase/compat/app'
 import NotFound from '../components/NotFound.vue'
 import Modal from '../components/Modal.vue'
@@ -15,6 +15,9 @@ import Pos from '../views/pos.vue'
 import Orders from '../views/orders.vue'
 import roles from '../views/roles.vue'
 import users from '../views/users.vue'
+import Expenses from '../views/expenses.vue'
+import { useUserStore } from "../stores/user";
+
 // import Addcategory from '../views/products/Addcategory.vue'
 
 
@@ -54,7 +57,7 @@ const router = createRouter({
       name: 'Settings',
       component: Settings,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
       }
     },
     {
@@ -74,11 +77,19 @@ const router = createRouter({
       }
     },
     {
+      path: '/expenses',
+      name: 'Expenses',
+      component: Expenses,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/roles',
       name: 'Roles',
       component: roles,
       meta: {
-        requiresAuth: true
+        requiresAuth: true, requiresRole: 'Admin' // This route requires the 'Admin' role
       }
     },
     {
@@ -86,7 +97,7 @@ const router = createRouter({
       name: 'Orders',
       component: Orders,
       meta: {
-        requiresAuth: true
+        requiresAuth: true, requiresRole: 'Admin'
       }
     },
     {
@@ -94,7 +105,7 @@ const router = createRouter({
       name: 'Users',
       component: users,
       meta: {
-        requiresAuth: true
+        requiresAuth: true, requiresRole: 'Admin'
       }
     },
     {
@@ -110,7 +121,7 @@ const router = createRouter({
       name: 'Allproducts',
       component: Allproducts,
       meta: {
-        requiresAuth: true
+        requiresAuth: true, requiresRole: 'Admin'
       }
     },
     {
@@ -118,23 +129,15 @@ const router = createRouter({
       name: 'Categories',
       component: Categories,
       meta: {
-        requiresAuth: true
+        requiresAuth: true, requiresRole: 'Admin'
       }
     },
-    // {
-    //   path: '/Addcategory',
-    //   name: 'Addcategory',
-    //   component: Addcategory,
-    //   meta: {
-    //     requiresAuth: true
-    //   }
-    // },
     {
       path: '/add-product',
       name: 'Addproduct',
       component: Addproduct,
       meta: {
-        requiresAuth: true
+        requiresAuth: true, requiresRole: 'Admin'
       }
     },
     {
@@ -144,29 +147,51 @@ const router = createRouter({
     },
   ]
 })
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!firebase.auth().currentUser) {
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore(pinia);
+  try {
+    if (!userStore.loggedInUserData.length) {
+      await userStore.fetchLoggedInUserData();
+    }
+
+    const userRole = userStore.loggedInUserData.Role;
+
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (!firebase.auth().currentUser) {
+        next({
+          path: '/',
+          query: {
+            redirect: to.fullPath
+          }
+        });
+      } else {
+        next();
+      }
+    } else if (firebase.auth().currentUser) {
       next({
-        path: '/',
+        path: '/pos',
         query: {
           redirect: to.fullPath
         }
-      })
-    } else {
-      next()
-    }
-  } else if (firebase.auth().currentUser) {
-    next({
-      path: '/pos',
-      query: {
-        redirect: to.fullPath
+      });
+    } else if (to.matched.some(record => record.meta.requiresRole === 'Admin')) {
+      // Allow access for admin routes
+      if (userRole === 'Admin') {
+        next();
+      } else {
+        next('/pos'); // Redirect to an access denied page for non-admins
       }
-    })
-  } else {
-    next()
+    } else {
+      next();
+    }
+  } catch (error) {
+    // Handle any errors that occur during data fetch
+    console.error('Error fetching user data:', error);
+    next(error); // You can pass the error to next() to handle it further.
   }
-})
+});
+
 
 export default router
 

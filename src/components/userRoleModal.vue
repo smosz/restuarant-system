@@ -71,7 +71,7 @@
   </template>
     
     <script setup>
-  import { ref,defineEmits } from "vue";
+  import { ref } from "vue";
   import "firebase/compat/storage";
   import firebase from "firebase/compat/app";
   import "firebase/compat/auth";

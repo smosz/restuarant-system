@@ -58,88 +58,116 @@
           <thead>
             <tr>
               <th
-                class="px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span>Username</span>
                 </div>
               </th>
               <th
-                class="px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span>User Email</span>
                 </div>
               </th>
               <th
-                class="px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span>Gender</span>
                 </div>
               </th>
               <th
-                class="px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span>Phone Number</span>
                 </div>
               </th>
               <!-- <th
-                class="px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span>Password</span>
                 </div>
               </th> -->
               <th
-                class="px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span>Role</span>
                 </div>
               </th>
-              <!-- <th
-                class="no-print px-6 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              <th
+                class=" py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Action
-              </th> -->
+                <div class="flex items-center justify-center">
+                  <span>Last Login</span>
+                </div>
+              </th>
+              <th
+                class=" py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span>Last Signout</span>
+                </div>
+              </th>
+              <th
+                class=" py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span>Status</span>
+                </div>
+              </th>
+              
             </tr>
           </thead>
           <tbody>
             <tr
               v-for="user in paginatedUsers"
-              :key="user.uid"
+              :key="user.id"
               class="text-center"
             >
-              <td class="px-6 py-4 border border-gray-300">
+              <td class=" py-4 border border-gray-300">
                 {{ user.Username }}
               </td>
-              <td class="px-6 py-4 border border-gray-300">
+              <td class=" py-4 border border-gray-300">
                 {{ user.Email }}
               </td>
-              <td class="px-6 py-4 border border-gray-300">
+              <td class=" py-4 border border-gray-300">
                 {{ user.Gender }}
               </td>
-              <td class="px-6 py-4 border border-gray-300">
+              <td class=" py-4 border border-gray-300">
                 {{ user.Phone_Number }}
               </td>
-              <!-- <td class="px-6 py-4 border border-gray-300">
+              <!-- <td class=" py-4 border border-gray-300">
                 {{ user.Password }}
               </td> -->
-              <td class="px-6 py-4 border border-gray-300">
+              <td class=" py-4 border border-gray-300">
                 {{ user.Role }}
               </td>
-              <!-- <td class="no-print py-4 border border-gray-300">
-                <div class="flex space-x-2 justify-center">
-                  <button
-                    @click="deleteUser(user)"
-                    class="text-red-500 hover:text-red-700 px-3 py-1"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </td> -->
+              <td class=" py-4 border border-gray-300">
+                {{ user.lastLogin }}
+              </td>
+              <td class=" py-4 border border-gray-300">
+                {{ user.lastSignOut }}
+              </td>
+              <td class=" py-4 border border-gray-300">
+                <el-tooltip :content="'Switch user status: ' + user.status" placement="top">
+            <el-switch
+              v-model="user.status"
+              :active-value="'enabled'"
+      :inactive-value="'disabled'"
+      active-color="#13ce66"
+      inactive-color="#ff4949"
+              @change="updateUserStatus(user.id, user.status)"
+            >
+            </el-switch>
+          </el-tooltip>
+          
+              </td>
+          
             </tr>
           </tbody>
         </table>
@@ -186,13 +214,6 @@
     </div>
 
     <Signup v-if="showUserModal" @close="closeUserModal" />
-
-    <!-- Use the DeleteConfirmationModal component -->
-    <deleteConfirmationModal
-      v-if="showDeleteConfirmation"
-      @confirm="deleteConfirmed(userId)"
-      @cancel="cancelDelete"
-    />
   </div>
 </template>
 
@@ -204,19 +225,13 @@ import "firebase/compat/firestore";
 import "firebase/compat/auth";
 
 import Signup from "../views/Signup.vue";
-import { useUserStore } from "../stores/user";
+
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
-import deleteConfirmationModal from "../components/deleteConfirmationModal.vue";
+
 // Control the visibility of the User registration modal
 const showUserModal = ref(false);
-
-const userStore = useUserStore();
-// Define a ref to control the visibility of the delete confirmation modal
-const showDeleteConfirmation = ref(false);
-// Define a ref to store the User being deleted
-const deletingUser = ref(null);
 // Define the Firestore database reference
 const db = firebase.firestore();
 // Define pagination state
@@ -305,6 +320,24 @@ const searchUsers = () => {
     });
   }
 };
+// Method to update the user's status (enabled/disabled)
+const updateUserStatus = async (userId, currentStatus) => {
+  try {
+    const userRef = db.collection("users").doc(userId);
+
+    // Toggle the user's status()
+    if(currentStatus==='enabled'){
+      const newStatus = 'enabled' ;
+      await userRef.update({ status: newStatus });
+    }else if(currentStatus==='disabled'){
+      const newStatus = 'disabled' ;
+      await userRef.update({ status: newStatus });
+    }
+  } catch (error) {
+    console.error("Error updating user status", error);
+  }
+};
+
 
 //Create a computed property that returns the users to display on the current page:
 const paginatedUsers = computed(() => {
@@ -335,7 +368,13 @@ const nextPage = () => {
 const fetchUsersData = async () => {
   try {
     const usersSnapshot = await db.collection("users").get();
-    users.value = usersSnapshot.docs.map((doc) => doc.data());
+    users.value = usersSnapshot.docs.map((doc) => {
+      const userData = doc.data();
+      console.log(userData)
+      return {
+        ...userData, 
+      };
+    });
   } catch (error) {
     // Handle any errors that occur during the fetch
     window.alert("Error fetching users");
@@ -343,44 +382,6 @@ const fetchUsersData = async () => {
   }
 };
 
-// // Function to close the delete confirmation modal
-// const cancelDelete = () => {
-//   deletingUser.value = null;
-//   showDeleteConfirmation.value = false;
-// };
-// // Function to open the delete confirmation modal
-// const deleteUser = (userToDelete) => {
-//   // Set the User to be deleted
-//   deletingUser.value = userToDelete;
-//   // Open the delete confirmation modal
-//   showDeleteConfirmation.value = true;
-// };
-
-// // Function to delete the User
-// const deleteConfirmed = () => {
-//   const userToDelete = deletingUser.value;
-//   if (userToDelete) {
-//     const userIdToDelete = userToDelete.uid;
-//     firebase.auth()
-//       .delete(userIdToDelete)
-//       .then(() => {
-//         // Use Firebase to delete the specific user from Firestore
-//         return db.collection("users").doc(userIdToDelete).delete();
-//       })
-//       .then(() => {
-//         // Show a success message or perform any other actions if needed
-//         window.alert("User deleted successfully");
-//         // Close the delete confirmation modal
-//         showDeleteConfirmation.value = false;
-//         // Fetch the updated list of users (if needed)
-//         fetchUsersData();
-//       })
-//       .catch((error) => {
-//         // Handle the error
-//         window.alert("Error deleting user");
-//       });
-//   }
-// };
 
 // Function to open the User registration modal
 const openUserRegistrationModal = () => {
@@ -388,17 +389,11 @@ const openUserRegistrationModal = () => {
   showUserModal.value = true;
 };
 
-const closeUserModal = () => {
-  showUserModal.value = false;
-  // Fetch the updated list of users after a new User is registered
-  fetchUsersData();
-};
 // Fetch users when the component is mounted
 onMounted(() => {
   firebase.auth().onAuthStateChanged(async (firebaseUser) => {
     userId.value = firebaseUser.uid;
   });
-
   fetchUsersData();
 });
 

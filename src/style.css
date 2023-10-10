@@ -18,7 +18,54 @@
   position: relative;
   display:flex
 }
+/* Media query for iPad Pro (2048 x 1536) */
+@media (min-width: 1024px) {
+ .iLogin{
+    max-width: 2048px;
+ }
+ .men{
+  @apply space-x-4
+ }
+}
+@media (max-width:1024px) {
+  .log{
+    @apply hidden 
+  }
+  .men{
+    @apply py-3
+  }
+ .logc{
+  @apply h-[11.5rem]
+ }
+ .pdis{
+  @apply grid-cols-2 
+ }
+ .pd{
+  @apply w-[50%]
+ }
+ .pdd2{
+  @apply pl-6
+ }
 
+}
+@media (max-width:940px) {
+  .pfo{
+    @apply h-[21rem] overflow-auto
+  }
+  
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+.pdtab{
+  @apply px-1 py-3 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider
+}
+.pdd{
+  @apply text-center py-4 border border-gray-300 
+}
 .slider {
   display: flex;
   animation: slide 200s linear infinite; /* Adjust the animation duration as needed */
@@ -51,6 +98,7 @@
   border-radius: 5px;
 }
 .demo-date-picker {
+  background-color: #fed7aa;
   display: flex;
   position: absolute;
     width: 18%;
@@ -105,7 +153,8 @@
   border-bottom: 1px solid #000; /* Adjust the color as needed */
   outline: none; /* Remove the default focus outline */
   padding: 3px; /* Add padding for better appearance */
-  background: transparent
+  background: transparent;
+  
 }
 @media print {
   /* Hide the last column (actions column) */
@@ -130,12 +179,6 @@
   }
 }
 
-
-/* Optionally, you can add transition for a smoother effect when focusing */
-.search-input:focus {
-  border-bottom: 2px solid #000; /* Adjust the color and thickness as needed */
-  transition: border-bottom 0.3s ease; /* Adjust the transition duration as needed */
-}
 .crelative:hover .absolute {
   display: block;
 }
@@ -227,15 +270,26 @@
   @apply bg-gray-900 text-white
 }
 .profile{
-  @apply overflow-hidden h-screen flex flex-col justify-center bg-[url('src/assets/wp.webp')] bg-no-repeat bg-cover 
+  @apply overflow-hidden h-screen flex flex-col justify-center bg-[url('/wp.webp')] bg-no-repeat bg-cover 
 }
 .settings{
-  @apply  overflow-hidden flex flex-col justify-center bg-[url('src/assets/3.jpg')] bg-no-repeat bg-cover 
+  @apply  overflow-hidden flex flex-col justify-center bg-[url('/3.jpg')] bg-no-repeat bg-cover 
+}
+.onl {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 .modal {
   /*@applyflexjustify-centeritems-centerh-screenw-screenfixedtop-0left-0*/position: fixed;
   background-color: rgba(0,0,0, 0.4);
-  background-image: url(./assets/desk.jpg);
+ 
   background-repeat: no-repeat;
   background-size: cover;
   top: 0;
@@ -289,6 +343,7 @@
 .btn-reg{
 @apply  w-full text-blue-900 border py-3 border-blue-500 hover:border-transparent hover:text-white font-semibold text-center bg-transparent hover:bg-blue-700 hover:font-bold
 }
+
 .modal-inner {
   @apply relative rounded-md w-[300px] max-w-[640px] bg-white  shadow-lg shadow-black z-[1]
 }
@@ -296,7 +351,7 @@
   @apply absolute top-4 right-4 text-[20px] cursor-pointer z-[1];
 }
 .dropdown {
-  @apply absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none
+  @apply absolute top-[45px] right-[31px] z-10 w-32 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none
 }
 .dropdown2 {
   
@@ -330,7 +385,7 @@
   @apply appearance-none bg-transparent border-t-0 border-x-0 border-b w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:border-none focus:outline-0
 }
 .input-field {
-  @apply appearance-none bg-transparent border-t-0 border-x-0 border-b pl-2 text-gray-700 leading-tight focus:border-none focus:outline-0
+  @apply appearance-none bg-transparent border-t-0 border-x-0 border-b pl-2 text-gray-700 leading-tight focus:border-none focus:outline-0 
 }
 .input-field-email {
   @apply appearance-none bg-transparent border-t-0 border-x-0 border-b pl-2 text-gray-700 leading-loose focus:border-none focus:outline-0
@@ -445,11 +500,11 @@ button[disabled] {
   -webkit-box-pack: center;
   -webkit-box-align: center;
 }
- .input-field {
+ .input-field-num {
     appearance: none;
     background: transparent;
     border-bottom: 1px solid #4A90E2;
-    width: 100%;
+    width: auto;
     color: #333;
     padding: 0.5rem 0;
     margin-right: 0.5rem;

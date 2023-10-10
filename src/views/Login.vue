@@ -1,17 +1,17 @@
 <template>
 
-  <div class="grid grid-cols-2 h-screen">
+  <div class="iLogin grid grid-cols-2 h-screen">
     <!-- Left Column with Image Background -->
     <div
       class="bg-cover bg-no-repeat bg-center"
       :style="'background-image: url(' + imageUrls[currentImageIndex] + ');'"
     ></div>
     <!-- Right Column with Login Form -->
-    <div class="flex flex-col justify-center items-center" style="background: linear-gradient(to right, hotpink, pink);">
-      <div class="flex justify-center mb-12 mt-12">
-        <img class="w-1/2" src="../../src/assets/imp.png" />
-      </div>
-      <form @submit.prevent="onSubmit" class="w-full max-w-sm space-y-4">
+    <div class="flex flex-col  items-center" style="background: linear-gradient(to right, hotpink, pink);">
+  <div class="flex justify-center mb-12 mt-36">
+    <img class="w-1/2" src="/imp.png" />
+  </div>
+  <form @submit.prevent="onSubmit" class="w-full max-w-sm space-y-4 justify-center">
         <div>
           <label for="email" class="block text-gray-700">Email</label>
           <input
@@ -47,7 +47,7 @@
         <div>
           <button
             id="btn"
-            @click="loginIn"
+            @click="login"
             :disabled="!state.email || !state.password"
             class="form-button"
           >
@@ -86,26 +86,26 @@ const state = reactive({
 });
 
 const imageUrls = ref([
-  "../../src/assets/48.jpg",
-  "../../src/assets/41.jpg",
-  "../../src/assets/38.jpg",
-  "../../src/assets/46.jpg",
-  "../../src/assets/21.jpg",
-  "../../src/assets/15.jpg",
-  "../../src/assets/45.jpg",
-  "../../src/assets/27.jpg",
-  "../../src/assets/18.jpg",
-  "../../src/assets/13.jpg",
-  "../../src/assets/14.jpg",
-  "../../src/assets/7.jpg",
-  "../../src/assets/10.jpg",
-  "../../src/assets/1.jpg",
-  "../../src/assets/2.jpg",
-  "../../src/assets/4.jpg",
-  "../../src/assets/8.jpg",
-  "../../src/assets/3.jpg",
-  "../../src/assets/9.jpg",
-  "../../src/assets/11.jpg",
+  "/48.jpg",
+  "/41.jpg",
+  "/38.jpg",
+  "/46.jpg",
+  "/21.jpg",
+  "/15.jpg",
+  "/45.jpg",
+  "/27.jpg",
+  "/18.jpg",
+  "/13.jpg",
+  "/14.jpg",
+  "/7.jpg",
+  "/10.jpg",
+  "/1.jpg",
+  "/2.jpg",
+  "/4.jpg",
+  "/8.jpg",
+  "/3.jpg",
+  "/9.jpg",
+  "/11.jpg",
   
   // Add more image URLs as needed
 ]);
@@ -132,39 +132,76 @@ const btnColor = () => {
 };
 
 const v$ = useValidate(rules, state);
-const loginIn = async () => {
+const login = async () => {
   const userData = await v$.value.$validate();
-  if (userData) {
-    loading.value = true;
-    try {
-      await firebase
-        .auth()
-        .signInWithEmailAndPassword(state.email, state.password);
-      useUser.user = firebase.auth().currentUser;
-      router.replace({ name: "Pos" });
-    } catch (err) {
-      loading.value = false;
-      state.error = true;
-      state.errorMsg = err;
-      switch (err.code) {
-        case "auth/invalid-email":
-          state.errorMsg = "Invalid email";
-          break;
-        case "auth/user-not-found":
-          state.errorMsg = "User doesn't exist";
-          break;
-        case "auth/wrong-password":
-          state.errorMsg = "Incorrect password";
-          break;
-        default:
-          state.errorMsg = "Connection to Server cut down";
-          break;
-      }
+  
+  if (!userData) {
+    alert("Form is invalid");
+    return;
+  }
+
+  loading.value = true;
+  // Sign in with Firebase Authentication
+  const userCredential = await firebase
+      .auth()
+      .signInWithEmailAndPassword(state.email, state.password);
+    
+    const user = userCredential.user;
+// Check if the user is disabled in Firestore
+const userDoc = await firebase.firestore().collection("users").doc(user.uid).get();
+
+if (userDoc.exists) {
+  const userData = userDoc.data();
+  if (userData.status === 'disabled') {
+    // User is disabled, prevent login
+    loading.value = false;
+    alert("Your account is disabled. Contact support for assistance.");
+    return;
+  }
+}
+  try {
+    // Get the current date and time
+  const currentDateTime = new Date();
+
+// Format the date as "dd-mm-yyyy"
+const formattedDate = `${currentDateTime.getDate()}-${
+  currentDateTime.getMonth() + 1
+}-${currentDateTime.getFullYear()}`;
+
+// Format the time in 12-hour clock format
+const hours = currentDateTime.getHours();
+const minutes = currentDateTime.getMinutes();
+const amOrPm = hours >= 12 ? "PM" : "AM";
+const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
+     // Update the lastLogin field in Firestore
+     await firebase.firestore().collection("users").doc(user.uid).update({
+      
+      lastLogin: `${formattedDate} - ${formattedTime}`
+    });
+    router.replace({ name: "Dashboard" });
+  } catch (err) {
+    loading.value = false;
+    state.error = true;
+    state.errorMsg = err.message;
+    switch (err.code) {
+      case "auth/invalid-email":
+        state.errorMsg = "Invalid email";
+        break;
+      case "auth/user-not-found":
+        state.errorMsg = "User doesn't exist";
+        break;
+      case "auth/wrong-password":
+        state.errorMsg = "Incorrect password";
+        break;
+      default:
+        state.errorMsg = "Connection to Server cut down";
+        break;
     }
-  } else {
-    alert("form invaild");
   }
 };
+
 const currentImageIndex = ref(0);
 
 const startSlideshow = () => {

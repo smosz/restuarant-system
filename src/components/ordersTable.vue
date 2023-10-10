@@ -15,12 +15,7 @@
     </div>
     <div class="grid grid-cols-3">
       <div
-        :class="{
-          'bg-white shadow-md rounded-lg overflow-hidden tab col-span-2 w-[122%]':
-            filterShow,
-          'bg-white shadow-md rounded-lg overflow-hidden tab col-span-3 w-full':
-            filterclose,
-        }"
+        class="bg-white shadow-md rounded-lg overflow-hidden tab col-span-3 w-full"
       >
         <div class="overflow-x-auto px-6">
           <div
@@ -97,7 +92,7 @@
             <thead>
               <tr>
                 <th
-                  class="px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]"
+                  class="px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%] sm:w-[10%]"
                 >
                   <div class="flex items-center justify-center">
                     <span>Date Time</span>
@@ -316,46 +311,21 @@
           </div>
           <div class="mt-2 text-center no-print">
   <div
-  :class="{
-          'bg-gray-200 p-4 rounded-lg shadow-lg flex items-center text-2xl  justify-between':
-          filterclose,
-          'bg-gray-200 p-4 rounded-sm shadow-sm flex items-center text-[20px] justify-between':
-            filterShow,
-        }"
+  class="bg-gray-200 p-4 rounded-sm shadow-sm flex items-center text-[20px] justify-between"
  >
     <p class=" font-semibold text-gray-700">
       Total Orders:<span 
-      :class="{
-          'ml-4 text-3xl font-semibold text-orange-500':
-          filterclose,
-          'ml-2 text-2xl font-semibold text-orange-500':
-            filterShow,
-        }"
+      class="ml-4 text-3xl font-semibold text-orange-500"
       >{{ sortedOrders.length }}</span>
     </p>
     <p class="  font-semibold text-gray-700">
-      Total Discounted Orders:<span :class="{
-          'ml-4 text-3xl font-semibold text-orange-500':
-          filterclose,
-          'ml-2 text-2xl font-semibold text-orange-500':
-            filterShow,
-        }">{{ totalDiscountedOrders }}</span>
+      Total Discounted Orders:<span class="ml-4 text-3xl font-semibold text-orange-500">{{ totalDiscountedOrders }}</span>
     </p>
     <p class=" font-semibold text-gray-700">
-      Total Items Ordered:<span :class="{
-          'ml-4 text-3xl font-semibold text-orange-500':
-          filterclose,
-          'ml-2 text-2xl font-semibold text-orange-500':
-            filterShow,
-        }"> {{ totalItemsOrdered }}</span> 
+      Total Items Ordered:<span class="ml-4 text-3xl font-semibold text-orange-500"> {{ totalItemsOrdered }}</span> 
     </p>
     <p class=" font-semibold text-black">
-      Total Orders Price:<span :class="{
-          'ml-4 text-3xl font-semibold text-orange-500':
-          filterclose,
-          'ml-2 text-2xl font-semibold text-orange-500':
-            filterShow,
-        }">UGX {{ totalOrdersPrice }}</span>
+      Total Orders Price:<span class="ml-4 text-3xl font-semibold text-orange-500">UGX {{ totalOrdersPrice }}</span>
     </p>
     
   </div>
@@ -364,7 +334,7 @@
         </div>
       </div>
       <div
-        v-if="filterShow"
+        v-if="filterShow && sortedOrders.length >=5"
         class="demo-date-picker col-span-1 justify-center border-collapse border border-[aquamarine]"
       >
         <div class="container">
@@ -417,14 +387,14 @@
               <input
                 v-model="minItems"
                 type="number"
-                class="border-solid border-[1px] ml-2 border-black w-24"
+                class="border-solid border-[1px] ml-2 border-black w-24 sm:w-[4.5rem]"
                 placeholder="Min Items"
               />
               <h1 class="ml-2">-</h1>
               <input
                 v-model="maxItems"
                 type="number"
-                class="border-solid border-[1px] ml-2 border-black w-24"
+                class="border-solid border-[1px] ml-2 border-black w-24 "
                 placeholder="Max Items"
               />
             </div>
@@ -437,14 +407,14 @@
               <input
                 v-model="minAmount"
                 type="number"
-                class="border-solid border-[1px] ml-2 border-black w-24"
+                class="border-solid border-[1px] ml-2 border-black w-24 sm:w-[4.5rem]"
                 placeholder="Min Amount"
               />
               <h1 class="ml-2">-</h1>
               <input
                 v-model="maxAmount"
                 type="number"
-                class="border-solid border-[1px] ml-2 border-black w-24"
+                class="border-solid border-[1px] ml-2 border-black w-24 sm:w-[4.5rem]"
                 placeholder="Max Amount"
               />
             </div>
@@ -469,7 +439,7 @@ const filterYear = ref("");
 const orderStore = useOrdersStore();
 const orderItems = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = 5;
+const itemsPerPage = 20;
 const sortColumnRef = ref(null);
 const sortDirection = ref("asc");
 const searchQuery = ref("");

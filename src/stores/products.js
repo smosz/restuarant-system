@@ -62,7 +62,7 @@ export const useProductStore = defineStore('product', {
     },
   addToCart(product) {
     // Check if the product is already in the cart based on a unique identifier (e.g., sku)
-    const existingCartItem = this.cart.find(item => item.product.sku === product.sku);
+    const existingCartItem = this.cart.find(item => item.product.id === product.id);
   
     if (existingCartItem) {
       // Check if the quantity is less than the available stock

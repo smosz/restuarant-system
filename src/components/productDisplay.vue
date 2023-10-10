@@ -42,7 +42,7 @@
 
     <!-- Product Display -->
     <div
-      class="grid grid-cols-3 gap-2 border bg-black rounded-2xl p-3 max-h-[86rem] overflow-y-auto"
+      class="pdis grid grid-cols-3 gap-2 border bg-black rounded-2xl p-3 max-h-[86rem] overflow-y-auto"
     >
       <div
         v-for="(product, index) in productStore.filteredProducts"

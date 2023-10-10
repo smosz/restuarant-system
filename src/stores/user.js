@@ -25,6 +25,7 @@ export const useUserStore = defineStore('user', {
           this.username = firebaseUser.displayName;
           this.emailVerified = firebaseUser.emailVerified;
           this.isPhoneVerified = firebaseUser.phoneVerified;
+
           // Fetch and store user data when logged in
           await this.fetchLoggedInUserData(firebaseUser.uid);
         } else {
@@ -77,8 +78,31 @@ export const useUserStore = defineStore('user', {
     },
     async signOut() {
       try {
+         // Get the current date and time
+  const currentDateTime = new Date();
+
+// Format the date as "dd-mm-yyyy"
+const formattedDate = `${currentDateTime.getDate()}-${
+  currentDateTime.getMonth() + 1
+}-${currentDateTime.getFullYear()}`;
+
+// Format the time in 12-hour clock format
+const hours = currentDateTime.getHours();
+const minutes = currentDateTime.getMinutes();
+const amOrPm = hours >= 12 ? "PM" : "AM";
+const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
+       const user= firebase.auth().currentUser;
+       await firebase.firestore().collection("users").doc(user.uid).update({
+        lastSignOut:`${formattedDate} - ${formattedTime}`
+      });
+        console.log(user)
         await firebase.auth().signOut(); // Sign out the user using Firebase Authentication
-        this.user = null; // Clear the user data in the store
+    //      // Update the lastLogin field in Firestore
+    //      console.log(this.user)
+    
+        // this.user = null; // Clear the user data in the store
         this.loggedInUserData = {}; // Clear the logged-in user data
         window.location.href = '/';
       } catch (error) {
