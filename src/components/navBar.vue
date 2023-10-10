@@ -243,6 +243,7 @@ const loggedInUserState = userStore.loggedInUserData
     const isAddCategoryActive = ref(false);
 
     onMounted(async  () => {
+       firebaseApp
       await userStore.initializeUser();
       const currentRouteName = router.currentRoute.value.name;
 

@@ -235,7 +235,7 @@
 .modal {
   /*@applyflexjustify-centeritems-centerh-screenw-screenfixedtop-0left-0*/position: fixed;
   background-color: rgba(0,0,0, 0.4);
-  background-image: url(./assets/desk.jpg);
+ 
   background-repeat: no-repeat;
   background-size: cover;
   top: 0;
