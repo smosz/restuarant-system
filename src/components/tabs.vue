@@ -20,7 +20,7 @@
                 </span>
               </button>
               <button
-              v-if=" userStore.loggedInUserData.Role === 'Admin'"
+              v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
                 :class="
                   tab === 2
                     ? 'border-blue-500 text-blue-600'
@@ -35,7 +35,7 @@
               </span>
               </button>
               <button
-              v-if=" userStore.loggedInUserData.Role === 'Admin'"
+             v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
                 :class="
                   tab === 3
                     ? 'border-blue-500 text-blue-600'
@@ -56,10 +56,10 @@
               <bio/>
             </div>
             <div v-if="tab === 2 ">
-             <emailTab  v-if=" userStore.loggedInUserData.Role === 'Admin'"/>
+             <emailTab v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"/>
             </div>
             <div v-if="tab === 3 ">
-              <passwordTab  v-if=" userStore.loggedInUserData.Role === 'Admin'"/>
+              <passwordTab v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"/>
             </div>
           </div>
         </div>

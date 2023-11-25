@@ -89,15 +89,17 @@ const router = createRouter({
       name: 'Roles',
       component: roles,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin' // This route requires the 'Admin' role
+        requiresAuth: true,
+        requiresAnyRole: ['ADMIN', 'Tech'] // This route requires either 'ADMIN' or 'Tech' role
       }
     },
+    
     {
       path: '/oders',
       name: 'Orders',
       component: Orders,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
       }
     },
     {
@@ -105,7 +107,7 @@ const router = createRouter({
       name: 'Users',
       component: users,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
       }
     },
     {
@@ -121,7 +123,7 @@ const router = createRouter({
       name: 'Allproducts',
       component: Allproducts,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
       }
     },
     {
@@ -129,7 +131,7 @@ const router = createRouter({
       name: 'Categories',
       component: Categories,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
       }
     },
     {
@@ -137,7 +139,7 @@ const router = createRouter({
       name: 'Addproduct',
       component: Addproduct,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
       }
     },
     {
@@ -175,12 +177,12 @@ router.beforeEach(async (to, from, next) => {
           redirect: to.fullPath
         }
       });
-    } else if (to.matched.some(record => record.meta.requiresRole === 'Admin')) {
-      // Allow access for admin routes
-      if (userRole === 'Admin') {
+    } else if (to.matched.some(record => ['ADMIN', 'Tech'].includes(record.meta.requiresRole))){
+      // Allow access for ADMIN routes
+      if (userRole === 'ADMIN' || userRole === 'Tech') {
         next();
       } else {
-        next('/pos'); // Redirect to an access denied page for non-admins
+        next('/pos'); // Redirect to an access denied page for non-ADMINs
       }
     } else {
       next();

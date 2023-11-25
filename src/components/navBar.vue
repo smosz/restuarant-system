@@ -3,9 +3,9 @@
     <div class="mx-auto flex items-center px-2 sm:px-6 lg:px-8">
       
         <div class="nav-item col-span-2">
-          <div class="flex flex-shrink-0 items-center log">
-            <img class="block h-16 w-auto" src="/imp.png" alt="Company" />
-          </div>
+          <!-- <div class="flex flex-shrink-0 items-center log">
+            <img class="block h-16 w-auto" src="/t1.png" alt="Company" />
+          </div> -->
           <div class="flex men">
             <router-link
               :to="{ name: 'Dashboard' }"
@@ -13,7 +13,7 @@
               >Dashboard</router-link
             >
             <div
-            v-if="userStore.loggedInUserData.Role === 'Admin'"
+            v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
               :class="{
                 'active-products': isAllProductsActive,
                 'active-add-product': isAddProductActive,
@@ -101,7 +101,7 @@
               >Pos</router-link
             >
             <router-link
-            v-if="userStore.loggedInUserData.Role === 'Admin'"
+            v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
               :to="{ name: 'Orders' }"
               class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Orders</router-link
@@ -113,13 +113,13 @@ class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medi
 >Expenses</router-link
 >
             <router-link
-            v-if="userStore.loggedInUserData.Role === 'Admin'"
+            v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
               :to="{ name: 'Roles' }"
               class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Roles</router-link
             >
             <router-link
-            v-if="userStore.loggedInUserData.Role === 'Admin'"
+            v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
               :to="{ name: 'Users' }"
               class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Users</router-link

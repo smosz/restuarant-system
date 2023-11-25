@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="editingProduct"
+    v-loading="loading"
     class="fixed inset-0 flex items-center justify-center z-50"
   >
     <div
@@ -63,7 +64,7 @@
                 >Testers:</label
               >
               <input
-                v-model="editingProduct.testers"
+                v-model="originalTesters"
                 type="number"
                 id="testers"
                 class="appearance-none bg-transparent border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -77,13 +78,25 @@
                 >Damaged Quantity:</label
               >
               <input
-                v-model="editingProduct.damaged"
+                v-model="originalDamaged"
                 type="number"
                 id="damaged"
                 class="appearance-none bg-transparent border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 required
                 :max= "editingProduct.InitialStockQuantity"
                 min="0"
+              />
+            </div>
+            <div class="mb-4">
+              <label for="sold" class="block text-gray-700 font-medium"
+                >sold Quantity:</label
+              >
+              <input
+                v-model="originalSoldStock"
+                type="number"
+                id="sold"
+                class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+               
               />
             </div>
           </div>
@@ -123,11 +136,12 @@
                 >Initial Quantity:</label
               >
               <input
-                v-model="editingProduct.InitialStockQuantity"
+              v-model="editingProduct.InitialStockQuantity "
                 type="number"
                 id="InitialStockQuantity"
-                class="appearance-none bg-transparent border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 required
+                
                 min="0"
               />
             </div>
@@ -137,11 +151,12 @@
                 >Remaining Quantity:</label
               >
               <input
-                v-model="editingProduct.stockQuantity"
+              v-model="editingProduct.stockQuantity"
                 type="number"
                 id="stockQuantity"
                 class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 required
+                
                 
               />
             </div>
@@ -151,7 +166,7 @@
               >Amount:</label
             >
             <input
-              v-model="editingProduct.amount"
+              v-model="amount"
               type="text"
               id="amount"
               class="bg-gray-200 px-2 py-1 rounded-sm w-full text-gray-700 mr-3leading-tight focus:outline-none"
@@ -180,37 +195,32 @@
             </div>
             <!-- Category Selection Section -->
             <div class="col-span-3">
-              <div class="mb-4">
-                <label class="block text-gray-700 font-medium"
-                  >Product Categories:</label
-                >
-                <div class="grid grid-cols-1 gap-4">
-                  <!-- Display available categories as checkboxes -->
-                  <div
-                    class="max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-2 grid grid-cols-2 gap-2"
-                  >
-                    <!-- Scrollable card -->
-                    <div
-                      v-for="category in availableCategories"
-                      :key="category"
-                    >
-                      <label class="flex items-center">
-                        <input
-                          type="checkbox"
-                          :value="category"
-                          :checked="
-                            selectedCategories.includes(category) ||
-                            editingProduct.category.includes(category)
-                          "
-                          @change="toggleCategory(category)"
-                          class="mr-2"
-                        />
-                        {{ category }}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <!-- Product Category (Autocomplete Input) -->
+            <div class="flex flex-col mb-4">
+              <label for="product-category" class="block text-gray-700 font-medium">Search & Edit Category</label>
+              <input type="text" id="product-category" v-model="newCategory"
+              class="appearance-none focus-visible:border-blue-500 border-b border-teal-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" @input="suggestCategories"
+                />
+              <!-- Auto-suggested categories dropdown -->
+              <ul v-if="showSuggestions" class="border border-gray-300 mt-1 rounded-b-md">
+                <li v-for="suggestion in categorySuggestions" :key="suggestion" @click="selectSuggestion(suggestion)"
+                  class="cursor-pointer px-2 py-1 hover:bg-gray-200">
+                  {{ suggestion }}
+                </li>
+              </ul>
+            </div>
+            </div>
+            <div class="mb-4">
+              <label for="newQuantity" class="block text-gray-700 font-medium"
+                >Add New Quantity:</label
+              >
+              <input
+                v-model="newQuantity"
+                type="number"
+                id="newQuantity"
+                class="appearance-none bg-transparent border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+min="0"
+              />
             </div>
           </div>
           <div class="col-span-1"></div>
@@ -312,6 +322,8 @@ import "firebase/compat/storage";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+import axios from 'axios';
+// import { getDatabase,ref as stRef, set,push} from "firebase/database";
 // Define the Firestore database reference
 const db = firebase.firestore();
 // Define a prop to pass the editing product data
@@ -320,70 +332,187 @@ const props = defineProps({
 });
 // Emit a custom event to close the modal
 const emit = defineEmits(["close"]);
-
+const categories = ref([])
 const closeEditModal = () => {
   // Add this line to log the closure
   emit("close");
 };
 const availableCategories = ref([]);
 // Handle checkbox selection
-const selectedCategories = ref([]);
+const selectedCategory = ref('');
+const newCategory = ref("");
+const categorySuggestions = ref([]);
+const showSuggestions = ref(false);
 // Define message variables
 const successMessage = ref("");
 const errorMessage = ref("");
 const updating = ref(false);
-const toggleCategory = (category) => {
-  const index = selectedCategories.value.indexOf(category);
-  if (index === -1) {
-    selectedCategories.value.push(category);
+const loading = ref(false);
+const newQuantity=ref(0);
+
+const suggestCategories = () => {
+  if (newCategory.value) {
+    // Filter available categories for suggestions
+    categorySuggestions.value = availableCategories.value.filter((category) =>
+      category.toLowerCase().includes(newCategory.value.toLowerCase())
+    );
+    showSuggestions.value = true;
   } else {
-    selectedCategories.value.splice(index, 1);
-  }
-  if (props.editingProduct.category === "" || !props.editingProduct.category) {
-    props.editingProduct.category = selectedCategories.value;
-  } else if (props.editingProduct.category) {
-    props.editingProduct.category = selectedCategories.value;
+    categorySuggestions.value = [];
+    showSuggestions.value = false;
   }
 };
-// Function to update the product
+
+const selectSuggestion = (suggestion) => {
+  // Add the selected suggestion to selectedCategories
+  props.editingProduct.category = suggestion;
+
+  newCategory.value = ''; // Clear the input
+  categorySuggestions.value = []; // Clear suggestions
+  showSuggestions.value = false; // Hide suggestions
+};
+
+const getCurrentDateTime = () => {
+  const currentDateTime = new Date();
+  const formattedDate = `${currentDateTime.getDate()}-${currentDateTime.getMonth() + 1}-${currentDateTime.getFullYear()}`;
+  const hours = currentDateTime.getHours();
+  const minutes = currentDateTime.getMinutes();
+  const amOrPm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
+  return { formattedDate, formattedTime };
+};
+
+// const addNewQuantityChange = (productData, newQuantityValue, newQuantityChange) => {
+//   const updatedProductData = {
+//     quantityChanges: JSON.parse(productData.quantityChanges || "[]").concat(newQuantityChange),
+//   };
+//   return updatedProductData;
+// };
+
+
+// Define a ref to store the original category
+const originalCategory = ref("");
+
+// Watch for changes in the editingProduct prop
+watch(
+  () => props.editingProduct,
+  (newEditingProduct) => {
+    if (newEditingProduct) {
+      // Set the originalCategory ref when the editingProduct changes
+      originalCategory.value = newEditingProduct.category;
+      
+      // Other code...
+    }
+  }
+);
+
 const updateProduct = async () => {
   try {
-
     if (props.editingProduct) {
-      updating.value = true;
-      const documentId = props.editingProduct.id; // Assuming "id" is the field name for the document ID
-      const { ...updatedProductData } = props.editingProduct;
-      await firebase
-        .firestore()
-        .collection("products")
-        .doc(documentId)
-        .update({
-          ...updatedProductData,
-          category: props.editingProduct.category, // Update with selected categories
-          amount: props.editingProduct.amount
+      loading.value = true;
+
+      const documentId = props.editingProduct.id;
+      const { ...updatedProduct } = props.editingProduct;
+      const { formattedDate, formattedTime } = getCurrentDateTime();
+
+      const generateUniqueId = () => {
+        return '_' + Math.random().toString(36).substr(2, 9);
+      };
+
+      // Parse the quantityChanges string into an array
+      const quantityChangesArray = JSON.parse(props.editingProduct.quantityChanges || '[]');
+
+      const newQuantityChange = {
+        quantityAdded: newQuantity.value,
+        pid: generateUniqueId(),
+        date: formattedDate,
+        time: formattedTime,
+      };
+
+      // Create an object with the updated product data
+      let updatedProductData = {
+        ...updatedProduct,
+        category: props.editingProduct.category,
+        amount: amount.value,
+        quantityChanges: newQuantity.value > 0 ? [...quantityChangesArray, newQuantityChange] : quantityChangesArray,
+        testers: originalTesters.value,
+        damaged: originalDamaged.value,
+        sold: originalSoldStock.value,
+      };
+      const originalCategoryObject = categories.value.find(category => category.name === originalCategory.value);
+const newCategoryObject = categories.value.find(category => category.name === updatedProductData.category);
+
+ // Get the old and new category IDs
+ if(originalCategoryObject !== undefined){
+  const oldCategoryId = originalCategoryObject.id ;
+      const newCategoryId = newCategoryObject.id;
+
+      // Update the productCount field for the old and new categories
+      if (oldCategoryId !== newCategoryId ) {
+        const oldCategoryDocRef = db.collection("categories").doc(oldCategoryId);
+        const newCategoryDocRef = db.collection("categories").doc(newCategoryId);
+
+        await db.runTransaction(async (transaction) => {
+          const oldCategoryDoc = await transaction.get(oldCategoryDocRef);
+          const newCategoryDoc = await transaction.get(newCategoryDocRef);
+
+          const oldCategoryCount = oldCategoryDoc.data().count|| 0;
+          const newCategoryCount = newCategoryDoc.data().count || 0;
+
+          transaction.update(oldCategoryDocRef, { count: Math.max(oldCategoryCount - 1, 0) });
+          transaction.update(newCategoryDocRef, { count: newCategoryCount + 1 });
         });
-      updating.value = false;
-      // Set a success message
+      }
+      await axios.put(`http://localhost:8080/products/${documentId}`, updatedProductData);
+
+      loading.value = false;
       successMessage.value = "Product updated successfully";
-      setTimeout(() => {
-        // Reload the page
-        location.reload();
-      }, 1000);
+ }else{
+  const newCategoryId = newCategoryObject.id;
+
+      // Update the productCount field for the old and new categories
+
+        const newCategoryDocRef = db.collection("categories").doc(newCategoryId);
+
+        await db.runTransaction(async (transaction) => {
+          const newCategoryDoc = await transaction.get(newCategoryDocRef);
+
+          const newCategoryCount = newCategoryDoc.data().count || 0;
+
+
+          transaction.update(newCategoryDocRef, { count: newCategoryCount + 1 });
+        });
+      
+      await axios.put(`http://localhost:8080/products/${documentId}`, updatedProductData);
+
+      loading.value = false;
+      successMessage.value = "Product updated successfully";
+ }
+ 
     }
   } catch (error) {
-    // Set an error message
-    updating.value = false;
-    console.log(error)
-    errorMessage.value = "Failed to update product. Please try again later.";
+    loading.value = false;
+    console.error(error);
+    errorMessage.value = "Failed to update the product. Please try again later.";
   }
 };
+
+
+
+
+
 const fetchCategoryNames = async () => {
   try {
     const categoriesSnapshot = await db.collection("categories").get();
+    categories.value = categoriesSnapshot.docs.map((doc) => ({
+      ...doc.data()
+    }))
     const categoryNames = categoriesSnapshot.docs.map((doc) => doc.data().name);
     return categoryNames;
   } catch (error) {
-    window.alert("Error fetching category names");
+    console.error("Error fetching category names",error);
     return [];
   }
 };
@@ -431,45 +560,82 @@ const handleDrop = (event) => {
   }
 };
 
+
+
+// Watch for changes in testers, dam, and newQuantity
+
+
+const originalInitialStock = ref(0)
+const originalRemainingStock = ref(0)
+const originalTesters=ref(0)
+const originalSoldStock=ref(0)
+const originalDamaged=ref(0)
+
+
+// Watch for changes in the editingProduct prop
+
 watch(
-  () => [props.editingProduct?.InitialStockQuantity, props.editingProduct?.testers,props.editingProduct?.damaged],
-  ([newInitialStockQuantity, newTesters], [prevInitialStockQuantity, prevTesters]) => {
-    if (newInitialStockQuantity !== prevInitialStockQuantity || newTesters !== prevTesters) {
-      if (newTesters >= 0 && newInitialStockQuantity >= newTesters) {
-        props.editingProduct.stockQuantity = newInitialStockQuantity - newTesters;
+  () => props.editingProduct,
+  (newEditingProduct) => {
+    if (newEditingProduct) {
+      // Handle the case where editingProduct is not null or undefined
+      // You can initialize or reset any related data here
+      // For example:
+      originalInitialStock.value = newEditingProduct.InitialStockQuantity;
+      originalRemainingStock.value = newEditingProduct.stockQuantity;
+      originalTesters.value = newEditingProduct.testers;
+      originalDamaged.value = newEditingProduct.damaged;
+      originalSoldStock.value = newEditingProduct.sold;
+    }
+  }
+);
+
+// Define a watcher to update stockQuantity based on various factors
+watch(
+  [newQuantity, originalTesters, originalDamaged],
+  () => {
+    if (props.editingProduct) {
+      if (newQuantity.value > 0) { 
+        props.editingProduct.InitialStockQuantity = originalInitialStock.value + newQuantity.value;
+        props.editingProduct.stockQuantity = originalRemainingStock.value + newQuantity.value;
+      } else if (newQuantity.value === 0) {
+        props.editingProduct.InitialStockQuantity = originalInitialStock.value;
+        props.editingProduct.stockQuantity = originalRemainingStock.value;
       }
     }
   }
 );
-onMounted(async () => {
-  availableCategories.value = await fetchCategoryNames();
-  // Preselect checkboxes only if editingProduct.category is not empty
-  if (
-    props.editingProduct &&
-    props.editingProduct.category &&
-    props.editingProduct.category.length > 0
-  ) {
-    selectedCategories.value = props.editingProduct.category;
-  }
-});
-// Computed property for the updated amount
-const updatedAmount = computed(() => {
-  if (props.editingProduct) {
-    const price = props.editingProduct.price || 0;
-    const stockQuantity = props.editingProduct.stockQuantity || 0;
-    return (price * stockQuantity);
-  }
-  return 0; // or any default value you prefer when editingProduct is null
-});
 
-// Watch for changes in price or stockQuantity
+// Watch for changes in originalTesters and originalDamaged
 watch(
-  () => [props.editingProduct?.price, props.editingProduct?.stockQuantity],
+  [originalTesters, originalDamaged],
   () => {
     if (props.editingProduct) {
-      props.editingProduct.amount = updatedAmount.value;
+      if (originalTesters.value >= 0 && originalDamaged.value >= 0 && newQuantity.value >= 0) {
+        props.editingProduct.stockQuantity = originalInitialStock.value + newQuantity.value - originalTesters.value - originalDamaged.value - originalSoldStock.value;
+      }
     }
   }
 );
+
+const amount = computed(() => {
+  if (props.editingProduct) {
+    return props.editingProduct.stockQuantity * props.editingProduct.price;
+  }
+  // Handle other cases if necessary
+  return 0; // Default value if any of the values are negative
+});
+
+
+
+onMounted(async () => {
+  availableCategories.value = await fetchCategoryNames();
+  if (props.editingProduct){
+    console.log(props.editingProduct)
+  }
+});
+
+
+
 
 </script>

@@ -88,6 +88,7 @@
     id:categoryId,
     name: "",
     description: "",
+    count: 0,
   });
   // Set the generated ID as the document ID for the category
 // category.value.uid = categoryId;

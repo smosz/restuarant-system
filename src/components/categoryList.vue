@@ -1,7 +1,7 @@
 <template>
   <div class="bgColor">
     <div class="max-w-screen-lg mx-auto py-6">
-      <div class="bg-white rounded-lg shadow-lg p-6 tab">
+      <div class="bg-white rounded-lg shadow-lg px-6 pt-6 tab">
         <div class="flex justify-between items-center mb-4 no-print">
           <h2 class="text-2xl font-semibold">Categories List</h2>
           <button
@@ -155,7 +155,7 @@
                 {{ category.description }}
               </td>
               <td class="px-6 py-4 border border-gray-300">
-                {{ category.productCount }}
+                {{ category.count }}
               </td>
               <td class="no-print py-4 border border-gray-300">
                 <div class="flex space-x-2 justify-center">
@@ -213,8 +213,17 @@
           </button>
         </div>
         <div class="mt-2 text-center no-print">
-          Total Categories: {{ sortedCategories.length }}
-        </div>
+            <div
+              class="bg-gray-200 p-4 rounded-sm shadow-sm flex items-center text-[20px] justify-center"
+            >
+              <p class="font-semibold text-black">
+                Total Categories:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                  > {{ sortedCategories.length }}</span
+                >
+              </p>
+            </div>
+          </div>
       </div>
     </div>
 
@@ -241,6 +250,7 @@ import "firebase/compat/firestore";
 import CategoryForm from "./CategoryForm.vue";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import axios from 'axios'
 import * as XLSX from "xlsx";
 import deleteConfirmationModal from "../components/deleteConfirmationModal.vue";
 import categoryEditModal from "../components/categoryEditModal.vue";
@@ -262,6 +272,7 @@ const db = firebase.firestore();
 const currentPage = ref(1); // Current page
 const itemsPerPage = 20 // Number of items to display per page
 const searchQuery = ref("");
+
 const minCount = ref(null);
 const maxCount = ref(null);
 // Define a ref to track the category being edited
@@ -446,12 +457,72 @@ const deleteCategory = (category) => {
   showDeleteConfirmation.value = true;
 };
 // Function to delete the product
+// const deleteConfirmed = async () => {
+//   if (deletingCategory.value) {
+//     const { id } = deletingCategory.value;
+//     try {
+//       const response = await axios.get('http://localhost:8080/products');
+//       // Assuming your server response contains products in the same structure as Firebase
+//       const productsList = response.data;
+
+// // Find products with the same category as deletingCategory.value.name
+// const productsWithSameCategory = productsList.filter((product) => {
+//   return product.category === deletingCategory.value.name;
+// });
+
+// if (productsWithSameCategory.length > 0) {
+//   console.log(productsWithSameCategory);
+//   await axios.put(`http://localhost:8080/products/${documentId}`, updatedProductData);
+//   await db.collection("categories").doc(id).delete();
+//   // Perform actions with productsWithSameCategory
+// } else {
+//   await db.collection("categories").doc(id).delete();
+//   console.log('No products with the same category found.');
+// }
+
+
+//       window.location.reload();
+//     } catch (error) {
+//       // Handle the error
+//       window.alert("Error deleting category");
+//     } finally {
+//       // Close the delete confirmation modal
+//       showDeleteConfirmation.value = false;
+//       // Fetch the updated list of products (if needed)
+//       fetchCategories();
+//     }
+//   }
+// };
 const deleteConfirmed = async () => {
   if (deletingCategory.value) {
-    const { id } = deletingCategory.value;
+    const { id: documentId, name: categoryName } = deletingCategory.value;
+
     try {
-      // Use Firebase to delete the product from Firestore
-      await db.collection("categories").doc(id).delete();
+      const response = await axios.get('http://localhost:8080/products');
+      const productsList = response.data;
+
+      // Find products with the same category as deletingCategory.value.name
+      const productsWithSameCategory = productsList.filter((product) => {
+        return product.category === categoryName;
+      });
+
+      if (productsWithSameCategory.length > 0) {
+        // Update products in the database with category set to null
+        const updatePromises = productsWithSameCategory.map(async (product) => {
+          const { id: productId } = product;
+          await axios.put(`http://localhost:8080/products/${productId}`, {
+            category: '',
+            // Include other fields that you may need to update
+          });
+        });
+
+        // Wait for all update promises to complete
+        await Promise.all(updatePromises);
+      }
+
+      // Delete the category from Firestore
+      await db.collection("categories").doc(documentId).delete();
+
       window.location.reload();
     } catch (error) {
       // Handle the error
@@ -471,29 +542,13 @@ const fetchCategories = async () => {
     const categoriesSnapshot = await db.collection("categories").get();
     categories.value = categoriesSnapshot.docs.map((doc) => ({
       ...doc.data(),
-      productCount: 0, // Initialize productCount
     }))
-    // Update productCount after fetching the categories
-    updateProductCount();
+
   } catch (error) {
     window.alert("Error fetching categories");
   }
 };
-const updateProductCount = async () => {
-  for (const category of categories.value) {
-    try {
-      const productsSnapshot = await db
-        .collection("products")
-        .where("category", "array-contains", category.name)
-        .get();
-      category.productCount = productsSnapshot.docs.length;
-    } catch (error) {
-      window.alert(
-        "Error counting products for category"
-      );
-    }
-  }
-};
+
 // Function to open the category registration modal
 const openCategoryRegistrationModal = () => {
   // Set showCategoryModal to true to show the modal
@@ -539,9 +594,6 @@ onMounted(() => {
   fetchCategories();
 });
 // Watch for changes in categories and update product counts when categories change
-watch(categories, () => {
-  updateProductCount();
-});
 watch(minCount, (newMin) => {
   if (newMin === "") {
     minCount.value = null;

@@ -7,17 +7,28 @@
   min-height: 100vh;
 @apply h-screen
 }
+.chng{
+  @apply border-[1px] border-blue-500 hover:border-orange-400
+}
+.lottie svg{
+  width:150% !important
+}
+.lottiep svg{
+  width:135% !important;
+  margin-left: -16px !important;
+}
+.-inset-1 {
+  top: -0.25rem;
+  right: -0.25rem;
+  bottom: -3px !important;
+  left: -0.25rem;
+}
 /* Hide the browser's default scrollbar */
 ::-webkit-scrollbar {
   display: none;
 }
 /* Add CSS for the slider container and animation */
-.slider-container {
-  max-width: 100%;
-  overflow: hidden;
-  position: relative;
-  display:flex
-}
+
 /* Media query for iPad Pro (2048 x 1536) */
 @media (min-width: 1024px) {
  .iLogin{
@@ -33,6 +44,12 @@
   }
   .men{
     @apply py-3
+  }
+  .ovr{
+    @apply grid-cols-3
+  }
+  .ovr4{
+    @apply mt-6 ml-[100%]
   }
  .logc{
   @apply h-[11.5rem]
@@ -60,16 +77,33 @@
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+.el-tabs__header {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  margin: 0 0 15px;
+  font-size: 14px;
+}
+.sidebar[data-v-7c412691]{
+  z-index: unset !important;
+}
+.sidebar[data-v-c74b8857]{
+  z-index: unset !important;
+}
 .pdtab{
   @apply px-1 py-3 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider
+}
+.pdtab2{
+  @apply px-1 py-3 bg-gray-600 text-center text-xs font-medium text-white uppercase tracking-wider
 }
 .pdd{
   @apply text-center py-4 border border-gray-300 
 }
-.slider {
-  display: flex;
-  animation: slide 200s linear infinite; /* Adjust the animation duration as needed */
+.pdd3{
+  @apply text-center py-4 
 }
+
 
 @keyframes slide {
   0% {
@@ -79,10 +113,7 @@
     transform: translateX(-100%); /* Adjust the percentage based on your content */
   }
 }
-/* Add a CSS rule to pause the animation when sliderPaused is true */
-.slider-container.slider-paused .slider {
-  animation-play-state: paused;
-}
+
 .num{
   @apply border-solid border-[1px] ml-2 border-black w-16
 }
@@ -263,8 +294,17 @@
 .bio{
   @apply inline-flex items-center
 }
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Change the color and opacity as needed */
+  z-index: 1; /* Adjust the z-index to control the stacking order */
+}
 .nav-item{
-  @apply flex flex-1 items-center justify-center sm:justify-start
+  @apply flex flex-1 items-center justify-center sm:justify-start h-[60px]
 }
 .nav-item .router-link-active{
   @apply bg-gray-900 text-white
@@ -273,7 +313,7 @@
   @apply overflow-hidden h-screen flex flex-col justify-center bg-[url('/wp.webp')] bg-no-repeat bg-cover 
 }
 .settings{
-  @apply  overflow-hidden flex flex-col justify-center bg-[url('/3.jpg')] bg-no-repeat bg-cover 
+  @apply  overflow-hidden flex flex-col justify-center bg-[url('/b5.jpg')] bg-no-repeat bg-cover 
 }
 .onl {
   position: absolute;
@@ -367,6 +407,9 @@
 .text-field-error {
   /* @apply appearance-none border-red-500 rounded-md text-sm sm:text-sm h-9 py-1 px-2 mr-3 */
   @apply appearance-none bg-slate-200 border border-red-500 text-gray-700 pl-2 leading-tight focus:border focus:outline-0
+}
+.cus-error{
+  @apply appearance-none border border-red-500 p-2 w-[45%] bg-slate-200 text-gray-700 leading-tight focus:border focus:outline-0
 }
 
 .error-text {
@@ -484,8 +527,9 @@ button[disabled] {
 }
 
 .bg-update-image{
-  @apply flex mt-[10px] items-center justify-center w-full h-64
+  @apply mt-[10px] self-center
 }
+
 
 
 .bg-update{

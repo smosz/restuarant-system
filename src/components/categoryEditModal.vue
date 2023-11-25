@@ -75,9 +75,10 @@
     
   
   <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits, watch} from "vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import axios from 'axios'
 // Define a prop to pass the editing product data
 const props = defineProps({
   editingCategory: Object,
@@ -90,7 +91,18 @@ const closeEditModal = () => {
   // Add this line to log the closure
   emit("close");
 };
-
+const originalCategory = ref("");
+watch(
+  () => props.editingCategory,
+  (newEditingCategory) => {
+    if (newEditingCategory) {
+      // Set the originalCategory ref when the editingProduct changes
+      originalCategory.value = newEditingCategory.name;
+      
+      // Other code...
+    }
+  }
+);
 // Define message variables
 const successMessage = ref("");
 const errorMessage = ref("");
@@ -100,13 +112,33 @@ const updateCategory = async () => {
     updating.value = true;
     if (props.editingCategory) {
       const { id, ...updatedCategoryData } = props.editingCategory;
+
+      const response = await axios.get('http://localhost:8080/products');
+      const productsList = response.data;
+      const productsWithSameCategory = productsList.filter((product) => {
+        return product.category === originalCategory.value;
+      });
+
+      if (productsWithSameCategory.length > 0) {
+        // Update products in the database with category set to null
+        const updatePromises = productsWithSameCategory.map(async (product) => {
+          const { id: productId } = product;
+          console.log(props.editingCategory.name)
+          await axios.put(`http://localhost:8080/products/${productId}`, {
+            category: props.editingCategory.name,
+            // Include other fields that you may need to update
+          });
+        });
+        // Wait for all update promises to complete
+        await Promise.all(updatePromises);
+      }
       await firebase
         .firestore()
         .collection("categories")
         .doc(id)
         .update(updatedCategoryData);
         updating.value = false;
-      // Set a success message
+      // // Set a success message
       successMessage.value = "Category updated successfully";
       
           location.reload();

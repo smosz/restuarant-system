@@ -1,7 +1,7 @@
 <template>
   <div class="bgColor">
     <div class="max-w-screen-lg mx-auto py-6">
-      <div class="bg-white rounded-lg shadow-lg p-6 tab">
+      <div class="bg-white rounded-lg shadow-lg px-6 pt-6 tab">
         <div class="flex justify-between items-center mb-4 no-print">
           <h2 class="text-2xl font-semibold">Customer List</h2>
           <button
@@ -58,21 +58,28 @@
           <thead>
             <tr>
               <th
-                class="px-2 py-2 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-2 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
-                  <span>Customer Name</span>
+                  <span>Last Purchase</span>
                 </div>
               </th>
               <th
-                class="px-2 py-2 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-2 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
-                  <span>Customer Number</span>
+                  <span> Name</span>
                 </div>
               </th>
               <th
-                class="px-2 py-2 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-2 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                <div class="flex items-center justify-center">
+                  <span> Number</span>
+                </div>
+              </th>
+              <th
+                class=" py-2 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span>Orders Made</span>
@@ -91,7 +98,7 @@
                 </div>
               </th>
               <th
-                class="px-2 py-2 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-2 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span>Products Purchased</span>
@@ -110,7 +117,7 @@
                 </div>
               </th>
               <th
-                class="px-2 py-2 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class=" py-2 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 <div class="flex items-center justify-center">
                   <span> Total Amount</span>
@@ -129,7 +136,7 @@
                 </div>
               </th>
               <th
-                class="no-print px-2 py-2 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="no-print  py-2 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Action
               </th>
@@ -137,21 +144,30 @@
           </thead>
           <tbody>
             <tr v-for="customer in paginatedcustomers" :key="customer.uid">
-              <td class="px-6 py-4 border border-gray-300">
+              <td class=" py-4 border border-gray-300 text-center">
+                <p>
+                  {{ customer.lastPurchaseDate }}
+                </p>
+                <p>
+                  {{ customer.lastPurchaseTime }}
+                </p>
+                
+              </td>
+              <td class=" py-4 border text-center border-gray-300">
                 {{ customer.name }}
               </td>
-              <td class="px-6 py-4 border border-gray-300">
+              <td class="text-center py-4 border border-gray-300">
                 {{ customer.number }}
               </td>
-              <td class="px-6 py-4 border border-gray-300">
+              <td class="text-center py-4 border border-gray-300">
                 <!-- Display the number of orders made by the customer -->
                 {{ customer.orderCount || 0 }}
               </td>
-              <td class="px-6 py-4 border border-gray-300">
+              <td class="py-4 text-center border border-gray-300">
                 <!-- Display the number of orders made by the customer -->
                 {{ customer.ProductCount || 0 }}
               </td>
-              <td class="px-6 py-4 border border-gray-300">
+              <td class="text-center py-4 border border-gray-300">
                 <!-- Display the number of orders made by the customer -->
                 {{ customer.AmountCount !== undefined ? customer.AmountCount.toLocaleString() : '0' }}
               </td>
@@ -212,9 +228,38 @@
             Next
           </button>
         </div>
+        
         <div class="mt-2 text-center no-print">
-          Total customers: {{ sortedcustomers.length }}
-        </div>
+            <div
+              class="bg-gray-200 p-4 rounded-sm shadow-sm flex items-center text-[20px] justify-between"
+            >
+              <p class="font-semibold text-gray-700">
+                Total customers:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                  > {{ sortedcustomers.length }}</span
+                >
+              </p>
+              <p class="font-semibold text-gray-700">
+                Total Orders:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                  >{{ totalOrders }}</span
+                >
+              </p>
+              <p class="font-semibold text-gray-700">
+                Total Purchased:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                >
+                  {{ totalPurchased }}</span
+                >
+              </p>
+              <p class="font-semibold text-black">
+                Total Amount:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                  >{{ totalAmount === 0 ? "UGX 0" : "UGX " + totalAmount.toLocaleString() }}</span
+                >
+              </p>
+            </div>
+          </div>
       </div>
     </div>
 
@@ -414,16 +459,30 @@ const deleteConfirmed = async () => {
     }
   }
 };
-
 // Function to fetch and populate the customers list
 const fetchcustomers = async () => {
   try {
     const customersSnapshot = await db.collection("customers").get();
-    customers.value = customersSnapshot.docs.map((doc) => doc.data());
+    const customersData = customersSnapshot.docs.map((doc) => {
+      const customerData = doc.data();
+      // Check if the customer has the "AmountCount" field
+      if (!customerData.hasOwnProperty("AmountCount")) {
+        // If not, assign a value of 0
+        customerData.AmountCount = 0;
+      }
+      return customerData;
+    });
+    
+    // Sort the customers by "AmountCount" in descending order
+    customersData.sort((a, b) => b.AmountCount - a.AmountCount);
+
+    // Now, customersData contains all customers with sorted "AmountCount" values
+    customers.value = customersData;
   } catch (error) {
     window.alert("Error fetching customers");
   }
 };
+
 
 // Function to open the customer registration modal
 const openCustomerRegistrationModal = () => {
@@ -448,7 +507,16 @@ const sortcustomers = () => {
     });
   }
 };
+const totalOrders = computed(() => {
+  return customers.value.reduce((total, customer) => total + (customer.orderCount || 0), 0);
+});
+const totalPurchased = computed(() => {
+  return customers.value.reduce((total, customer) => total + (customer.ProductCount || 0), 0);
+});
 
+const totalAmount = computed(() => {
+  return customers.value.reduce((total, customer) => total + (customer.AmountCount || 0), 0);
+});
 const sortedcustomers = computed(() => {
   // Clone the original customers array to avoid sorting the original data
   const clonedcustomers = [...customers.value];

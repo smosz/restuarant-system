@@ -27,7 +27,7 @@
                 type="text"
                 id="role-name"
                 v-model="role.name"
-                class="border border-gray-300 px-2 py-1 rounded-sm"
+                class="border uppercase border-gray-300 px-2 py-1 rounded-sm"
                 required
               />
             </div>
@@ -42,13 +42,16 @@
                 v-model="role.description"
                 rows="4"
                 class="border border-gray-300 px-2 py-1 rounded-sm"
-                required
+                
               ></textarea>
             </div> 
             <!-- Success Message -->
-            <div v-if="message" class="mt-4 text-center text-green-600">
-              {{ message }}
-            </div>
+            <div v-if="errorMessage" class="mt-4 text-center text-red-600">
+  {{ message }}
+</div>
+<div v-else-if="message" class="mt-4 text-center text-green-600">
+  {{ message }}
+</div>
             <!-- Submit Button -->
             <div class="flex justify-center">
               <button
@@ -78,6 +81,7 @@
   import "firebase/compat/firestore";
   
   const message = ref("");
+  const errorMessage = ref("");
    // Define the Firestore database reference
    const db = firebase.firestore();
    // Generate a unique ID for the role document
@@ -97,33 +101,62 @@
   // Add this line to log the closure
   emit("close");
   };
-  
-  const createRole  = async () => {
-    try {
-      updating.value = true;
-  // Add the role data to Firestore
-  await db.collection("roles").doc(roleId).set(role.value);
-  updating.value = false;
-      // Show a success message
-      message.value = "role registered successfully";
-  
-      // Clear the form fields after successful submission
-      role.value = {
-        
-        name: "",
-    description: "",
-      };
-      // Automatically clear the success message after 5 seconds (5000 milliseconds)
-      setTimeout(() => {
-        message.value = "";
-        location.reload();
-      }, 2000);
-    } catch (error) {
+
+  const createRole = async () => {
+  try {
+    updating.value = true;
+    role.value.name = role.value.name.toUpperCase();
+    if (role.value.name === "TECH") {
       updating.value = false;
-       message.value = "role registration failed";
-       window.alert("Error registering product");
+      errorMessage.value = true; // Update errorMessage
+      message.value = "You can't create a role called 'TECH'.";
+    } else {
+      // Check if a role with the same name already exists
+      const roleExists = await checkRoleExists(role.value.name);
+      
+      if (roleExists) {
+        // If a role with the same name exists, show an error message
+        updating.value = false;
+        errorMessage.value = true; // Update errorMessage
+        message.value = `${role.value.name} Role already exists.`;
+      } else {
+        // If the role doesn't exist, add it to Firestore
+        await db.collection("roles").doc(roleId).set(role.value);
+        updating.value = false;
+        errorMessage.value = false; // Update errorMessage
+        message.value = "Role registered successfully";
+
+        // Clear the form fields after successful submission
+        role.value = {
+          name: "",
+          description: "",
+        };
+
+        // Automatically clear the success message after 5 seconds (5000 milliseconds)
+        setTimeout(() => {
+          errorMessage.value = false; // Update errorMessage
+          message.value = "";
+          location.reload();
+        }, 2000);
+      }
     }
+  } catch (error) {
+    updating.value = false;
+    errorMessage.value = true; // Update errorMessage
+    message.value = "Role registration failed";
+    window.alert("Error registering role");
   }
+};
+// Function to check if a role with the same name exists
+const checkRoleExists = async (roleName) => {
+
+  const roleQuery = await db.collection("roles")
+    .where("name", "==", roleName)
+    .get();
+  
+  return !roleQuery.empty;
+};
+
   
   </script>
     

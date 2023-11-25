@@ -23,9 +23,9 @@
       >
         <div
           class="w-full lg:w-1/2 flex flex-col items-center justify-center p-32 bg-cover bg-center"
-          style="background-image: url('/49.jpg')"
+          style="background-image: url('/b4.jpg')"
         ></div>
-        <div class="w-full lg:w-1/2 py-16 px-12">
+        <div class="w-full lg:w-1/2 py-16 px-12 bg-[aliceblue]">
           <h1 class="text-blue-900 font-bold uppercase text-center text-3xl mb-3">
             Welcome
           </h1>
@@ -97,7 +97,7 @@
               <input
                 type="tel"
                 name="number"
-                placeholder="Phone Number (E.g.07XXXXXXXX)"
+                placeholder="Phone Number "
                 v-model="NewState.number"
                 :class="v$.number.$error === true ? 'text-fields-error' : 'input-fields'"
               />
@@ -226,17 +226,17 @@ emit("close");
           $autoDirty: true,
         },
         number: {
-          required: helpers.withMessage("Phone number required", required),
-          numeric: helpers.withMessage("Phone number must be numeric", numeric),
-          maxLength: helpers.withMessage(
-            "Phone number must be 10 digits long",
-            maxLength(10)
-          ),
-          formatPhoneNumber: helpers.withMessage("Invalid Format", formatPhoneNumber),
-          minLength: helpers.withMessage(
-            "Phone number must be 10 digits long",
-            minLength(10)
-          ),
+          
+          // numeric: helpers.withMessage("Phone number must be numeric", numeric),
+          // maxLength: helpers.withMessage(
+          //   "Phone number must be 10 digits long",
+          //   maxLength(10)
+          // ),
+          // formatPhoneNumber: helpers.withMessage("Invalid Format", formatPhoneNumber),
+          // minLength: helpers.withMessage(
+          //   "Phone number must be 10 digits long",
+          //   minLength(10)
+          // ),
           $autoDirty: true,
         },
         password: {

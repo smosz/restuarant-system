@@ -9,7 +9,7 @@
         <div class="text-sm font-medium text-gray-500 w-[90px]">Profile Picture</div>
         <ProfileImage />
       </div>
-      <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6" v-if="userStore.loggedInUserData.Role === 'Admin'">
+      <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6" v-if="userStore.loggedInUserData.Role === 'ADMIN'">
         <dt class="text-sm font-medium text-gray-500">Username</dt>
         <input
           v-model="state.username"
@@ -24,15 +24,17 @@
           {{ v$.username.$errors[0].$message }}</span
         >
       </div>
-      <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6" v-if="userStore.loggedInUserData.Role === 'Admin'">
+      <div class="bg-white py-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6" v-if="userStore.loggedInUserData.Role === 'ADMIN'">
         <dt class="text-sm font-medium text-gray-500">Role</dt>
+        
         <select
       id="role"
       v-model="state.role"
+     
       :class="v$.role.$error === true ? 'text-fields-error' : 'input-fields'"
     >
       <!-- Populate options from the roles array -->
-      <option value="" disabled>Select a role</option>
+      <option value = '' selected>Select a role</option>
       <option v-for="role in userRoles.availableRoles" :key="role" :value="role">{{ role }}</option>
     </select>
         <br />
@@ -40,8 +42,8 @@
     <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
     {{ v$.role.$errors[0].$message }}</span>
       </div>
-      <number v-if="userStore.loggedInUserData.Role === 'Admin'" />
-      <div class="bg-white flex justify-end " v-if="userStore.loggedInUserData.Role === 'Admin'">
+      <number v-if="userStore.loggedInUserData.Role === 'ADMIN'" />
+      <div class="bg-white flex justify-end " v-if="userStore.loggedInUserData.Role === 'ADMIN'">
         <button
         @click="saveSettings"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

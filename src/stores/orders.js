@@ -29,10 +29,7 @@ export const useOrdersStore = defineStore('order', {
         const ordersSnapshot = await db.collection('orders').orderBy("timestamp", "desc").get();
         this.orders = ordersSnapshot.docs.map((doc) => doc.data());
         this.cartItems = ordersSnapshot.docs.map((doc) => doc.data().cart);
-        //  this.productItems = ordersSnapshot.docs.flatMap((doc) => doc.data().cart.map((item) => item.product));
-        //  this.productItems.forEach((product) => {
-        //   console.log(product.name);
-        // });
+       
       } catch (error) {
         window.alert('Error fetching orders');
       }

@@ -21,7 +21,7 @@
               <img
                 v-else
                 class="object-contain w-full"
-                src="/03.jpg"
+                src="/b6.jpg"
                 alt="Default Cover Photo"
               />
             </div>

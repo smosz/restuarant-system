@@ -2,24 +2,27 @@
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore';
 import { getStorage } from "firebase/storage";
-import { getAnalytics } from "firebase/analytics";
 
+
+
+
+// import { getDatabase, ref, onDisconnect } from "firebase/database";zz
 const firebaseConfig = {
-  apiKey: "AIzaSyAi8icuYtYEMqfxHJyDBGvySeWvxoTiP-Q",
-  authDomain: "impress---pos.firebaseapp.com",
-  projectId: "impress---pos",
-  storageBucket: "impress---pos.appspot.com",
-  messagingSenderId: "561877123322",
-  appId: "1:561877123322:web:f10a1e4f1d93ba74c00943"
+  apiKey: "AIzaSyDZ-5OjKQlrNMqqLik-_SQNoXSwcy4YFHU",
+authDomain: "poss-f59bf.firebaseapp.com",
+projectId: "poss-f59bf",
+storageBucket: "poss-f59bf.appspot.com",
+messagingSenderId: "656641009076",
+appId: "1:656641009076:web:aef697b7a592c80bfb3ee1"
 };
 // Create a new Firebase project configuration for registration
 const firebaseConfigForRegistration = {
-  apiKey: "AIzaSyAi8icuYtYEMqfxHJyDBGvySeWvxoTiP-Q",
-  authDomain: "impress---pos.firebaseapp.com",
-  projectId: "impress---pos",
-  storageBucket: "impress---pos.appspot.com",
-  messagingSenderId: "561877123322",
-  appId: "1:561877123322:web:f10a1e4f1d93ba74c00943"
+  apiKey: "AIzaSyDZ-5OjKQlrNMqqLik-_SQNoXSwcy4YFHU",
+authDomain: "poss-f59bf.firebaseapp.com",
+projectId: "poss-f59bf",
+storageBucket: "poss-f59bf.appspot.com",
+messagingSenderId: "656641009076",
+appId: "1:656641009076:web:aef697b7a592c80bfb3ee1"
   // Add other Firebase config options
 };
 
@@ -29,10 +32,11 @@ const firebaseAuthForRegistration = firebase.initializeApp(
   "registration"
 ).auth();
 
+
 const firebaseApp = firebase.initializeApp(firebaseConfig)
 const db = firebase.firestore();
 const storage = getStorage(firebaseApp);
-const analytics = getAnalytics(firebaseApp);
+
 export{
-  firebaseApp,db,storage,firebaseAuthForRegistration,analytics
+  firebaseApp,db,storage,firebaseAuthForRegistration
 }
