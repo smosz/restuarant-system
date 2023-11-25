@@ -216,10 +216,9 @@ const isAddProductActive = ref(false);
 const isCategoriesActive = ref(false);
 const isAddCategoryActive = ref(false);
 
-onMounted(async () => {
-
-  await  userStore.initializeUser();
-  const currentRouteName = router.currentRoute.value.name;
+    onMounted(async  () => {
+      await userStore.initializeUser();
+      const currentRouteName = router.currentRoute.value.name;
 
   // Check if the current route matches each route
   isAllProductsActive.value = currentRouteName === "Allproducts";
