@@ -6,7 +6,15 @@
       </div>
   
       <div class="bg-white shadow-md rounded-lg overflow-hidden tab">
+<<<<<<< HEAD
         <div class="px-6">
+=======
+<<<<<<< HEAD
+        <div class="overflow-x-auto px-6">
+=======
+        <div class="px-6">
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
           <div
             class="mt-2 mb-4 flex items-center font-['monospace'] space-x-2 justify-between no-print"
           >
@@ -19,6 +27,56 @@
                 @keyup.enter="searchProducts"
                 placeholder="Search products..."
               />
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+              <!-- <Icon
+                icon="mi:filter"
+                class="mx-2 cursor-pointer"
+                :height="30"
+                @click="toggleFilter"
+                v-if="filterclose"
+              />
+              <Icon
+                icon="mdi:close-box"
+                color="red"
+                class="mx-2 cursor-pointer"
+                :height="30"
+                @click="toggleFilter"
+                v-if="filterShow"
+              />
+              <div v-if="filterShow" class="flex items-center">
+                
+                <div class="mt-2">
+                  <h1 class="ml-2">Filter by Quantity</h1>
+                  <div class="flex">
+                    <input
+                      v-model="minStock"
+                      type="number"
+                      class="num"
+                      placeholder="Min Qty"
+                    />
+                    <h1 class="ml-2">-</h1>
+                    <input
+                      v-model="maxStock"
+                      type="number"
+                      class="num"
+                      placeholder="Max Qty"
+                    />
+                  </div>
+                </div>
+               
+               
+                <button
+                  @click="filterProducts"
+                  class=" px-3 py-2 bg-blue-500 text-white hover:bg-blue-700 rounded-md cursor-pointer"
+                >
+                  Filter
+                </button>
+              </div> -->
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
             </div>
   
             <div class="flex ml-auto">
@@ -151,6 +209,7 @@
                
               </tr>
             </thead>
+<<<<<<< HEAD
             <tbody v-loading="loading">
               <tr >
     <td :colspan="numberOfColumns" class="text-center" v-if="paginatedProducts.length === 0 ">
@@ -161,6 +220,16 @@
               <tr v-for="product in paginatedProducts" :key="product.sku">
                 <td class="pdd">
                   <div class="flex items-center justify-left flex-wrap">
+=======
+            <tbody>
+              <tr v-for="product in paginatedProducts" :key="product.sku">
+                <td class="pdd">
+<<<<<<< HEAD
+                  <div class="flex items-center justify-center flex-wrap">
+=======
+                  <div class="flex items-center justify-left flex-wrap">
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
                     <img
                       :src="product.productImage"
                       alt="Product Image"
@@ -188,6 +257,28 @@
     {{ product.sold }}
   </td>
   <td
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+             :class="{ 'pdd': product.stockQuantity > 20, 'text-red-500 pdd2 flex items-center py-4 pl-10 justify-center': product.stockQuantity <= 20 }"
+              >
+                <div> {{ product.stockQuantity }}</div>
+                 
+                  <Vue3Lottie
+                    v-if="
+                      product.stockQuantity <= 20 && product.stockQuantity > 0
+                    "
+                    :animationData="low"
+                    :height="47"
+                  />
+                  <Vue3Lottie
+                    v-if="product.stockQuantity === 0"
+                    :animationData="empty"
+                    :height="47"
+                  />
+                  
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
                 :class="{
                   pdd: product.stockQuantity > 20,
                   'text-red-500 pdd2 border-b border-gray-300 flex items-center py-[2rem] pl-10 justify-center':
@@ -208,6 +299,10 @@
                   :animationData="empty"
                   :height="47"
                 />
+<<<<<<< HEAD
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
               </td>
                 
 
@@ -290,13 +385,21 @@ import empty from "../assets/empty.json";
   import jsPDF from "jspdf";
   import "jspdf-autotable";
   import * as XLSX from "xlsx";
+<<<<<<< HEAD
   import axios from 'axios'
   // import { getDatabase,ref as stRef, get,orderByChild,} from "firebase/database";
+=======
+<<<<<<< HEAD
+=======
+  // import { getDatabase,ref as stRef, get,orderByChild,} from "firebase/database";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   // Define the Firestore database reference
   const db = firebase.firestore();
 
   // Define pagination state
   const currentPage = ref(1); // Current page
+<<<<<<< HEAD
   const itemsPerPage = 20; // Number of items to display per page
   const searchQuery = ref("");
   const filterShow = ref(false);
@@ -305,6 +408,20 @@ import empty from "../assets/empty.json";
   const sortColumnRef = ref(null);
   const sortDirection = ref("asc"); // Default sorting direction
   const numberOfColumns = ref(7)
+=======
+<<<<<<< HEAD
+  const itemsPerPage = 5; // Number of items to display per page
+=======
+  const itemsPerPage = 20; // Number of items to display per page
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+  const searchQuery = ref("");
+  const filterShow = ref(false);
+  const filterclose = ref(true);
+  
+  const sortColumnRef = ref(null);
+  const sortDirection = ref("asc"); // Default sorting direction
+
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   const minStock = ref(null);
   const maxStock = ref(null);
   const minPrice = ref(null);
@@ -430,6 +547,15 @@ import empty from "../assets/empty.json";
 
 
   const totalQtySold = computed(() => {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    return products.value.reduce((total, product) => total + product.sold, 0);;
+});
+
+
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     const num = products.value.reduce((total, product) => {
         const sold = product.sold;
         if (isNaN(sold)) {
@@ -437,11 +563,19 @@ import empty from "../assets/empty.json";
         }
         return total + (isNaN(sold) ? 0 : sold);
     }, 0);
+<<<<<<< HEAD
+=======
+    console.log(num);
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     return num;
 });
 
 
 
+<<<<<<< HEAD
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   const totalTesters = computed(() => {
     return products.value.reduce((total, product) => total + product.testers, 0);
   });
@@ -514,6 +648,7 @@ import empty from "../assets/empty.json";
   };
   // Function to fetch and populate the products list
   const fetchProducts = async () => {
+<<<<<<< HEAD
   try {
     const response = await axios.get('http://localhost:8080/products');
 
@@ -534,6 +669,44 @@ import empty from "../assets/empty.json";
 
 
 
+=======
+    try {
+      const productsSnapshot = await db.collection("products").orderBy('ranking','asc').get();
+      products.value = productsSnapshot.docs.map((doc) => doc.data());
+    } catch (error) {
+      window.alert("Error fetching products");
+    }
+  };
+<<<<<<< HEAD
+  
+=======
+//   const fetchProducts = async () => {
+//   try {
+//     const db = getDatabase();
+//     const productsDataRef = stRef(db, "/products");
+//         const prod =await get(productsDataRef)
+//     if (prod.val() !== null) {
+
+//       const productsArray= Object.values(prod.val()).map((product) => {
+//             return {
+//               ...product,
+//             };});
+//       // Sort the products by ranking in ascending order
+//       productsArray.sort((a, b) => a.ranking - b.ranking);
+
+//       // Set the products value
+//       products.value = productsArray;
+//     } else {
+//       // Handle the case where there are no products in the database
+//       products.value = [];
+//     }
+//   } catch (error) {
+//     window.alert("Error fetching products: " + error);
+//   }
+// };
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   const sortProducts = () => {
     if (sortColumnRef.value && sortDirection.value) {
       products.value.sort((a, b) => {

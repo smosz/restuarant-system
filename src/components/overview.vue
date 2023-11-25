@@ -89,17 +89,37 @@ import pro from "../assets/pro.json";
 import an from "../assets/an.json";
 import wallet from "../assets/wallet.json";
 import prod from "../assets/prod.json";
+<<<<<<< HEAD
 import { useProductStore } from "../stores/products.js";
+=======
+<<<<<<< HEAD
+=======
+import { useProductStore } from "../stores/products.js";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 import "firebase/compat/firestore";
 
 const orders = ref([]);
 const totalPrices = ref([])
 const rawTotalPrices = ref([])
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+const expenses = ref([])
+const expenseMoney = ref([])
+const db = firebase.firestore();
+const products = ref([]);
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const productStore = useProductStore();
 const expenses = ref([])
 const expenseMoney = ref([])
 const db = firebase.firestore();
 const products = productStore.products
+<<<<<<< HEAD
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 // Function to fetch and populate the latest 5 orders
 const fetchLatestOrders = async () => {
   try {
@@ -129,12 +149,34 @@ const fetchLatestOrders = async () => {
         return null; // or some default value
       }
     });
+<<<<<<< HEAD
     
+=======
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   } catch (error) {
     window.alert("Error fetching the latest orders");
   }
 };
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+const fetchProducts = async () => {
+  try {
+    const productsSnapshot = await db.collection("products").get();
+    products.value = productsSnapshot.docs.map((doc) => doc.data());
+  } catch (error) {
+    window.alert("Error fetching products");
+  }
+};
+=======
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const fetchExpenses = async () => {
   try {
     const expensesSnapshot = await db.collection("expenses").get();
@@ -150,7 +192,14 @@ const fetchExpenses = async () => {
     window.alert("Error fetching expenses");
   }
 };
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const totalAmount = computed(() => {
   const total = expenses.value.reduce((total, expense) => total + expense.totalAmount, 0);
   if (total > 0) {
@@ -159,9 +208,26 @@ const totalAmount = computed(() => {
     return "0";
   }
 });
+<<<<<<< HEAD
 
 const totalAmountProd = computed(() => productStore.totalAmountOfAllProducts);
 
+=======
+<<<<<<< HEAD
+const totalAmountProd = computed(() => {
+  const total = products.value.reduce((total, product) => total + product.amount, 0);
+  if (total > 0) {
+    return total.toLocaleString();
+  } else {
+    return "0";
+  }
+});
+=======
+
+const totalAmountProd = computed(() => productStore.totalAmountOfAllProducts);
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const highestAmount = computed(() => {
   const total = Math.max(...totalPrices.value);
   if (total > 0) {
@@ -180,6 +246,17 @@ const totalOrdersPrice = computed(() => {
 });
 
 // Fetch the latest 5 orders when the component is mounted
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+onMounted(() => {
+  fetchLatestOrders();
+  fetchProducts();
+  fetchExpenses();
+});
+
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 onMounted(async () => {
   try {
     await productStore.fetchProducts(),
@@ -190,5 +267,9 @@ onMounted(async () => {
     window.alert("Error fetching Data");
   }
 });
+<<<<<<< HEAD
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 </script>
 

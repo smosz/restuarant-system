@@ -81,7 +81,11 @@
             <div class="flex flex-col mt-4">
               <label for="product-category" class="text-sm">Search or Add Category</label>
               <input type="text" id="product-category" v-model="newCategory"
+<<<<<<< HEAD
                 class="border border-gray-300 px-2 py-1 rounded-sm uppercase" @input="suggestCategories"
+=======
+                class="border border-gray-300 px-2 py-1 rounded-sm" @input="suggestCategories"
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
                 @keydown.enter.prevent="registerNewCategory" />
               <!-- Auto-suggested categories dropdown -->
               <ul v-if="showSuggestions" class="border border-gray-300 mt-1 rounded-b-md">
@@ -210,7 +214,11 @@ const router = useRouter();
 const newCategory = ref("");
 const categorySuggestions = ref([]);
 const showSuggestions = ref(false);
+<<<<<<< HEAD
 const categories = ref([])
+=======
+
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 // Create a computed property for displaying the formatted amount
 const selectedCategory = ref("");
 const rawAmount = computed(() => {
@@ -265,7 +273,11 @@ const update = () => {
 const toggleCategory = (category) => {
   selectedCategory.value = category;
   product.value.category = category;
+<<<<<<< HEAD
   
+=======
+  console.log(product.value)
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 };
 
 const fetchCategoryNames = async () => {
@@ -352,7 +364,10 @@ const selectSuggestion = (suggestion) => {
   // Add the selected suggestion to selectedCategories
   selectedCategory.value = suggestion;
   product.value.category = suggestion;
+<<<<<<< HEAD
   
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   newCategory.value = suggestion; // Clear the input
   categorySuggestions.value = []; // Clear suggestions
   showSuggestions.value = false; // Hide suggestions
@@ -377,8 +392,12 @@ const registerNewCategory = () => {
         availableCategories.value.push(newCategory.value);
         // Add the new category to the selectedCategories
         selectedCategory.value = newCategory.value;
+<<<<<<< HEAD
         product.value.category = newCategory.value;
         
+=======
+      
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       })
       .catch((error) => {
         window.alert("Error registering new category");
@@ -389,10 +408,13 @@ const registerNewCategory = () => {
 
 
 const registerProduct = async () => {
+
+
   try {
     updating.value = true;
     product.value.name = product.value.name.toUpperCase();
     product.value.sku = product.value.sku.toUpperCase();
+<<<<<<< HEAD
     
     const originalCategoryObject = categories.value.find(category => category.name === product.value.category);
     console.log(availableCategories.value)
@@ -413,13 +435,36 @@ const registerProduct = async () => {
           transaction.update(oldCategoryDocRef, { count: oldCategoryCount + 1 });
         });
       }
+=======
+<<<<<<< HEAD
+=======
+    
+    const dbs = firebase.firestore();
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+    // Generate a unique ID
+    const sku = dbs.collection("products").doc().id;
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     
     // Add the product data to Firestore with SKU as the document ID
     const productDataWithId = {
       ...product.value,
+<<<<<<< HEAD
     };
      await axios.post('http://localhost:8080/products', productDataWithId);
 
+=======
+id:sku,
+    };
+<<<<<<< HEAD
+console.log(productDataWithId)
+    await db.collection("products").doc(sku).set(productDataWithId);
+=======
+
+
+    await dbs.collection("products").doc(sku).set(productDataWithId);
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     updating.value = false;
 
     // Show a success message
@@ -439,7 +484,14 @@ const registerProduct = async () => {
       InitialStockQuantity: 0,
     };
     selectedCategory.value = null
+<<<<<<< HEAD
     newCategory.value=''
+=======
+<<<<<<< HEAD
+=======
+    newCategory.value=''
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     // Automatically clear the success message after 5 seconds (5000 milliseconds)
     setTimeout(() => {
   message.value = "";

@@ -19,10 +19,17 @@
             <Icon icon="fluent-mdl2:product-variant" class="mr-2"/>
             Inventory Data
           </a>
+<<<<<<< HEAD
           <!-- <a class="sidebar-link" @click="toggleAnalyticsSection" :class="{ 'active-link': isAnalyticsSectionActive }">
             <Icon icon="icon-park:chart-graph" class="mr-2"/>
             Analytics
           </a> -->
+=======
+          <a class="sidebar-link" @click="toggleAnalyticsSection" :class="{ 'active-link': isAnalyticsSectionActive }">
+            <Icon icon="icon-park:chart-graph" class="mr-2"/>
+            Analytics
+          </a>
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
         </div>
       </aside>
     </transition-group>

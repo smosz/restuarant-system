@@ -13,10 +13,14 @@
     "@vuelidate/core": "^2.0.0",
     "@vuelidate/validators": "^2.0.0",
     "@vueuse/firebase": "^9.13.0",
+<<<<<<< HEAD
     "axios": "^1.6.2",
     "body-parser": "^1.20.2",
     "chart.js": "^4.4.0",
     "cors": "^2.8.5",
+=======
+    "chart.js": "^4.4.0",
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     "element-plus": "^2.3.14",
     "express": "^4.18.2",
     "firebase": "^9.19.1",
@@ -29,7 +33,11 @@
     "jspdf-autotable": "^3.6.0",
     "mysql2": "^3.6.3",
     "pinia": "^2.1.6",
+<<<<<<< HEAD
     "sequelize": "^6.35.0",
+=======
+    "twilio": "^4.19.0",
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     "vue": "^3.2.47",
     "vue-chartkick": "^1.1.0",
     "vue-router": "^4.1.6",

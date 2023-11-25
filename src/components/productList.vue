@@ -193,7 +193,15 @@
                   </span>
                 </div>
               </th> -->
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+              
+=======
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
               <!-- <th class="pdtab">
                 <div class="flex items-center justify-center">
                   <span>Dam Qty</span>
@@ -307,6 +315,7 @@
               <td class="pdd">
                 {{ product.sku }}
               </td>
+<<<<<<< HEAD
               <td class="pdd" style="text-align: -webkit-center">
                 <!-- Display Categories as Pills -->
                 <div
@@ -314,12 +323,32 @@
                 >
                   <div
                     class="text-blue-800"
+=======
+<<<<<<< HEAD
+              <td class="pdd" style="text-align: -webkit-center;">
+                <!-- Display Categories as Pills -->
+                <div class="flex justify-center px-2  rounded-full bg-blue-200 w-max" >
+                  <div
+                    v-for="category in product.category"
+                    :key="category"
+                    class=" text-blue-800 "
+=======
+              <td class="pdd" style="text-align: -webkit-center">
+                <!-- Display Categories as Pills -->
+                <div
+                  class="flex justify-center px-2 rounded-full bg-blue-200 w-max"
+                >
+                  <div
+                    class="text-blue-800"
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
                   >
                     {{ product.category }}
                   </div>
                 </div>
               </td>
               <td class="pdd">
+<<<<<<< HEAD
                 
                   <span v-if="product.price > 0">
                     {{ product.price.toLocaleString() }}
@@ -331,11 +360,36 @@
               </td>
 
               <td
+=======
+<<<<<<< HEAD
+                {{ product.price.toLocaleString() }}
+              </td>
+             
+              <td
+              
+             :class="{ 'pdd': product.stockQuantity > 20, 'text-red-500 pdd2 border-b border-gray-300 flex items-center py-[2rem] pl-10 justify-center': product.stockQuantity <= 20 }"
+=======
+                
+                  <span v-if="product.price > 0">
+                    {{ product.price.toLocaleString() }}
+                  </span>
+                  <span v-else>
+                    {{ product.price }}
+                  </span>
+                
+              </td>
+
+              <td
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
                 :class="{
                   pdd: product.stockQuantity > 20,
                   'text-red-500 pdd2 border-b border-gray-300 flex items-center py-[2rem] pl-10 justify-center':
                     product.stockQuantity <= 20,
                 }"
+<<<<<<< HEAD
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
               >
                 <div>{{ product.stockQuantity }}</div>
 
@@ -381,6 +435,7 @@
                   </button>
                 </div>
               </td>
+
             </tr>
           </tbody>
         </table>
@@ -487,9 +542,18 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import axios from 'axios'
 import * as XLSX from "xlsx";
+<<<<<<< HEAD
 // import { API, graphqlOperation } from 'aws-amplify';
 // import { listProducts } from '../graphql/queries';
 import { getDatabase, ref as stRef, get,remove,limitToLast,query } from "firebase/database";
+=======
+<<<<<<< HEAD
+=======
+// import { API, graphqlOperation } from 'aws-amplify';
+// import { listProducts } from '../graphql/queries';
+import { getDatabase, ref as stRef, get,remove,limitToLast,query } from "firebase/database";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 // Define the Firestore database reference
 const db = firebase.firestore();
 // Define a ref to control the visibility of the delete confirmation modal
@@ -514,9 +578,18 @@ const minStock = ref(null);
 const maxStock = ref(null);
 const minPrice = ref(null);
 const maxPrice = ref(null);
+<<<<<<< HEAD
 const numberOfColumns = ref(8)
 const cachedProducts = ref([]);
 
+=======
+<<<<<<< HEAD
+=======
+const numberOfColumns = ref(8)
+const cachedProducts = ref([]);
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const { props } = defineProps(["showListSection"]);
 const toggleFilter = () => {
   filterShow.value = !filterShow.value;
@@ -692,10 +765,23 @@ const filterProducts = () => {
 
       // Check the type of category and convert it to a string if necessary
       if (Array.isArray(productCategory)) {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        productCategory = productCategory.join(' '); // Convert array to a space-separated string
+      } else if (typeof productCategory !== 'string') {
+        // Handle other types of category, e.g., if it's an object or something else
+        productCategory = '';
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
         productCategory = productCategory.join(" "); // Convert array to a space-separated string
       } else if (typeof productCategory !== "string") {
         // Handle other types of category, e.g., if it's an object or something else
         productCategory = "";
+<<<<<<< HEAD
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       }
 
       // Check both stock quantity and price criteria
@@ -707,10 +793,20 @@ const filterProducts = () => {
         (minPrice.value === null || productPrice >= minPrice.value) &&
         (maxPrice.value === null || productPrice <= maxPrice.value);
 
+<<<<<<< HEAD
+      const categoryFilter = selectedCategory.value === "" || productCategory === selectedCategory.value.trim();
+      
+=======
       const categoryFilter =
         selectedCategory.value === "" ||
         productCategory === selectedCategory.value.trim();
 
+<<<<<<< HEAD
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+      console.log(productCategory);
+      console.log(selectedCategory.value);
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 
       return stockQuantityFilter && priceFilter && categoryFilter; // Include the product in the filtered list if both criteria are met
     });
@@ -719,6 +815,13 @@ const filterProducts = () => {
   }
 };
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const printTable = () => {
   // Trigger the browser's print dialog
   window.print();
@@ -769,6 +872,7 @@ const deleteConfirmed = async () => {
     const { id } = deletingProduct.value;
 
     try {
+<<<<<<< HEAD
       const response = await axios.delete(`http://localhost:8080/products/${id}`);
 
       // Check if the deletion was successful based on your server response
@@ -781,6 +885,15 @@ const deleteConfirmed = async () => {
         // Handle the case where the server did not return a successful response
         window.alert("Error deleting product");
       }
+=======
+      // const dbs = getDatabase();
+
+      // // Use Firebase Realtime Database to delete the product
+      // await remove(stRef(dbs, 'products/' + id));
+      await db.collection("products").doc(id).delete();
+      // Show a success message or perform any other actions if needed
+      window.alert("Product deleted successfully");
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     } catch (error) {
       // Handle the error
       window.alert("Error deleting product");
@@ -791,6 +904,7 @@ const deleteConfirmed = async () => {
     }
   }
 };
+<<<<<<< HEAD
 
 const fetchProducts = async () => {
   try {
@@ -819,11 +933,58 @@ const fetchProducts = async () => {
       // Use the cached products
       products.value = cachedProducts.value.slice();
     }
+=======
+<<<<<<< HEAD
+const fetchProducts = async () => {
+  try {
+    const productsSnapshot = await db.collection("products").get();
+    const productsData = productsSnapshot.docs.map((doc) => doc.data());
+
+    // Sort the products by name alphabetically
+    productsData.sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+      return 0;
+    });
+
+    products.value = productsData;
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   } catch (error) {
     loading.value = false;
     console.error('Error fetching products', error);
     window.alert('Error fetching products');
   }
+=======
+
+const fetchProducts = async () => {
+  try {
+        if (cachedProducts.value.length === 0) {
+          // Only fetch products if the cache is empty
+          const productsSnapshot = await db.collection("products").get();
+          const productsList  = productsSnapshot.docs.map((doc) => doc.data());
+// Sort the products by name alphabetically
+productsList.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      });
+      loading.value = false;
+          // Cache the fetched products
+          products.value = productsList;
+          cachedProducts.value = products.value.slice();
+        } else {
+          // Use the cached products
+          products.value = cachedProducts.value.slice();
+        }
+      } catch (error) {
+        loading.value = false;
+        window.alert("Error fetching products");
+      }
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 };
 
 

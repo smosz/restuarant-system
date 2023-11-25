@@ -142,6 +142,64 @@ const closeReceipt = () => {
   emit("close")
 };
 
+<<<<<<< HEAD
+const exportToPDF = () => {
+    const element = document.getElementById('mainContainer');
+    const buttonsContainer = document.getElementById('buttonsContainer');
+
+=======
+<<<<<<< HEAD
+const exportToPDsF = async () => {
+
+  //  Select the HTML element to be converted to PDF
+  const element = document.getElementById('mainContainer');
+// Remove the buttons container
+const buttonsContainer = document.getElementById('buttonsContainer');
+  if (buttonsContainer) {
+    buttonsContainer.remove();
+  }
+  // Remove the max height and overflow styles
+  if (element) {
+=======
+const exportToPDF = () => {
+    const element = document.getElementById('mainContainer');
+    const buttonsContainer = document.getElementById('buttonsContainer');
+
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
+    if (buttonsContainer) {
+      buttonsContainer.style.display = 'none';
+    }
+    if (element) {
+<<<<<<< HEAD
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
+    element.classList.remove('max-h-[437px]')
+    element.classList.remove('overflow-y-auto');
+    }
+    html2canvas(element, {
+      scale: 2, // You can adjust the scale as needed
+    }).then((canvas) => {
+      // Create an image from the canvas
+      const imgData = canvas.toDataURL('image/png');
+
+      // Create a download link for the image
+      const a = document.createElement('a');
+      a.href = imgData;
+      a.download = `${customerName.value} receipt.png`;
+      a.click();
+
+      if (buttonsContainer) {
+        buttonsContainer.style.display = 'flex';
+      }
+    });
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  } catch (error) {
+   window.alert('PDF generation error');
+  }
+};
 const exportToPDF = () => {
     const element = document.getElementById('mainContainer');
     const buttonsContainer = document.getElementById('buttonsContainer');
@@ -169,12 +227,23 @@ const exportToPDF = () => {
         buttonsContainer.style.display = 'flex';
       }
     });
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   };
   // Fetch orders and set the current order on component mount
   onMounted(async () => {
   
     await orderStore.fetchOrders();
+<<<<<<< HEAD
     userStore.initializeUser()
+=======
+<<<<<<< HEAD
+    userStore.initializeUser();
+=======
+    userStore.initializeUser()
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 
   // Set the current order (replace '0' with the index of the order you want to display)
   const initialOrderIndex = 0; // Replace with the desired index

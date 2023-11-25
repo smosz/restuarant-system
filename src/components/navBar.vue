@@ -13,7 +13,11 @@
               >Dashboard</router-link
             >
             <div
+<<<<<<< HEAD
             v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
+=======
+            v-if="userStore.loggedInUserData.Role === 'Admin' || userStore.loggedInUserData.Role === 'Tech'"
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
               :class="{
                 'active-products': isAllProductsActive,
                 'active-add-product': isAddProductActive,
@@ -101,7 +105,11 @@
               >Pos</router-link
             >
             <router-link
+<<<<<<< HEAD
             v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
+=======
+            v-if="userStore.loggedInUserData.Role === 'Admin' || userStore.loggedInUserData.Role === 'Tech'"
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
               :to="{ name: 'Orders' }"
               class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Orders</router-link
@@ -113,13 +121,21 @@ class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medi
 >Expenses</router-link
 >
             <router-link
+<<<<<<< HEAD
             v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
+=======
+            v-if="userStore.loggedInUserData.Role === 'Admin' || userStore.loggedInUserData.Role === 'Tech'"
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
               :to="{ name: 'Roles' }"
               class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Roles</router-link
             >
             <router-link
+<<<<<<< HEAD
             v-if="userStore.loggedInUserData.Role === 'ADMIN' || userStore.loggedInUserData.Role === 'Tech'"
+=======
+            v-if="userStore.loggedInUserData.Role === 'Admin' || userStore.loggedInUserData.Role === 'Tech'"
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
               :to="{ name: 'Users' }"
               class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Users</router-link
@@ -216,10 +232,9 @@ const isAddProductActive = ref(false);
 const isCategoriesActive = ref(false);
 const isAddCategoryActive = ref(false);
 
-onMounted(async () => {
-
-  await  userStore.initializeUser();
-  const currentRouteName = router.currentRoute.value.name;
+    onMounted(async  () => {
+      await userStore.initializeUser();
+      const currentRouteName = router.currentRoute.value.name;
 
   // Check if the current route matches each route
   isAllProductsActive.value = currentRouteName === "Allproducts";

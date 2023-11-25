@@ -122,6 +122,7 @@
   import firebase from "firebase/compat/app";
   import emptyStock from "../assets/emptyStock.json";
   import sold from "../assets/sold.json";
+<<<<<<< HEAD
   import axios from "axios";
   import prod from "../assets/prod.json";
   import lowStock from "../assets/lowStock.json";
@@ -138,11 +139,84 @@
               ...product,
             };
           });
+=======
+
+  import prod from "../assets/prod.json";
+  import lowStock from "../assets/lowStock.json";
+  import "firebase/compat/firestore";
+<<<<<<< HEAD
+  
+=======
+  import { getDatabase, ref as stRef, get,remove } from "firebase/database";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+  const orders = ref([]);
+
+  const db = firebase.firestore();
+  const products=ref([]);
+  // Function to fetch and populate the latest 5 orders
+  const fetchLatestOrders = async () => {
+    try {
+      const latestOrdersSnapshot = await db
+        .collection("orders")
+        .get();
+  
+      orders.value = latestOrdersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+    } catch (error) {
+      window.alert("Error fetching the latest orders");
+    }
+  };
+  const fetchProducts = async () => {
+    try {
+      const productsSnapshot = await db.collection("products").get();
+      products.value = productsSnapshot.docs.map((doc) => doc.data());
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     } catch (error) {
       window.alert("Error fetching products");
     }
   };
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+//   const fetchProducts = async () => {
+//   try {
+//     // Get a reference to the Firebase Realtime Database
+//     const db = getDatabase();
+
+//     // Reference the "products" node in the database
+//     const productsRef = stRef(db, "/products");
+
+//     // Retrieve the data from the "products" node
+//     const productsSnapshot = await get(productsRef);
+
+//     if (productsSnapshot.val() !== null) {
+//       // Convert the data to an array of products
+//       const productsList = [];
+//       for (const sku in productsSnapshot.val()) {
+//         const productData = productsSnapshot.val()[sku];
+//         productsList.push({
+//           id: sku, // Use the SKU as the ID
+//           ...productData,
+//         });
+//       }
+
+//       // Set the sorted products in your Vue variable
+//       products.value = productsList;
+//     } else {
+//       console.log("No products found in the database.");
+//     }
+//   } catch (error) {
+//     console.error("Error fetching products:", error);
+//   }
+// };
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   const totalStockQuantity = computed(() => {
   return products.value.reduce(
     (total, product) => total + product.stockQuantity,
@@ -163,6 +237,10 @@ const totalLowStockProducts = computed(() => {
   });
   // Fetch the latest 5 orders when the component is mounted
   onMounted(() => {
+<<<<<<< HEAD
+=======
+    fetchLatestOrders();
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     fetchProducts();
 
   });

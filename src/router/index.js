@@ -90,7 +90,11 @@ const router = createRouter({
       component: roles,
       meta: {
         requiresAuth: true,
+<<<<<<< HEAD
         requiresAnyRole: ['ADMIN', 'Tech'] // This route requires either 'ADMIN' or 'Tech' role
+=======
+        requiresAnyRole: ['Admin', 'Tech'] // This route requires either 'Admin' or 'Tech' role
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       }
     },
     
@@ -99,7 +103,11 @@ const router = createRouter({
       name: 'Orders',
       component: Orders,
       meta: {
+<<<<<<< HEAD
         requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
+=======
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       }
     },
     {
@@ -107,7 +115,11 @@ const router = createRouter({
       name: 'Users',
       component: users,
       meta: {
+<<<<<<< HEAD
         requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
+=======
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       }
     },
     {
@@ -123,7 +135,11 @@ const router = createRouter({
       name: 'Allproducts',
       component: Allproducts,
       meta: {
+<<<<<<< HEAD
         requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
+=======
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       }
     },
     {
@@ -131,7 +147,11 @@ const router = createRouter({
       name: 'Categories',
       component: Categories,
       meta: {
+<<<<<<< HEAD
         requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
+=======
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       }
     },
     {
@@ -139,7 +159,11 @@ const router = createRouter({
       name: 'Addproduct',
       component: Addproduct,
       meta: {
+<<<<<<< HEAD
         requiresAuth: true, requiresAnyRole: ['ADMIN', 'Tech']
+=======
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       }
     },
     {
@@ -177,9 +201,15 @@ router.beforeEach(async (to, from, next) => {
           redirect: to.fullPath
         }
       });
+<<<<<<< HEAD
     } else if (to.matched.some(record => ['ADMIN', 'Tech'].includes(record.meta.requiresRole))){
       // Allow access for ADMIN routes
       if (userRole === 'ADMIN' || userRole === 'Tech') {
+=======
+    } else if (to.matched.some(record => ['Admin', 'Tech'].includes(record.meta.requiresRole))){
+      // Allow access for admin routes
+      if (userRole === 'Admin' || userRole === 'Tech') {
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
         next();
       } else {
         next('/pos'); // Redirect to an access denied page for non-ADMINs

@@ -85,12 +85,15 @@
   margin: 0 0 15px;
   font-size: 14px;
 }
+<<<<<<< HEAD
 .sidebar[data-v-7c412691]{
   z-index: unset !important;
 }
 .sidebar[data-v-c74b8857]{
   z-index: unset !important;
 }
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 .pdtab{
   @apply px-1 py-3 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider
 }

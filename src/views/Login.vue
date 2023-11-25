@@ -91,6 +91,10 @@ import load from "../assets/load.json";
 import { useUserStore } from "../stores/user.js";
 import useValidate from "@vuelidate/core";
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 import { email, helpers } from "@vuelidate/validators";
 const db = firebase.firestore();
 const state = reactive({
@@ -123,6 +127,24 @@ const btnColor = () => {
 };
 
 const v$ = useValidate(rules, state);
+<<<<<<< HEAD
+=======
+
+const login = async () => {
+ 
+
+<<<<<<< HEAD
+=======
+  try {
+    
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+  const userData = await v$.value.$validate();
+  
+  if (!userData) {
+    alert("Form is invalid");
+    return;
+  }
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 
 const login = async () => {
   try {
@@ -147,6 +169,7 @@ const login = async () => {
       .doc(user.uid)
       .get();
 
+<<<<<<< HEAD
     if (userDoc.exists) {
       const userData = userDoc.data();
       if (userData.status === "disabled") {
@@ -156,9 +179,21 @@ const login = async () => {
         return;
       }
     }
+=======
+if (userDoc.exists) {
+  const userData = userDoc.data();
+  if (userData.status === 'disabled') {
+    // User is disabled, prevent login
+    loading.value = false;
+    alert("Your account is disabled. Contact support for assistance.");
+    return;
+  }
+}
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     // Get the current date and time
     const currentDateTime = new Date();
 
+<<<<<<< HEAD
     // Format the date as "dd-mm-yyyy"
     const formattedDate = `${currentDateTime.getDate()}-${
       currentDateTime.getMonth() + 1
@@ -175,6 +210,25 @@ const login = async () => {
     await firebase.firestore().collection("users").doc(user.uid).update({
       lastLoginDate: formattedDate,
       lastLoginTime: formattedTime,
+=======
+// Format the date as "dd-mm-yyyy"
+const formattedDate = `${currentDateTime.getDate()}-${
+  currentDateTime.getMonth() + 1
+}-${currentDateTime.getFullYear()}`
+
+// Format the time in 12-hour clock format
+const hours = currentDateTime.getHours();
+const minutes = currentDateTime.getMinutes();
+const amOrPm = hours >= 12 ? "PM" : "AM";
+const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
+     // Update the lastLogin field in Firestore
+     await firebase.firestore().collection("users").doc(user.uid).update({
+      
+      lastLoginDate: formattedDate ,
+        lastLoginTime: formattedTime
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     });
     router.replace({ name: "Dashboard" });
   } catch (err) {
@@ -193,6 +247,12 @@ const login = async () => {
         break;
       case "auth/invalid-login-credentials":
         state.errorMsg = "Invalid Credentials. Try again or Contact Admin";
+<<<<<<< HEAD
+=======
+        break;
+      case "auth/invalid-login-credentials":
+        state.errorMsg = "Invalid Credentials";
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
         break;
       default:
         state.errorMsg = "Connection to Server cut down";

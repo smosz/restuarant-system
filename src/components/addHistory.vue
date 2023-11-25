@@ -62,6 +62,7 @@
       </th>
     </tr>
   </thead>
+<<<<<<< HEAD
   <tbody v-loading="loading">
     <tr >
     <td :colspan="numberOfColumns" class="text-center" v-if="paginatedProducts.length === 0 ">
@@ -71,6 +72,10 @@
   </tr>
     <tr v-for="product in paginatedProducts" :key="product.sku">
       
+=======
+  <tbody>
+    <tr v-for="product in paginatedProducts" :key="product.sku">
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       <td class="pdd">
         <div class="flex items-center justify-center flex-wrap">
           <img :src="product.productImage" alt="Product Image" class="w-10 h-10 mr-2" />
@@ -79,8 +84,12 @@
       </td>
       <td class="pdd">
         {{ product.sku }}
+<<<<<<< HEAD
       </td> 
     
+=======
+      </td>
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       <td class="pdd">
         <!-- Iterate through quantityChanges for the current product -->
         <table class="w-full">
@@ -92,6 +101,7 @@
             </tr>
           </thead>
           <tbody>
+<<<<<<< HEAD
 
             <tr v-for="change in product.quantityChanges" :key=" change.pid">
 
@@ -99,6 +109,12 @@
               <td class="pdd3">{{ change.date || 'N/A'}}</td>
               <td class="pdd3">{{ change.time|| 'N/A' }}</td>
               <td class="pdd3">{{ change.quantityAdded|| 'N/A' }}</td>
+=======
+            <tr v-for="change in product.quantityChanges" :key="change.date + change.time">
+              <td class="pdd3">{{ change.date }}</td>
+              <td class="pdd3">{{ change.time }}</td>
+              <td class="pdd3">{{ change.quantityAdded }}</td>
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
             </tr>
           </tbody>
         </table>
@@ -156,19 +172,34 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+<<<<<<< HEAD
 import axios from 'axios'
 // import { getDatabase,ref as stRef, get,orderByChild,} from "firebase/database";
 import * as XLSX from "xlsx";
 // Define the Firestore database reference
 const db = firebase.firestore();
 const loading = ref(true);
+=======
+<<<<<<< HEAD
+=======
+// import { getDatabase,ref as stRef, get,orderByChild,} from "firebase/database";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+import * as XLSX from "xlsx";
+// Define the Firestore database reference
+const db = firebase.firestore();
+
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 // Define pagination state
 const currentPage = ref(1); // Current page
 const itemsPerPage = 5; // Number of items to display per page
 const searchQuery = ref("");
 const filterShow = ref(false);
 const filterclose = ref(true);
+<<<<<<< HEAD
 const numberOfColumns = ref(3)
+=======
+
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const sortColumnRef = ref(null);
 const sortDirection = ref("asc"); // Default sorting direction
 
@@ -227,6 +258,10 @@ const exportToPDF = () => {
 };
 // Define a ref to store the list of products
 const products = ref([]);
+<<<<<<< HEAD
+=======
+const productsAddHistory = ref([]);
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const exportToExcel = () => {
   // Check if 'products' is an array
   if (!Array.isArray(products.value)) {
@@ -277,7 +312,10 @@ const paginatedProducts = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   return sortedProducts.value.slice(startIndex, endIndex);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 });
 
 // Computed property for calculating Qty Sold
@@ -323,6 +361,7 @@ const nextPage = () => {
 };
 const fetchProducts = async () => {
   try {
+<<<<<<< HEAD
     const response = await axios.get('http://localhost:8080/products');
 
     // Assuming your server response contains products in the same structure as Firebase
@@ -347,13 +386,58 @@ const filteredProducts = productsWithParsedQuantityChanges.filter(
   } catch (error) {
     loading.value = false;
     window.alert("Error fetching products: " + error);
+=======
+    const productsSnapshot = await db.collection("products").get();
+<<<<<<< HEAD
+    const allProducts = productsSnapshot.docs.map((doc) => doc.data());
+    
+    // Filter products with the `quantityChanges` field
+    products.value = allProducts.filter((product) => product.quantityChanges !== undefined);
+    
+    // Get the `quantityChanges` for the filtered products
+    productsAddHistory.value = products.value.map((product) => product.quantityChanges);
+  } catch (error) {
+    window.alert("Error fetching products");
+=======
+    const productsArray = productsSnapshot.docs.map((doc) => doc.data());
+    // const db = getDatabase();
+    // const productsDataRef = stRef(db, "/products");
+    // const productsSnapshot = await get(productsDataRef);
+
+    // if (productsSnapshot.val() !== null) {
+    //   // Convert the data to an array of products
+    //   const productsArray = Object.values(productsSnapshot.val()).map((product) => {
+    //     return {
+    //       ...product,
+    //     };
+    //   });
+
+      // Filter products with the `quantityChanges` field
+      const filteredProducts = productsArray.filter((product) => product.quantityChanges !== undefined);
+
+      // Set the `products.value` with the filtered products
+      products.value = filteredProducts;
+
+      // Get the `quantityChanges` for the filtered products
+      productsAddHistory.value = filteredProducts.map((product) => product.quantityChanges);
+  } catch (error) {
+    window.alert("Error fetching products: " + error);
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   }
 };
 
 
 
+<<<<<<< HEAD
 
 
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const sortProducts = () => {
   if (sortColumnRef.value && sortDirection.value) {
     products.value.sort((a, b) => {
@@ -388,7 +472,10 @@ const sortedProducts = computed(() => {
 // Fetch products and available categories when the component is mounted
 onMounted(async () => {
   await fetchProducts();
+<<<<<<< HEAD
   
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 });
 </script>
   

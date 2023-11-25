@@ -96,7 +96,15 @@
                 type="number"
                 id="sold"
                 class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+<<<<<<< HEAD
                
+=======
+<<<<<<< HEAD
+               disabled
+=======
+               
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
               />
             </div>
           </div>
@@ -141,7 +149,15 @@
                 id="InitialStockQuantity"
                 class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 required
+<<<<<<< HEAD
                 
+=======
+<<<<<<< HEAD
+                disabled
+=======
+                
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
                 min="0"
               />
             </div>
@@ -156,6 +172,8 @@
                 id="stockQuantity"
                 class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 required
+                disabled
+                
                 
                 
               />
@@ -322,7 +340,10 @@ import "firebase/compat/storage";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+<<<<<<< HEAD
 import axios from 'axios';
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 // import { getDatabase,ref as stRef, set,push} from "firebase/database";
 // Define the Firestore database reference
 const db = firebase.firestore();
@@ -347,7 +368,14 @@ const showSuggestions = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 const updating = ref(false);
+<<<<<<< HEAD
 const loading = ref(false);
+=======
+<<<<<<< HEAD
+=======
+const loading = ref(false);
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const newQuantity=ref(0);
 
 const suggestCategories = () => {
@@ -372,6 +400,7 @@ const selectSuggestion = (suggestion) => {
   showSuggestions.value = false; // Hide suggestions
 };
 
+<<<<<<< HEAD
 const getCurrentDateTime = () => {
   const currentDateTime = new Date();
   const formattedDate = `${currentDateTime.getDate()}-${currentDateTime.getMonth() + 1}-${currentDateTime.getFullYear()}`;
@@ -427,10 +456,34 @@ const updateProduct = async () => {
       const newQuantityChange = {
         quantityAdded: newQuantity.value,
         pid: generateUniqueId(),
+=======
+<<<<<<< HEAD
+// Function to update the product
+const updateProduct = async () => {
+  try {
+    if (props.editingProduct) {
+      updating.value = true;
+
+      // Get the current date and time
+      const currentDateTime = new Date();
+      const formattedDate = `${currentDateTime.getDate()}-${currentDateTime.getMonth() + 1}-${currentDateTime.getFullYear()}`;
+      const hours = currentDateTime.getHours();
+      const minutes = currentDateTime.getMinutes();
+      const amOrPm = hours >= 12 ? "PM" : "AM";
+      const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
+
+      const documentId = props.editingProduct.id;
+
+      const newQuantityChange = {
+        quantityAdded: newQuantity.value,
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
         date: formattedDate,
         time: formattedTime,
       };
 
+<<<<<<< HEAD
       // Create an object with the updated product data
       let updatedProductData = {
         ...updatedProduct,
@@ -503,6 +556,135 @@ const newCategoryObject = categories.value.find(category => category.name === up
 
 
 
+=======
+      const { ...updatedProductData } = props.editingProduct;
+
+      // Only include the quantityChanges field if newQuantity is greater than zero
+      if (newQuantity.value > 0) {
+        await firebase
+          .firestore()
+          .collection("products")
+          .doc(documentId)
+          .update({
+            ...updatedProductData,
+            category: props.editingProduct.category,
+            amount: amount.value,
+            testers: originalTesters.value,
+            damaged: originalDamaged.value,
+            newQuantity: newQuantity.value,
+            quantityChanges: firebase.firestore.FieldValue.arrayUnion(newQuantityChange),
+          });
+      } else {
+        // If newQuantity is zero or negative, update the product data without quantityChanges
+        await firebase
+          .firestore()
+          .collection("products")
+          .doc(documentId)
+          .update({
+            ...updatedProductData,
+            category: props.editingProduct.category,
+            amount: amount.value,
+            testers: originalTesters.value,
+            damaged: originalDamaged.value,
+            newQuantity: newQuantity.value,
+          });
+      }
+
+      updating.value = false;
+      successMessage.value = "Product updated successfully";
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+  } catch (error) {
+    updating.value = false;
+    console.error("Firestore Error:", error);
+    errorMessage.value = "Failed to update product. Please try again later.";
+  }
+};
+
+=======
+const getCurrentDateTime = () => {
+  const currentDateTime = new Date();
+  const formattedDate = `${currentDateTime.getDate()}-${currentDateTime.getMonth() + 1}-${currentDateTime.getFullYear()}`;
+  const hours = currentDateTime.getHours();
+  const minutes = currentDateTime.getMinutes();
+  const amOrPm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
+  return { formattedDate, formattedTime };
+};
+
+const addNewQuantityChange = (updatedProductData, newQuantityValue, newQuantityChange) => {
+  updatedProductData.quantityChanges = updatedProductData.quantityChanges || [];
+  updatedProductData.quantityChanges.push(newQuantityChange);
+  return updatedProductData;
+};
+
+const updateProductInFirestore = async (documentId, updatedProductData) => {
+  await firebase.firestore()
+    .collection("products")
+    .doc(documentId)
+    .update(updatedProductData);
+};
+
+// const updateProductInRealtimeDB = async (productRef, updatedProductData) => {
+//   await set(productRef, updatedProductData);
+// };
+
+const updateProduct = async () => {
+  try {
+    if (props.editingProduct) {
+      loading.value = true;
+      // const dbs = getDatabase();
+      const documentId = props.editingProduct.id;
+      // const productRef = stRef(dbs, 'products/' + documentId);
+      const { ...updatedProduct } = props.editingProduct;
+
+      // Create an object with the updated product data
+      let updatedProductData = {
+        ...updatedProduct,
+        category: props.editingProduct.category,
+        amount: amount.value,
+        testers: originalTesters.value,
+        damaged: originalDamaged.value,
+        newQuantity: newQuantity.value,
+        sold: originalSoldStock.value,
+      };
+
+      const { formattedDate, formattedTime } = getCurrentDateTime();
+
+      if (newQuantity.value > 0) {
+        // Add quantity change only when newQuantity is greater than zero
+        const newQuantityChange = {
+          quantityAdded: newQuantity.value,
+          date: formattedDate,
+          time: formattedTime,
+        };
+        updatedProductData = addNewQuantityChange(updatedProductData, newQuantity.value, newQuantityChange);
+      }
+
+      await updateProductInFirestore(documentId, updatedProductData);
+      // await updateProductInRealtimeDB(productRef, updatedProductData);
+
+      loading.value = false;
+      successMessage.value = "Product updated successfully";
+      // setTimeout(() => {
+      //   location.reload();
+      // }, 1000);
+    }
+  } catch (error) {
+    loading.value = false;
+    console.error(error)
+    errorMessage.value = "Failed to update the product. Please try again later.";
+  }
+};
+
+
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const fetchCategoryNames = async () => {
   try {
     const categoriesSnapshot = await db.collection("categories").get();
@@ -571,7 +753,14 @@ const originalTesters=ref(0)
 const originalSoldStock=ref(0)
 const originalDamaged=ref(0)
 
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 // Watch for changes in the editingProduct prop
 
 watch(
@@ -630,9 +819,14 @@ const amount = computed(() => {
 
 onMounted(async () => {
   availableCategories.value = await fetchCategoryNames();
+<<<<<<< HEAD
   if (props.editingProduct){
     console.log(props.editingProduct)
   }
+=======
+
+ 
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 });
 
 

@@ -1,9 +1,16 @@
 import { defineStore } from 'pinia';
 import { useCategoryStore } from './categories.js';
+<<<<<<< HEAD
 
 import axios from "axios";
 
 
+=======
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+import { getDatabase, ref as stRef, get, remove } from "firebase/database";
+const db = firebase.firestore();
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 
 // Retrieve the cart data from localStorage, if available
 const initialCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -48,10 +55,18 @@ export const useProductStore = defineStore('product', {
     try {
         if (this.cachedProducts.length === 0) {
           // Only fetch products if the cache is empty
+<<<<<<< HEAD
           const response = await axios.get("http://localhost:8080/products"); // Replace with your API endpoint
           this.products = response.data.map((product) => {
             return {
               ...product,
+=======
+          const productsSnapshot = await db.collection("products").get();
+          this.products = productsSnapshot.docs.map((doc) => {
+            const productData = doc.data();
+            return {
+              ...productData,
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
               isHovered: false,
               customPrice: 0,
             };
@@ -62,7 +77,11 @@ export const useProductStore = defineStore('product', {
         } else {
           // Use the cached products
           this.products = this.cachedProducts.slice();
+<<<<<<< HEAD
         }
+=======
+        }this.addNewProduct()
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
       } catch (error) {
         console.error(error)
         window.alert("Error fetching products");
@@ -111,7 +130,32 @@ export const useProductStore = defineStore('product', {
       localStorage.setItem('cart', JSON.stringify(this.cart));
       
     },
+<<<<<<< HEAD
 
+=======
+    addNewProduct() {
+      // Create a new product object
+      const newProduct = {
+        id: 'FB001XT56WHJAKKLBKJ',
+        sku: "FB001", // Customize the SKU as needed
+        name: "FACEBEAT", // Set the name property
+        price: 30000,
+        stockQuantity: Infinity,
+        amount:0
+      };
+
+     // Check if the product already exists in the products array
+     const productExists = this.products.some(product => product.id === newProduct.id);
+
+     if (!productExists) {
+       // Add the new product to the fetched products in the store
+       this.products.push(newProduct);
+
+       // Optionally, you can also add it to the cachedProducts if needed
+       this.cachedProducts.push(newProduct);
+     }
+    },
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     removeFromCart(cartItem) {
       // Remove the specified cart item from the cart
       const index = this.cart.indexOf(cartItem);

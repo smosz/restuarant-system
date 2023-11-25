@@ -15,6 +15,7 @@
           >View All</router-link
         >
       </div>
+<<<<<<< HEAD
       <div v-loading="loading">
         <div  class="text-center" v-if="orders.length === 0 ">
       <!-- Center the el-empty component -->
@@ -22,6 +23,10 @@
     </div>
         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700"  >
           
+=======
+      <div >
+        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
   <li class="py-3 sm:py-4" v-for="order in orders" :key="order.id">
     <div class="flex flex-col sm:flex-row items-center sm:space-x-4 justify-between">
       <div class="flex-shrink-0 text-gray-600 font-semibold">
@@ -50,7 +55,15 @@
           {{
             order.discountAmount > 0
               ? "UGX " + order.discountAmount.toLocaleString()
+<<<<<<< HEAD
               : "UGX " + order.totalAmount.toLocaleString()
+=======
+<<<<<<< HEAD
+              : "UGX " + order.totalAmount
+=======
+              : "UGX " + order.totalAmount.toLocaleString()
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
           }}
         </p>
       </div>
@@ -257,6 +270,7 @@
           >View All</router-link
         >
       </div>
+<<<<<<< HEAD
       <div class="flow-root" v-loading="loading">
         
         <div  class="text-center" v-if="orders.length === 0 ">
@@ -264,6 +278,9 @@
       <el-empty :image-size="200">
       </el-empty>
     </div>
+=======
+      <div class="flow-root">
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
   <li class="py-3 sm:py-4" v-for="order in orders" :key="order.id">
     <div class="flex flex-col sm:flex-row items-center sm:space-x-4 justify-between">
@@ -293,7 +310,15 @@
           {{
             order.discountAmount > 0
               ? "UGX " + order.discountAmount.toLocaleString()
+<<<<<<< HEAD
               : "UGX " + order.totalAmount.toLocaleString()
+=======
+<<<<<<< HEAD
+              : "UGX " + order.totalAmount
+=======
+              : "UGX " + order.totalAmount.toLocaleString()
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
           }}
         </p>
       </div>
@@ -330,7 +355,10 @@ const monthlysalesFiltered = ref([]);
 const monthlySales=ref(0)
 const monthlyTotalAmounts = ref([]);
 const monthly=ref([])
+<<<<<<< HEAD
 const loading = ref(true);
+=======
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const db = firebase.firestore();
 // Get the current date and time
 const currentDateTime = new Date();
@@ -577,9 +605,15 @@ const calculateMonthlyExpenses = computed(() => {
   }
 });
 // Fetch the latest 5 orders when the component is mounted
+<<<<<<< HEAD
 onMounted(async() => {
  await fetchLatestOrders();
  await fetchExpenses();
  loading.value = false;
+=======
+onMounted(() => {
+  fetchLatestOrders();
+  fetchExpenses();
+>>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 });
 </script>
