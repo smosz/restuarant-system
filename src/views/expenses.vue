@@ -1,12 +1,12 @@
 <template>
     <div class="dashboard-container">
       <navBar />
-      <customerList />
+      <expenseList />
     </div>
   </template>
   
   <script setup>
   import navBar from "../components/navBar.vue";
-  import customerList from "../components/customerList.vue";
+  import expenseList from "../components/expenseList.vue";
 
   </script>

@@ -2,10 +2,10 @@
   <div class="bg-white pb-5 sm:grid sm:grid-cols-[31%_41%] sm:px-6">
     <dt class="text-sm font-medium text-gray-500">Phone Number</dt>
     <div class="flex">
-      <div class="relative flex items-stretch w-full">
+      <div class="relative flex items-stretch ">
         <input
           v-model="state.number"
-          class="input-field"
+          class="input-field-num"
           id="phone"
           type="tel"
           placeholder="Enter your phone number"

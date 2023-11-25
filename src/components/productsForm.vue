@@ -33,7 +33,7 @@
             </div>
 
             <!-- Product SKU -->
-            <div class="flex flex-col">
+            <div class="flex flex-col mt-4">
               <label for="product-sku" class="text-sm">Product SKU</label>
               <input
                 type="text"
@@ -43,19 +43,50 @@
                 required
               />
             </div>
-
             <!-- Product Price -->
             <div class="flex flex-col mt-4">
               <label for="product-price" class="text-sm">Product Price</label>
               <input
                 type="number"
+                min="0"
                 id="product-price"
                 v-model="product.price"
                 class="border border-gray-300 px-2 py-1 rounded-sm"
                 required
               />
             </div>
+            <div class="col-span-2 mt-4">
+              <div class="flex flex-col">
+                <label for="stockQuantity" class="text-sm"
+                  >Remaining Stock Quantity</label
+                >
+                <input
+                  type="number"
+                  id="stockQuantity"
+                  v-model="product.stockQuantity"
+                  class="border border-gray-300 px-2 py-1 rounded-sm"
+                  required
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="col-span-2 mt-4">
+            <div class="flex flex-col">
+              <label for="damaged" class="text-sm">Damaged Quantity</label>
+              <input
+                type="number"
+                id="damaged"
+                v-model="product.damaged"
+                min="0"
+                :max="product.InitialStockQuantity"
+                @input="updateStockQuantity()"
+                class="border border-gray-300 px-2 py-1 rounded-sm"
+                required
+              />
+            </div>
           </div>
+          </div>
+          
 
           <!-- Right Column -->
           <div class="col-span-1">
@@ -109,36 +140,53 @@
                 </li>
               </ul>
             </div>
- <!-- Stock Quantity -->
- <div class="col-span-2 mt-4">
-            <div class="flex flex-col">
-              <label for="stockQuantity" class="text-sm">Stock Quantity</label>
-              <input
-                type="number"
-                id="stockQuantity"
-                v-model="product.stockQuantity"
-                class="border border-gray-300 px-2 py-1 rounded-sm"
-                required
-              />
+            <!-- Stock Quantity -->
+            <div class="col-span-2 mt-4">
+              <div class="flex flex-col">
+                <label for="InitialstockQuantity" class="text-sm"
+                  >Initial Stock Quantity</label
+                >
+                <input
+                  type="number"
+                  min="0"
+                  id="InitialstockQuantity"
+                  v-model="product.InitialStockQuantity"
+                  @input="update()"
+                  class="border border-gray-300 px-2 py-1 rounded-sm"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-span-2 mt-4">
+              <div class="flex flex-col">
+                <label for="testers" class="text-sm">Testers</label>
+                <input
+                  type="number"
+                  id="testers"
+                  min="0"
+                  v-model="product.testers"
+                  :max="product.InitialStockQuantity"
+                  @input="updateStockQuantity()"
+                  class="border border-gray-300 px-2 py-1 rounded-sm"
+                  required
+                />
+              </div>
+            </div>
+            <!-- Amount -->
+            <div class="col-span-2 mt-4">
+              <div class="flex flex-col">
+                <label for="amount" class="text-sm">Amount</label>
+                <input
+                  type="text"
+                  id="amount"
+                  min="0"
+                  :value="amount"
+                  class="border border-gray-300 px-2 py-1 rounded-sm"
+                  disabled
+                />
+              </div>
             </div>
           </div>
-          <!-- Amount -->
- <div class="col-span-2 mt-4">
-            <div class="flex flex-col">
-              <label for="amount" class="text-sm">Amount</label>
-              <input
-                type="text"
-                id="amount"
-                :value="amount"
-                class="border border-gray-300 px-2 py-1 rounded-sm"
-                disabled
-              />
-              
-            </div>
-          </div>
-          </div>
-
-         
 
           <!-- Product Image -->
           <div class="col-span-2">
@@ -220,8 +268,7 @@
 
   
   <script setup>
-  
-import { ref, computed, onMounted,watch } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import "firebase/compat/storage";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -243,8 +290,6 @@ const showSuggestions = ref(false);
 const selectedCategories = ref([]);
 // Create a computed property for displaying the formatted amount
 
-
-
 const rawAmount = computed(() => {
   return product.value.price * product.value.stockQuantity;
 });
@@ -262,8 +307,36 @@ const product = ref({
   category: selectedCategories.value,
   stockQuantity: 0,
   productImage: "",
- amount: rawAmount,
+  amount: rawAmount,
+  testers: 0,
+  damaged: 0,
+  InitialStockQuantity: 0,
 });
+const updateStockQuantity = () => {
+  if (product.value.testers >= 0 && product.value.damaged === 0) {
+    // Update stockQuantity as testers are added
+    const pt = product.value.InitialStockQuantity - product.value.testers;
+    product.value.stockQuantity = pt;
+  } else if(product.value.damaged >= 0 && product.value.testers >= 0){
+const plus = product.value.testers + product.value.damaged;
+    const ptl = product.value.InitialStockQuantity - plus;
+    product.value.stockQuantity = ptl;
+  }else if(product.value.testers === 0 && product.value.damaged >= 0){
+    const pts = product.value.InitialStockQuantity - product.value.damaged;
+    product.value.stockQuantity = pts;
+  }
+  else {
+    return;
+  }
+};
+const update = () => {
+  if (product.value.testers === 0 || product.value.InitialStockQuantity === 0 || product.value.damaged === 0) {
+    product.value.stockQuantity = product.value.InitialStockQuantity;
+  } else {
+    // Handle negative testers value if needed
+  }
+};
+
 const toggleCategory = (category) => {
   const index = selectedCategories.value.indexOf(category);
   if (index === -1) {
@@ -376,12 +449,19 @@ const registerNewCategory = () => {
 const registerProduct = async () => {
   try {
     updating.value = true;
-    // Use SKU as the document ID
-    const sku = product.value.sku;
+
+    // Generate a unique ID
+    const sku = db.collection("products").doc().id;
 
     // Add the product data to Firestore with SKU as the document ID
-    await db.collection("products").doc(sku).set(product.value);
+    const productDataWithId = {
+      ...product.value,
+      id: sku, // Add the ID to the product data
+    };
+
+    await db.collection("products").doc(sku).set(productDataWithId);
     updating.value = false;
+
     // Show a success message
     message.value = "Product registered successfully";
 
@@ -394,6 +474,9 @@ const registerProduct = async () => {
       category: null,
       stockQuantity: 0,
       productImage: "",
+      testers: 0,
+      damaged: 0,
+      InitialStockQuantity: 0,
     };
 
     // Automatically clear the success message after 5 seconds (5000 milliseconds)
@@ -403,13 +486,22 @@ const registerProduct = async () => {
     }, 2000);
   } catch (error) {
     updating.value = false;
-    message.value = "Product registration Failed.Try Again";
+    message.value = "Product registration failed. Try again.";
     window.alert("Error registering product");
   }
 };
+
 onMounted(async () => {
   availableCategories.value = await fetchCategoryNames();
 });
-
+watch(
+  () => product.value.testers,
+  (newValue) => {
+    if (newValue <= 0) {
+      updateStockQuantity();
+      update();
+    }
+  }
+);
 </script>
   

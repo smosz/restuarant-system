@@ -44,7 +44,7 @@
             </div>
 
             <!-- Product Description -->
-            <div class="mb-4">
+            <div class="mb-1">
               <label
                 for="product-description"
                 class="block text-gray-700 font-medium"
@@ -58,7 +58,34 @@
                 required
               ></textarea>
             </div>
-            
+            <div class="mb-2">
+              <label for="testers" class="block text-gray-700 font-medium"
+                >Testers:</label
+              >
+              <input
+                v-model="editingProduct.testers"
+                type="number"
+                id="testers"
+                class="appearance-none bg-transparent border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                required
+                :max= "editingProduct.InitialStockQuantity"
+                min="0"
+              />
+            </div>
+            <div class="mb-4">
+              <label for="damaged" class="block text-gray-700 font-medium"
+                >Damaged Quantity:</label
+              >
+              <input
+                v-model="editingProduct.damaged"
+                type="number"
+                id="damaged"
+                class="appearance-none bg-transparent border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                required
+                :max= "editingProduct.InitialStockQuantity"
+                min="0"
+              />
+            </div>
           </div>
           
           <!-- Column 2 -->
@@ -91,16 +118,29 @@
                 
               />
             </div>
+            <div class="mb-4">
+              <label for="InitialStockQuantity" class="block text-gray-700 font-medium"
+                >Initial Quantity:</label
+              >
+              <input
+                v-model="editingProduct.InitialStockQuantity"
+                type="number"
+                id="InitialStockQuantity"
+                class="appearance-none bg-transparent border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                required
+                min="0"
+              />
+            </div>
             <!-- Stock Quantity -->
             <div class="mb-4">
               <label for="stockQuantity" class="block text-gray-700 font-medium"
-                >Stock Quantity:</label
+                >Remaining Quantity:</label
               >
               <input
                 v-model="editingProduct.stockQuantity"
                 type="number"
                 id="stockQuantity"
-                class="appearance-none bg-transparent border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 required
                 
               />
@@ -133,8 +173,9 @@
                 v-model="editingProduct.category"
                 type="text"
                 id="product-category"
-                class="appearance-none bg-transparent focus-visible:border-blue-500 border-b border-teal-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                class="appearance-none bg-gray-200 focus-visible:border-blue-500 border-b border-teal-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 required
+                disabled
               />
             </div>
             <!-- Category Selection Section -->
@@ -266,7 +307,7 @@
   
 
 <script setup>
-import { ref, defineProps, defineEmits, onMounted, computed,watch } from "vue";
+import { ref, defineProps, onMounted, computed,watch } from "vue";
 import "firebase/compat/storage";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -310,11 +351,12 @@ const updateProduct = async () => {
 
     if (props.editingProduct) {
       updating.value = true;
-      const { sku, ...updatedProductData } = props.editingProduct;
+      const documentId = props.editingProduct.id; // Assuming "id" is the field name for the document ID
+      const { ...updatedProductData } = props.editingProduct;
       await firebase
         .firestore()
         .collection("products")
-        .doc(sku)
+        .doc(documentId)
         .update({
           ...updatedProductData,
           category: props.editingProduct.category, // Update with selected categories
@@ -331,6 +373,7 @@ const updateProduct = async () => {
   } catch (error) {
     // Set an error message
     updating.value = false;
+    console.log(error)
     errorMessage.value = "Failed to update product. Please try again later.";
   }
 };
@@ -388,7 +431,16 @@ const handleDrop = (event) => {
   }
 };
 
-
+watch(
+  () => [props.editingProduct?.InitialStockQuantity, props.editingProduct?.testers,props.editingProduct?.damaged],
+  ([newInitialStockQuantity, newTesters], [prevInitialStockQuantity, prevTesters]) => {
+    if (newInitialStockQuantity !== prevInitialStockQuantity || newTesters !== prevTesters) {
+      if (newTesters >= 0 && newInitialStockQuantity >= newTesters) {
+        props.editingProduct.stockQuantity = newInitialStockQuantity - newTesters;
+      }
+    }
+  }
+);
 onMounted(async () => {
   availableCategories.value = await fetchCategoryNames();
   // Preselect checkboxes only if editingProduct.category is not empty

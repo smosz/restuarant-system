@@ -277,16 +277,12 @@ const userCredential = await firebaseAuthForRegistration.createUserWithEmailAndP
 
       // Create a new document in the 'users' collection with user data
       await usersCollection.doc(userId).set({
-        id: userId,
         Username: NewState.username,
         Email: NewState.email,
         Password: NewState.password,
         Phone_Number: NewState.number,
         Gender: NewState.gender,
         Role: NewState.role,
-        status:"enabled",
-        lastLogin:null,
-        lastSignOut:null
         // Add other user data fields as needed
       });
 

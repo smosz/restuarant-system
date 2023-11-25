@@ -88,7 +88,7 @@
                   <h1 class="ml-2">Filter by Category</h1>
                   <select
                     v-model="selectedCategory"
-                    class="search-input ml-2 !overflow-y-auto"
+                    class="search-input ml-2 !overflow-y-auto w-[50%]"
                   >
                     <option value="">All Categories</option>
                     <option
@@ -104,7 +104,7 @@
               </div>
               <button
                 @click="filterProducts"
-                class="ml-10 px-3 py-2 bg-blue-500 text-white hover:bg-blue-700 rounded-md cursor-pointer"
+                class=" px-3 py-2 bg-blue-500 text-white hover:bg-blue-700 rounded-md cursor-pointer"
               >
                 Filter
               </button>
@@ -139,39 +139,29 @@
           <!-- Table header  -->
           <thead>
             <tr>
-              <th
-                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
+              <th class="pdtab">
                 <div class="flex items-center justify-center">
-                  <span>Product Name</span>
+                  <span> Name</span>
                 </div>
               </th>
-              <th
-                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
+              <th class="pdtab">
                 <div class="flex items-center justify-center">
-                  <span>Product Description</span>
+                  <span> Description</span>
                 </div>
               </th>
-              <th
-                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
+              <th class="pdtab">
                 <div class="flex items-center justify-center">
-                  <span>Product SKU</span>
+                  <span> SKU</span>
                 </div>
               </th>
-              <th
-                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
+              <th class="pdtab w-[15rem]">
                 <div class="flex items-center justify-center">
-                  <span>Product Category</span>
+                  <span> Category</span>
                 </div>
               </th>
-              <th
-                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
+              <th class="pdtab">
                 <div class="flex items-center justify-center">
-                  <span>Product Price</span>
+                  <span>Price</span>
                   <span class="ml-2 no-print">
                     <Icon
                       icon="fa6-solid:sort-up"
@@ -186,12 +176,61 @@
                   </span>
                 </div>
               </th>
-
-              <th
-                class="px-1 py-3 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
+              <th class="pdtab">
                 <div class="flex items-center justify-center">
-                  <span>Stock Quantity</span>
+                  <span>Init Qty</span>
+                  <span class="ml-2 no-print">
+                    <Icon
+                      icon="fa6-solid:sort-up"
+                      class="mx-1 mb-[-8px] w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('InitialStockQuantity', 'asc')"
+                    />
+                    <Icon
+                      icon="fa6-solid:sort-down"
+                      class="mx-1 mb-0 w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('InitialStockQuantity', 'desc')"
+                    />
+                  </span>
+                </div>
+              </th>
+              
+              <th class="pdtab">
+                <div class="flex items-center justify-center">
+                  <span>Dam Qty</span>
+                  <span class="ml-2 no-print">
+                    <Icon
+                      icon="fa6-solid:sort-up"
+                      class="mx-1 mb-[-8px] w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('damaged', 'asc')"
+                    />
+                    <Icon
+                      icon="fa6-solid:sort-down"
+                      class="mx-1 mb-0 w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('damaged', 'desc')"
+                    />
+                  </span>
+                </div>
+              </th>
+              <th class="pdtab">
+                <div class="flex items-center justify-center">
+                  <span>Testers</span>
+                  <span class="ml-2 no-print">
+                    <Icon
+                      icon="fa6-solid:sort-up"
+                      class="mx-1 mb-[-8px] w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('testers', 'asc')"
+                    />
+                    <Icon
+                      icon="fa6-solid:sort-down"
+                      class="mx-1 mb-0 w-5 text-lg hover:text-blue-500 cursor-pointer"
+                      @click="sortColumn('testers', 'desc')"
+                    />
+                  </span>
+                </div>
+              </th>
+              <th class="pdtab">
+                <div class="flex items-center justify-center">
+                  <span>Rem Qty</span>
                   <span class="ml-2 no-print">
                     <Icon
                       icon="fa6-solid:sort-up"
@@ -206,9 +245,7 @@
                   </span>
                 </div>
               </th>
-              <th
-                class="px-1 py-3 w-[13%] bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
+              <th class="pdtab">
                 <div class="flex items-center justify-center">
                   <span>Amount</span>
                   <span class="ml-2 no-print">
@@ -225,17 +262,14 @@
                   </span>
                 </div>
               </th>
-              <th
-                class="no-print px-1 py-3 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Action
-              </th>
+              
+              <th class="pdtab">Action</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="product in paginatedProducts" :key="product.sku">
-              <td class="text-center py-4 border border-gray-300">
-                <div class="flex items-center justify-center">
+              <td class="pdd">
+                <div class="flex items-center justify-center flex-wrap">
                   <img
                     :src="product.productImage"
                     alt="Product Image"
@@ -244,50 +278,61 @@
                   <span>{{ product.name }}</span>
                 </div>
               </td>
-              <td class="text-center py-4 border border-gray-300">
+              <td class="pdd">
                 {{ product.description }}
               </td>
-              <td class="text-center py-4 border border-gray-300">
+              <td class="pdd">
                 {{ product.sku }}
               </td>
-              <td class="text-center py-4 border border-gray-300">
+              <td class="pdd">
                 <!-- Display Categories as Pills -->
-                <div class="flex justify-center mt-2">
+                <div class="flex justify-center ">
                   <div
                     v-for="category in product.category"
                     :key="category"
-                    class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full mr-2 mb-2"
+                    class="bg-blue-200 text-blue-800 px-2  rounded-full "
                   >
                     {{ category }}
                   </div>
                 </div>
               </td>
-              <td class="text-center py-4 border border-gray-300">
-                UGX {{ product.price.toLocaleString() }}
+              <td class="pdd">
+                {{ product.price.toLocaleString() }}
               </td>
-
+              <td class="pdd">
+                {{ product.InitialStockQuantity }}
+              </td>
+              
+              <td class="pdd">
+                {{ product.damaged }}
+              </td>
+              <td class="pdd">
+                {{ product.testers}}
+              </td>
               <td
-                class="pl-12 py-4 border border-gray-300"
-                :class="{ 'text-red-500': product.stockQuantity <= 20 }"
+             :class="{ 'pdd': product.stockQuantity > 20, 'text-red-500 pdd2 flex items-center py-4 pl-10 justify-center': product.stockQuantity <= 20 }"
               >
-                <span class="flex justify-between items-center">
-                  {{ product.stockQuantity }}
+                <div> {{ product.stockQuantity }}</div>
+                 
                   <Vue3Lottie
-                    v-if="product.stockQuantity <= 20  && product.stockQuantity > 0"
+                    v-if="
+                      product.stockQuantity <= 20 && product.stockQuantity > 0
+                    "
                     :animationData="low"
                     :height="47"
                   />
                   <Vue3Lottie
-              v-if="product.stockQuantity === 0"
-              :animationData="empty"
-              :height="47"
-            />
-                </span>
+                    v-if="product.stockQuantity === 0"
+                    :animationData="empty"
+                    :height="47"
+                  />
+                  
               </td>
-              <td class="text-center py-4 border border-gray-300">
-                UGX {{ product.amount.toLocaleString() }}
+              <td class="pdd">
+                {{ product.amount.toLocaleString() }}
               </td>
-              <td class="no-print py-4 border border-gray-300">
+              
+              <td class="pdd">
                 <div class="flex space-x-2 justify-center">
                   <button
                     @click="openEditModal(product)"
@@ -341,20 +386,44 @@
             Next
           </button>
         </div>
-        <div class="bg-gray-200 p-4 rounded-lg shadow-lg flex justify-center mt-4">
-    <p class="text-2xl font-semibold text-gray-700">
-      Total Products:<span class="ml-4 text-3xl font-semibold text-orange-500">{{ sortedProducts.length }}</span>
-    </p>
-    <p class="ml-4 text-3xl font-semibold text-black">
-      Total Stock:<span class="ml-4 text-3xl font-semibold text-orange-500"> {{ totalStockQuantity }}</span>
-    </p>
-    <p class="ml-4 text-2xl font-semibold text-black">
-      Total Amount:<span class="ml-4 text-3xl font-semibold text-orange-500">UGX {{ totalAmount.toLocaleString() }}</span> 
-    </p>
-  </div>
+        <div
+          class="bg-gray-200 p-4 rounded-lg shadow-lg flex  mt-4 justify-between"
+        >
+          <p class="text-2xl font-semibold text-gray-700">
+            Total Products:<span
+              class="ml-4 text-3xl font-semibold text-orange-500"
+              >{{ sortedProducts.length }}</span
+            >
+          </p>
+          <p class="text-2xl font-semibold text-gray-700">
+            Total Testers:<span
+              class="ml-4 text-3xl font-semibold text-orange-500"
+              >{{ totalTesters }}</span
+            >
+          </p>
+          <p class="text-2xl font-semibold text-gray-700">
+            Total Damaged:<span
+              class="ml-4 text-3xl font-semibold text-orange-500"
+              >{{ totalDamaged }}</span
+            >
+          </p>
+          <p class="ml-4 text-3xl font-semibold text-black">
+            Total Stock:<span
+              class="ml-4 text-3xl font-semibold text-orange-500"
+            >
+              {{ totalStockQuantity }}</span
+            >
+          </p>
+          <p class="ml-4 text-2xl font-semibold text-black">
+            Total Amount:<span
+              class="ml-4 text-3xl font-semibold text-orange-500"
+              >UGX {{ totalAmount.toLocaleString() }}</span
+            >
+          </p>
+        </div>
       </div>
     </div>
-    
+
     <!-- Use the EditProductModal component with a prop -->
     <editProductModal
       :editingProduct="editingProduct"
@@ -550,6 +619,12 @@ const totalStockQuantity = computed(() => {
 const totalAmount = computed(() => {
   return products.value.reduce((total, product) => total + product.amount, 0);
 });
+const totalTesters = computed(() => {
+  return products.value.reduce((total, product) => total + product.testers, 0);
+});
+const totalDamaged = computed(() => {
+  return products.value.reduce((total, product) => total + product.damaged, 0);
+});
 const searchProducts = () => {
   if (searchQuery.value.trim() === "") {
     // Reset the product list if the search query is empty
@@ -638,10 +713,11 @@ const deleteProduct = (product) => {
 // Function to delete the product
 const deleteConfirmed = async () => {
   if (deletingProduct.value) {
-    const { sku } = deletingProduct.value;
+    const { id } = deletingProduct.value;
+
     try {
       // Use Firebase to delete the product from Firestore
-      await db.collection("products").doc(sku).delete();
+      await db.collection("products").doc(id).delete();
       // Show a success message or perform any other actions if needed
       window.alert("Product deleted successfully");
     } catch (error) {

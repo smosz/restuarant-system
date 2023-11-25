@@ -3,25 +3,25 @@
     <navBar />
     
       <div
-      class="grid my-4 grid-cols-2 w-10/12 lg:w-8/12 mx-auto bg-white rounded-xl shadow-lg overflow-hidden h-[32rem]"
+      class="grid my-4 grid-cols-2 w-10/12 mx-auto bg-white rounded-xl shadow-lg overflow-hidden h-[40rem] pfo"
     >
       <div
         :style="'background-image: url(' + imageUrls[currentImageIndex] + ');'"
-        class="col-span-1 overflow-hidden h-screen flex flex-col justify-center bg-no-repeat bg-cover bg-center"
+        class="col-span-1 overflow-hidden flex flex-col justify-center bg-no-repeat bg-cover bg-top"
       ></div>
       <div class="container mx-auto ">
         
           <div class="w-full">
-            <div class=" h-[9.5rem] overflow-hidden">
+            <div class=" h-[17.5rem] overflow-hidden logc">
               <img
-                v-if="loggedInUserState.coverPhotoUrl"
+                v-if="userStore.loggedInUserData.coverPhotoUrl"
                 class="object-contain w-full"
-                :src="loggedInUserState.coverPhotoUrl"
+                :src="userStore.loggedInUserData.coverPhotoUrl"
               />
               <img
                 v-else
                 class="object-contain w-full"
-                src="../assets/03.jpg"
+                src="/03.jpg"
                 alt="Default Cover Photo"
               />
             </div>
@@ -29,61 +29,61 @@
               class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden"
             >
               <img
-                v-if="loggedInUserState.profilePhotoUrl"
+                v-if="userStore.loggedInUserData.profilePhotoUrl"
                 class="object-contain w-full"
-                :src="loggedInUserState.profilePhotoUrl"
+                :src="userStore.loggedInUserData.profilePhotoUrl"
               />
               <img
                 v-else
                 class="object-contain w-full"
-                src="../assets/avatar.jpg"
+                src="/avatar.jpg"
                 alt="Default Profile Photo"
               />
             </div>
-            <div class="">
+            <div class="pro">
               <dl>
                 <div
-                  class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+                  class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 "
                 >
                   <dt class="text-sm font-medium text-gray-500">Username</dt>
                   <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ loggedInUserState.Username }}
+                    {{ userStore.loggedInUserData.Username }}
                   </dd>
                 </div>
                 <div
-                  class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+                  class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 "
                 >
                   <dt class="text-sm font-medium text-gray-500">Gender</dt>
                   <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ loggedInUserState.Gender }}
+                    {{ userStore.loggedInUserData.Gender }}
                   </dd>
                 </div>
                 <div
-                  class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+                  class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 "
                 >
                   <dt class="text-sm font-medium text-gray-500">
                     Email Address
                   </dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ loggedInUserState.Email }}
+                  <dd class=" text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ userStore.loggedInUserData.Email }}
                   </dd>
                 </div>
                 <div
-                  class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+                  class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 "
                 >
                   <dt class="text-sm font-medium text-gray-500">
                     Phone Number
                   </dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ loggedInUserState.Phone_Number }}
+                  <dd class=" text-sm text-gray-900 proh ">
+                    {{ userStore.loggedInUserData.Phone_Number }}
                   </dd>
                 </div>
                 <div
-                  class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+                  class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 "
                 >
                   <dt class="text-sm font-medium text-gray-500">Role</dt>
                   <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{ loggedInUserState.Role }}
+                    {{ userStore.loggedInUserData.Role }}
                   </dd>
                 </div>
               </dl>
@@ -106,27 +106,27 @@ import { useUserStore } from "../stores/user";
 const userStore = useUserStore();
 // State for the logged-in user
 const imageUrls = ref([
-  "../../src/assets/w1.jpg",
-  "../../src/assets/wp2.jpg",
-  "../../src/assets/wp3.jpg",
-  "../../src/assets/wp23.jpg",
-  "../../src/assets/wp4.jpg",
-  "../../src/assets/wp22.jpg",
-  "../../src/assets/wp5.jpg",
-  "../../src/assets/wp25.jpg",
-  "../../src/assets/wp6.jpg",
-  "../../src/assets/wp21.jpg",
-  "../../src/assets/wp7.jpg",
-  "../../src/assets/wp8.jpg",
-  "../../src/assets/wp18.jpg",
-  "../../src/assets/wp10.webp",
-  "../../src/assets/wp17.jpg",
-  "../../src/assets/wp11.png",
-  "../../src/assets/wp12.jpg",
-  "../../src/assets/wp13.jpg",
-  "../../src/assets/wp14.jpg",
-  "../../src/assets/wp15.jpg",
-  "../../src/assets/wp16.jpg",
+  "/w1.jpg",
+  "/wp2.jpg",
+  "/wp3.jpg",
+  "/wp23.jpg",
+  "/wp4.jpg",
+  "/wp22.jpg",
+  "/wp5.jpg",
+  "/wp25.jpg",
+  "/wp6.jpg",
+  "/wp21.jpg",
+  "/wp7.jpg",
+  "/wp8.jpg",
+  "/wp18.jpg",
+  "/wp10.webp",
+  "/wp17.jpg",
+  "/wp11.png",
+  "/wp12.jpg",
+  "/wp13.jpg",
+  "/wp14.jpg",
+  "/wp15.jpg",
+  "/wp16.jpg",
 
   // Add more image URLs as needed
 ]);
@@ -157,9 +157,9 @@ const nextImage = () => {
 onBeforeUnmount(() => {
   stopSlideshow(slideshowInterval);
 });
-const loggedInUserState = userStore.loggedInUserData;
 
 onMounted(async () => {
-  await userStore.initializeUser();
+  await userStore.fetchLoggedInUserData()
+  userStore.loggedInUserData
 });
 </script>

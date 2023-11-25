@@ -1,7 +1,7 @@
 <template>
     <div class="inset-0 flex flex-wrap items-center  max-h-[437px] overflow-y-auto  justify-center z-50 ml-10 mt-10" id="mainContainer" >
       <div class="p-[1.05rem] rounded-lg shadow-lg relative" style="
-    background-image: url('../../src/assets/hot.jpg');
+    background-image: url('/hot.jpg');
     background-size: cover; /* Adjust to 'contain' or custom dimensions if needed */
     background-position: center; /* Adjust if needed */
     background-repeat: no-repeat;
@@ -9,7 +9,7 @@
 <div class="text-center">
    <!-- receipt logo  -->
    <img
-    src="../assets/imp.png" 
+    src="/imp.png" 
     alt="Receipt Logo"
     class=" h-24 mx-auto mb-4" 
   />
@@ -76,7 +76,7 @@
           <div class="text-center">
    <!-- receipt logo  -->
    <img
-    src="../assets/ord.png" 
+    src="/ord.png" 
     alt="Receipt Logo"
     class=" h-24 mx-auto" 
   />
@@ -116,7 +116,7 @@
         </div>
       </div>
       <img
-    src="../assets/see.png" 
+    src="/see.png" 
     alt="Receipt Logo"
     class=" h-24 mx-auto mt-4" 
   />

@@ -349,8 +349,9 @@ const addCustomer = async () => {
 
   // Add the new customer data to Firestore with the generated ID
   await db.collection("customers").doc(customerId).set(customer);
+  customerStore.fetchCustomers()
   customerLookup.value = newCustomerName.value + " - " + newCustomerPhone.value;
-
+  
   // Hide the new customer input fields
   showCustomerInput.value = false;
 };
@@ -599,12 +600,12 @@ const checkout = async () => {
     }
     // Iterate through cart items and reduce stock in the database
     for (const cartItem of cartItems.value) {
-      const productId = cartItem.product.sku;
+      const productId = cartItem.product.id;
       const productRef = db.collection("products").doc(productId);
       const productSnapshot = await productRef.get();
       const productData = productSnapshot.data();
       const currentStock = productData.stockQuantity;
-
+console.log(productData);
       if (currentStock >= cartItem.quantity) {
         // Reduce stock by the quantity in the carts
         await productRef.update({
@@ -626,7 +627,7 @@ const checkout = async () => {
     loading.value = false;
     showReceiptModal();
   } catch (error) {
-    window.alert("Error storing the order");
+    console.log( error);
     loading.value = false;
     isCheckoutLoading.value = false;
     // Handle the error appropriately (e.g., display an error message)
