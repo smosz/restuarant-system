@@ -138,6 +138,11 @@ const v$ = useValidate(rules, state);
 const login = async () => {
  
 
+<<<<<<< HEAD
+=======
+  try {
+    
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   const userData = await v$.value.$validate();
   
   if (!userData) {
@@ -164,7 +169,6 @@ if (userDoc.exists) {
     return;
   }
 }
-  try {
     // Get the current date and time
   const currentDateTime = new Date();
 
@@ -193,13 +197,16 @@ const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
     state.errorMsg = err.message;
     switch (err.code) {
       case "auth/invalid-email":
-        state.errorMsg = "Invalid email";
+        state.errorMsg = "Invalid email. Try again or Contact Admin";
         break;
       case "auth/user-not-found":
         state.errorMsg = "User doesn't exist";
         break;
       case "auth/wrong-password":
-        state.errorMsg = "Incorrect password";
+        state.errorMsg = "Incorrect password. Try again or Contact Admin";
+        break;
+      case "auth/invalid-login-credentials":
+        state.errorMsg = "Invalid Credentials. Try again or Contact Admin";
         break;
       case "auth/invalid-login-credentials":
         state.errorMsg = "Invalid Credentials";

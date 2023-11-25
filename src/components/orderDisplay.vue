@@ -40,7 +40,15 @@
               <td class="p-2 text-left ">{{ cartItem.product.name }}</td>
               <td class="p-2 text-left ">{{ cartItem.product.sku }}</td>
               <td class="p-2 text-center ">{{ cartItem.quantity }}</td>
-              <td class="p-2 text-right "> {{ cartItem.product.price.toLocaleString() }}</td>
+              <td class="p-2 text-right ">
+  <span v-if="cartItem.product.customPrice > 0">
+    {{ cartItem.product.customPrice.toLocaleString() }}
+  </span>
+  <span v-else>
+    {{ cartItem.product.price.toLocaleString() }}
+  </span>
+</td>
+
               <td class="p-2 text-right ">{{ calculateTotalPrice(cartItem).toLocaleString() }}</td>
             </tr>
           </tbody>
@@ -50,7 +58,7 @@
         <div class="mt-4">
           <p class="text-lg font-bold">Order Summary</p>
           <p>Total Items: <span  class=" font-bold">{{ totalItems }}</span> </p>
-          <p>Total Amount: <span class=" font-bold"> UGX {{ totalPrice }}</span></p>
+          <p>Total Amount: <span class=" font-bold"> UGX {{ totalPrice.toLocaleString() }}</span></p>
           <!-- Show the discount percentage and amount fields only if there is a discount -->
   <div class="mt-4" v-if="discount>0 ">
     <p>Discount: <span class="font-bold">{{ discount }}%</span></p>
@@ -131,9 +139,10 @@ const userStore = useUserStore();
 
 const closeReceipt = () => {
   // Add this line to log the closure
-  emit("close");
+  emit("close")
 };
 
+<<<<<<< HEAD
 const exportToPDsF = async () => {
 
   //  Select the HTML element to be converted to PDF
@@ -145,50 +154,36 @@ const buttonsContainer = document.getElementById('buttonsContainer');
   }
   // Remove the max height and overflow styles
   if (element) {
+=======
+const exportToPDF = () => {
+    const element = document.getElementById('mainContainer');
+    const buttonsContainer = document.getElementById('buttonsContainer');
+
+    if (buttonsContainer) {
+      buttonsContainer.style.display = 'none';
+    }
+    if (element) {
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
     element.classList.remove('max-h-[437px]')
     element.classList.remove('overflow-y-auto');
     }
-  try {
-    const pdfOptions = {
-      margin: 0,
-    filename: 'receipt.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', pageHeight: 'auto' },
-    };
-    html2pdf().from(element).set(pdfOptions).save();
-    // Generate the PDF using html2pdf
-    const data = await html2pdf().from(element).toPdf().output('blob')
-    const pdfFileName = `${customerName.value}_Impress_receipt.pdf`;
-    
-    const metadata = {
-      contentDisposition: `attachment; filename="${pdfFileName}"`,
-    };
+    html2canvas(element, {
+      scale: 2, // You can adjust the scale as needed
+    }).then((canvas) => {
+      // Create an image from the canvas
+      const imgData = canvas.toDataURL('image/png');
 
-    // Upload the PDF to Firebase Storage
-    const storageRef = firebase.storage().ref(`${customerId.value}/${pdfFileName}`);
-    const uploadTask = storageRef.put(data, metadata);
+      // Create a download link for the image
+      const a = document.createElement('a');
+      a.href = imgData;
+      a.download = `${customerName.value} receipt.png`;
+      a.click();
 
-    // Listen for the upload completion
-    uploadTask.on('state_changed', (snapshot) => {
-      // You can track the upload progress here if needed
-    }, (error) => {
-      // Handle errors during upload
-     window.alert('Error uploading PDF');
-    }, async () => {
-      // Get the download URL of the uploaded PDF
-      const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-
-      // Store the download URL in Firestore
-      const userRef = firebase.firestore().collection("customers").doc(customerId.value);
-      await userRef.update({
-        orderReceipt: downloadURL,
-      });
-
-      // Set the pdfData.value to the download URL
-      pdfData.value = downloadURL;
-  
+      if (buttonsContainer) {
+        buttonsContainer.style.display = 'flex';
+      }
     });
+<<<<<<< HEAD
   } catch (error) {
    window.alert('PDF generation error');
   }
@@ -220,12 +215,18 @@ const exportToPDF = () => {
         buttonsContainer.style.display = 'flex';
       }
     });
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   };
   // Fetch orders and set the current order on component mount
   onMounted(async () => {
   
     await orderStore.fetchOrders();
+<<<<<<< HEAD
     userStore.initializeUser();
+=======
+    userStore.initializeUser()
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 
   // Set the current order (replace '0' with the index of the order you want to display)
   const initialOrderIndex = 0; // Replace with the desired index
@@ -246,9 +247,13 @@ const exportToPDF = () => {
   change.value = orderStore.orders[initialOrderIndex].change;
   });
   const calculateTotalPrice = (cartItem) => {
+  if (cartItem.product.customPrice > 0) {
+    return cartItem.product.customPrice * cartItem.quantity;
+  } else {
     return cartItem.product.price * cartItem.quantity;
-    
-  };
+  }
+};
+
   
   </script>
   

@@ -104,7 +104,7 @@
               </div>
               <button
                 @click="filterProducts"
-                class=" px-3 py-2 bg-blue-500 text-white hover:bg-blue-700 rounded-md cursor-pointer"
+                class="px-3 py-2 bg-blue-500 text-white hover:bg-blue-700 rounded-md cursor-pointer"
               >
                 Filter
               </button>
@@ -193,7 +193,11 @@
                   </span>
                 </div>
               </th> -->
+<<<<<<< HEAD
               
+=======
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
               <!-- <th class="pdtab">
                 <div class="flex items-center justify-center">
                   <span>Dam Qty</span>
@@ -282,8 +286,15 @@
               <th class="pdtab">Action</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="product in paginatedProducts" :key="product.sku">
+          <tbody v-loading="loading">
+            <tr >
+    <td :colspan="numberOfColumns" class="text-center" v-if="paginatedProducts.length === 0 ">
+      <!-- Center the el-empty component -->
+      <el-empty :image-size="200"></el-empty>
+    </td>
+  </tr>
+            
+            <tr v-for="product in paginatedProducts" :key="product.sku" >
               <td class="pdd">
                 <div class="flex items-center justify-left flex-wrap p-2">
                   <img
@@ -300,6 +311,7 @@
               <td class="pdd">
                 {{ product.sku }}
               </td>
+<<<<<<< HEAD
               <td class="pdd" style="text-align: -webkit-center;">
                 <!-- Display Categories as Pills -->
                 <div class="flex justify-center px-2  rounded-full bg-blue-200 w-max" >
@@ -307,37 +319,71 @@
                     v-for="category in product.category"
                     :key="category"
                     class=" text-blue-800 "
+=======
+              <td class="pdd" style="text-align: -webkit-center">
+                <!-- Display Categories as Pills -->
+                <div
+                  class="flex justify-center px-2 rounded-full bg-blue-200 w-max"
+                >
+                  <div
+                    class="text-blue-800"
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
                   >
-                    {{ category }}
+                    {{ product.category }}
                   </div>
                 </div>
               </td>
               <td class="pdd">
+<<<<<<< HEAD
                 {{ product.price.toLocaleString() }}
               </td>
              
               <td
               
              :class="{ 'pdd': product.stockQuantity > 20, 'text-red-500 pdd2 border-b border-gray-300 flex items-center py-[2rem] pl-10 justify-center': product.stockQuantity <= 20 }"
+=======
+                
+                  <span v-if="product.price > 0">
+                    {{ product.price.toLocaleString() }}
+                  </span>
+                  <span v-else>
+                    {{ product.price }}
+                  </span>
+                
+              </td>
+
+              <td
+                :class="{
+                  pdd: product.stockQuantity > 20,
+                  'text-red-500 pdd2 border-b border-gray-300 flex items-center py-[2rem] pl-10 justify-center':
+                    product.stockQuantity <= 20,
+                }"
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
               >
-                <div> {{ product.stockQuantity }}</div>
-                 
-                  <Vue3Lottie
-                    v-if="
-                      product.stockQuantity <= 20 && product.stockQuantity > 0
-                    "
-                    :animationData="low"
-                    :height="47"
-                  />
-                  <Vue3Lottie
-                    v-if="product.stockQuantity === 0"
-                    :animationData="empty"
-                    :height="47"
-                  />
-                  
+                <div>{{ product.stockQuantity }}</div>
+
+                <Vue3Lottie
+                  v-if="
+                    product.stockQuantity <= 20 && product.stockQuantity > 0
+                  "
+                  :animationData="low"
+                  :height="47"
+                />
+                <Vue3Lottie
+                  v-if="product.stockQuantity === 0"
+                  :animationData="empty"
+                  :height="47"
+                />
               </td>
               <td class="pdd">
-                {{ product.amount.toLocaleString() }}
+                
+                  <span v-if="product.amount > 0">
+                    {{ product.amount.toLocaleString() }}
+                  </span>
+                  <span v-else>
+                    {{ product.amount }}
+                  </span>
+                
               </td>
               <!-- <td v-for="(product, index) in products" :key="index"  class="pdd">
   {{ calculatedQtySold[index] }}
@@ -398,7 +444,8 @@
           </button>
         </div>
         <div
-          class="bg-gray-200 p-4 rounded-lg shadow-lg flex  mt-4 justify-between"
+        v-if="paginatedProducts.length > 0"
+          class="bg-gray-200 p-4 rounded-lg shadow-lg flex mt-4 justify-between"
         >
           <p class="text-2xl font-semibold text-gray-700">
             Total Products:<span
@@ -426,10 +473,13 @@
             >
           </p>
           <p class="ml-4 text-2xl font-semibold text-black">
-            Total Amount:<span
-              class="ml-4 text-3xl font-semibold text-orange-500"
-              >UGX {{ totalAmount.toLocaleString() }}</span
-            >
+            Total Amount:
+            <span class="ml-4 text-3xl font-semibold text-orange-500">
+              <span v-if="totalAmount > 0">
+                UGX {{ totalAmount.toLocaleString() }}
+              </span>
+              <span v-else> UGX {{ totalAmount }} </span>
+            </span>
           </p>
         </div>
       </div>
@@ -449,9 +499,7 @@
   </div>
 </template>
 
-
-  
-  <script setup>
+<script setup>
 import { ref, onMounted, computed, watch } from "vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
@@ -462,6 +510,12 @@ import empty from "../assets/empty.json";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
+<<<<<<< HEAD
+=======
+// import { API, graphqlOperation } from 'aws-amplify';
+// import { listProducts } from '../graphql/queries';
+import { getDatabase, ref as stRef, get,remove,limitToLast,query } from "firebase/database";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 // Define the Firestore database reference
 const db = firebase.firestore();
 // Define a ref to control the visibility of the delete confirmation modal
@@ -479,12 +533,19 @@ const sortColumnRef = ref(null);
 const sortDirection = ref("asc"); // Default sorting direction
 // Define a ref to track the product being edited
 const editingProduct = ref(null);
+const loading = ref(true);
 const selectedCategory = ref("");
 const availableCategories = ref([]);
 const minStock = ref(null);
 const maxStock = ref(null);
 const minPrice = ref(null);
 const maxPrice = ref(null);
+<<<<<<< HEAD
+=======
+const numberOfColumns = ref(8)
+const cachedProducts = ref([]);
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 const { props } = defineProps(["showListSection"]);
 const toggleFilter = () => {
   filterShow.value = !filterShow.value;
@@ -643,10 +704,12 @@ const searchProducts = () => {
     products.value = sortedProducts.value.filter((product) => {
       const productName = product.name.toLowerCase();
       const productSku = product.sku.toLowerCase();
-      return productName.includes(query) || productSku.includes(query);
+      const result = productName.includes(query) || productSku.includes(query);
+      return result;
     });
   }
 };
+
 const filterProducts = () => {
   try {
     // Filter products based on search query, stock quantity range, and price range
@@ -658,10 +721,17 @@ const filterProducts = () => {
 
       // Check the type of category and convert it to a string if necessary
       if (Array.isArray(productCategory)) {
+<<<<<<< HEAD
         productCategory = productCategory.join(' '); // Convert array to a space-separated string
       } else if (typeof productCategory !== 'string') {
         // Handle other types of category, e.g., if it's an object or something else
         productCategory = '';
+=======
+        productCategory = productCategory.join(" "); // Convert array to a space-separated string
+      } else if (typeof productCategory !== "string") {
+        // Handle other types of category, e.g., if it's an object or something else
+        productCategory = "";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
       }
 
       // Check both stock quantity and price criteria
@@ -673,8 +743,15 @@ const filterProducts = () => {
         (minPrice.value === null || productPrice >= minPrice.value) &&
         (maxPrice.value === null || productPrice <= maxPrice.value);
 
+<<<<<<< HEAD
       const categoryFilter = selectedCategory.value === "" || productCategory === selectedCategory.value.trim();
       
+=======
+      const categoryFilter =
+        selectedCategory.value === "" ||
+        productCategory === selectedCategory.value.trim();
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
       console.log(productCategory);
       console.log(selectedCategory.value);
 
@@ -685,7 +762,10 @@ const filterProducts = () => {
   }
 };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 const printTable = () => {
   // Trigger the browser's print dialog
   window.print();
@@ -731,13 +811,15 @@ const deleteProduct = (product) => {
   showDeleteConfirmation.value = true;
 };
 
-// Function to delete the product
 const deleteConfirmed = async () => {
   if (deletingProduct.value) {
     const { id } = deletingProduct.value;
 
     try {
-      // Use Firebase to delete the product from Firestore
+      // const dbs = getDatabase();
+
+      // // Use Firebase Realtime Database to delete the product
+      // await remove(stRef(dbs, 'products/' + id));
       await db.collection("products").doc(id).delete();
       // Show a success message or perform any other actions if needed
       window.alert("Product deleted successfully");
@@ -752,6 +834,7 @@ const deleteConfirmed = async () => {
     }
   }
 };
+<<<<<<< HEAD
 const fetchProducts = async () => {
   try {
     const productsSnapshot = await db.collection("products").get();
@@ -770,7 +853,37 @@ const fetchProducts = async () => {
   } catch (error) {
     window.alert("Error fetching products");
   }
+=======
+
+const fetchProducts = async () => {
+  try {
+        if (cachedProducts.value.length === 0) {
+          // Only fetch products if the cache is empty
+          const productsSnapshot = await db.collection("products").get();
+          const productsList  = productsSnapshot.docs.map((doc) => doc.data());
+// Sort the products by name alphabetically
+productsList.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      });
+      loading.value = false;
+          // Cache the fetched products
+          products.value = productsList;
+          cachedProducts.value = products.value.slice();
+        } else {
+          // Use the cached products
+          products.value = cachedProducts.value.slice();
+        }
+      } catch (error) {
+        loading.value = false;
+        window.alert("Error fetching products");
+      }
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 };
+
 
 const sortProducts = () => {
   if (sortColumnRef.value && sortDirection.value) {

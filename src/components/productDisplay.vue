@@ -2,7 +2,11 @@
   <div>
     <!-- Search input field -->
     <input v-model="productStore.searchQuery" v-if="categoryStore.availableCategories.length > 0" type="text"
+<<<<<<< HEAD
       class="search-input mb-4" @keyup.enter="productStore.searchProducts" placeholder="Search Products..." />
+=======
+      class="search-input mb-4 uppercase" @keyup.enter="productStore.searchProducts" placeholder="Search Products..." />
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
     <!-- Category Slider -->
     <div class="flex">
       <!-- Navigate to the left -->
@@ -89,7 +93,7 @@
             </svg>
           </div>
         </div>
-
+        
         <!-- Product Info -->
         <div class="mt-2">
           <span >
@@ -141,6 +145,7 @@ const visibleCategories = computed(() => {
 const slideCategoriesLeft = () => {
   if (visibleCategoriesIndex.value > 0) {
     visibleCategoriesIndex.value -= 4;
+<<<<<<< HEAD
   }
 };
 
@@ -150,6 +155,17 @@ const slideCategoriesRight = () => {
     visibleCategoriesIndex.value += 4;
   }
 };
+=======
+  }
+};
+const slideCategoriesRight = () => {
+  const lastVisibleIndex = categoryStore.availableCategories.length - categoriesPerPage;
+  if (visibleCategoriesIndex.value < lastVisibleIndex) {
+    visibleCategoriesIndex.value += 4;
+  }
+};
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 // Watch the searchQuery property
 watch(
   () => productStore.searchQuery,
@@ -169,7 +185,11 @@ onMounted(async () => {
       categoryStore.fetchAvailableCategories(),
       categoryStore.selectCategory("All");
   } catch (error) {
+<<<<<<< HEAD
     window.alert("Error fetching categories");
+=======
+    window.alert("Error fetching Data");
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   }
 });
 // Inside your script setup

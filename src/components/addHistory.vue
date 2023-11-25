@@ -145,6 +145,10 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+<<<<<<< HEAD
+=======
+// import { getDatabase,ref as stRef, get,orderByChild,} from "firebase/database";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 import * as XLSX from "xlsx";
 // Define the Firestore database reference
 const db = firebase.firestore();
@@ -311,6 +315,7 @@ const nextPage = () => {
 const fetchProducts = async () => {
   try {
     const productsSnapshot = await db.collection("products").get();
+<<<<<<< HEAD
     const allProducts = productsSnapshot.docs.map((doc) => doc.data());
     
     // Filter products with the `quantityChanges` field
@@ -320,11 +325,40 @@ const fetchProducts = async () => {
     productsAddHistory.value = products.value.map((product) => product.quantityChanges);
   } catch (error) {
     window.alert("Error fetching products");
+=======
+    const productsArray = productsSnapshot.docs.map((doc) => doc.data());
+    // const db = getDatabase();
+    // const productsDataRef = stRef(db, "/products");
+    // const productsSnapshot = await get(productsDataRef);
+
+    // if (productsSnapshot.val() !== null) {
+    //   // Convert the data to an array of products
+    //   const productsArray = Object.values(productsSnapshot.val()).map((product) => {
+    //     return {
+    //       ...product,
+    //     };
+    //   });
+
+      // Filter products with the `quantityChanges` field
+      const filteredProducts = productsArray.filter((product) => product.quantityChanges !== undefined);
+
+      // Set the `products.value` with the filtered products
+      products.value = filteredProducts;
+
+      // Get the `quantityChanges` for the filtered products
+      productsAddHistory.value = filteredProducts.map((product) => product.quantityChanges);
+  } catch (error) {
+    window.alert("Error fetching products: " + error);
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   }
 };
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 const sortProducts = () => {
   if (sortColumnRef.value && sortDirection.value) {
     products.value.sort((a, b) => {

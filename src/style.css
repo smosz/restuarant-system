@@ -512,8 +512,9 @@ button[disabled] {
 }
 
 .bg-update-image{
-  @apply flex mt-[10px] items-center justify-center w-full h-64
+  @apply mt-[10px] self-center
 }
+
 
 
 .bg-update{

@@ -159,7 +159,12 @@
           <div v-if="message" class="mt-4 col-span-2 text-center text-green-600">
             {{ message }}
           </div>
-
+          <div v-if="errorMessage" class="mt-4 col-span-2 text-center text-red-600">
+            {{ errorMessage }}
+          </div>
+          <div v-if="imageSizeError" class="mt-4 col-span-2 text-center text-red-600">
+            {{ imageSizeError }}
+          </div>
           <!-- Submit Button -->
           <div class="col-span-2 flex justify-center">
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
@@ -183,11 +188,20 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { useRouter } from "vue-router";
+// import { API, graphqlOperation } from 'aws-amplify';
+// import { createProduct } from '../graphql/mutations'; // Import the specific mutation
+// import { getDatabase,ref as stRef, set,push,} from "firebase/database";
+
+
 // Define the Firestore database reference
 const db = firebase.firestore();
+
 // Track whether a file is being dragged over the drop area
 const isDragging = ref(false);
 const message = ref("");
+const errorMessage = ref("");
+const imageSizeError = ref("");
+const imgSize = ref(null)
 const updating = ref(false);
 const availableCategories = ref([]);
 const router = useRouter();
@@ -267,15 +281,26 @@ const fetchCategoryNames = async () => {
 const previewProductImage = (event) => {
   const file = event.target.files[0];
   if (file) {
-    // Read the selected image file as a Data URL
+
+    imgSize.value = file.size
+ // Check the image size before uploading
+ if (imgSize.value > 1048487) {
+      imageSizeError.value = "Image is too large. Please upload a another image.";
+      return;
+    }else{
+      imageSizeError.value = "";
+      // Read the selected image file as a Data URL
     const reader = new FileReader();
     reader.onload = () => {
       // Update the productImage ref with the Data URL
       product.value.productImage = reader.result;
     };
     reader.readAsDataURL(file);
+    }
+    
   }
 };
+
 // Handle the drag-and-drop events
 const handleDragOver = (event) => {
   isDragging.value = true;
@@ -363,16 +388,28 @@ const registerProduct = async () => {
     updating.value = true;
     product.value.name = product.value.name.toUpperCase();
     product.value.sku = product.value.sku.toUpperCase();
+<<<<<<< HEAD
+=======
+    
+    const dbs = firebase.firestore();
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
     // Generate a unique ID
-    const sku = db.collection("products").doc().id;
-
+    const sku = dbs.collection("products").doc().id;
+    
     // Add the product data to Firestore with SKU as the document ID
     const productDataWithId = {
       ...product.value,
-      id: sku, // Add the ID to the product data
+id:sku,
     };
+<<<<<<< HEAD
 console.log(productDataWithId)
     await db.collection("products").doc(sku).set(productDataWithId);
+=======
+
+
+    await dbs.collection("products").doc(sku).set(productDataWithId);
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
     updating.value = false;
 
     // Show a success message
@@ -392,15 +429,20 @@ console.log(productDataWithId)
       InitialStockQuantity: 0,
     };
     selectedCategory.value = null
+<<<<<<< HEAD
+=======
+    newCategory.value=''
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
     // Automatically clear the success message after 5 seconds (5000 milliseconds)
     setTimeout(() => {
-      message.value = "";
-      router.replace("/all-products");
-    }, 2000);
+  message.value = "";
+  location.reload();
+}, 2000);
+
   } catch (error) {
     updating.value = false;
-    message.value = "Product registration failed. Try again.";
-    window.alert("Error registering product");
+    errorMessage.value = "Product registration failed. Try again.";
+    console.error(error)
   }
 };
 

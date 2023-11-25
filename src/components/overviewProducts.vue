@@ -126,7 +126,11 @@
   import prod from "../assets/prod.json";
   import lowStock from "../assets/lowStock.json";
   import "firebase/compat/firestore";
+<<<<<<< HEAD
   
+=======
+  import { getDatabase, ref as stRef, get,remove } from "firebase/database";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   const orders = ref([]);
 
   const db = firebase.firestore();
@@ -155,7 +159,41 @@
       window.alert("Error fetching products");
     }
   };
+<<<<<<< HEAD
 
+=======
+//   const fetchProducts = async () => {
+//   try {
+//     // Get a reference to the Firebase Realtime Database
+//     const db = getDatabase();
+
+//     // Reference the "products" node in the database
+//     const productsRef = stRef(db, "/products");
+
+//     // Retrieve the data from the "products" node
+//     const productsSnapshot = await get(productsRef);
+
+//     if (productsSnapshot.val() !== null) {
+//       // Convert the data to an array of products
+//       const productsList = [];
+//       for (const sku in productsSnapshot.val()) {
+//         const productData = productsSnapshot.val()[sku];
+//         productsList.push({
+//           id: sku, // Use the SKU as the ID
+//           ...productData,
+//         });
+//       }
+
+//       // Set the sorted products in your Vue variable
+//       products.value = productsList;
+//     } else {
+//       console.log("No products found in the database.");
+//     }
+//   } catch (error) {
+//     console.error("Error fetching products:", error);
+//   }
+// };
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   const totalStockQuantity = computed(() => {
   return products.value.reduce(
     (total, product) => total + product.stockQuantity,

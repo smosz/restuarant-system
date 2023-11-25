@@ -232,7 +232,7 @@
                           cartItem.product.sku
                         }}</span>
                       </td>
-                      <td class="border border-gray-300">
+                      <td class="border border-gray-300 text-left">
                         <span class="text-gray-700">{{
                           cartItem.product.name
                         }}</span>
@@ -243,10 +243,11 @@
                         }}</span>
                       </td>
                       <td class="border border-gray-300">
-                        <span class="text-gray-700">{{
-                          cartItem.product.price.toLocaleString()
-                        }}</span>
-                      </td>
+  <span class="text-gray-700">
+    {{ cartItem.product.customPrice > 0 ? cartItem.product.customPrice.toLocaleString() : cartItem.product.price.toLocaleString() }}
+  </span>
+</td>
+
                       <td class="border border-gray-300">
                         <span class="text-gray-700">{{
                           calculateTotalPrice(cartItem).toLocaleString()
@@ -260,7 +261,7 @@
                   {{ orderItem.totalItems }}
                 </td>
                 <td class="px-1 py-4 border border-gray-300 text-center">
-                  {{ orderItem.totalAmount }}
+                  {{ orderItem.totalAmount.toLocaleString() }}
                 </td>
                 <td
                   v-if="hideDiscounts"
@@ -919,10 +920,14 @@ const sortColumn = (column, direction) => {
   sortColumnRef.value = column;
   sortDirection.value = direction;
 };
-const calculateTotalPrice = (cartItem) => {
-  return cartItem.product.price * cartItem.quantity;
-};
 
+const calculateTotalPrice = (cartItem) => {
+  if (cartItem.product.customPrice > 0) {
+    return cartItem.product.customPrice * cartItem.quantity;
+  } else {
+    return cartItem.product.price * cartItem.quantity;
+  }
+};
 // Watch for changes to searchQuery
 watch(
   [

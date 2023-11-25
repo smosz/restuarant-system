@@ -3,7 +3,7 @@ import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore';
 import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
-
+// import { getDatabase, ref, onDisconnect } from "firebase/database";
 const firebaseConfig = {
   apiKey: "AIzaSyAi8icuYtYEMqfxHJyDBGvySeWvxoTiP-Q",
   authDomain: "impress---pos.firebaseapp.com",
@@ -28,6 +28,14 @@ const firebaseAuthForRegistration = firebase.initializeApp(
   firebaseConfigForRegistration,
   "registration"
 ).auth();
+// // Initialize the Firebase Realtime Database
+// const dbs = getDatabase();
+
+// // Define a reference to the location in the database where you want to write the disconnect message
+// const presenceRef = ref(dbs, "disconnectmessage");
+
+// // Write a string when this client loses connection
+// onDisconnect(presenceRef).set("I disconnected!");
 
 const firebaseApp = firebase.initializeApp(firebaseConfig)
 const db = firebase.firestore();

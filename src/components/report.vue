@@ -6,7 +6,11 @@
       </div>
   
       <div class="bg-white shadow-md rounded-lg overflow-hidden tab">
+<<<<<<< HEAD
         <div class="overflow-x-auto px-6">
+=======
+        <div class="px-6">
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
           <div
             class="mt-2 mb-4 flex items-center font-['monospace'] space-x-2 justify-between no-print"
           >
@@ -19,6 +23,7 @@
                 @keyup.enter="searchProducts"
                 placeholder="Search products..."
               />
+<<<<<<< HEAD
               <!-- <Icon
                 icon="mi:filter"
                 class="mx-2 cursor-pointer"
@@ -63,6 +68,8 @@
                   Filter
                 </button>
               </div> -->
+=======
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
             </div>
   
             <div class="flex ml-auto">
@@ -198,7 +205,11 @@
             <tbody>
               <tr v-for="product in paginatedProducts" :key="product.sku">
                 <td class="pdd">
+<<<<<<< HEAD
                   <div class="flex items-center justify-center flex-wrap">
+=======
+                  <div class="flex items-center justify-left flex-wrap">
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
                     <img
                       :src="product.productImage"
                       alt="Product Image"
@@ -226,6 +237,7 @@
     {{ product.sold }}
   </td>
   <td
+<<<<<<< HEAD
              :class="{ 'pdd': product.stockQuantity > 20, 'text-red-500 pdd2 flex items-center py-4 pl-10 justify-center': product.stockQuantity <= 20 }"
               >
                 <div> {{ product.stockQuantity }}</div>
@@ -243,6 +255,28 @@
                     :height="47"
                   />
                   
+=======
+                :class="{
+                  pdd: product.stockQuantity > 20,
+                  'text-red-500 pdd2 border-b border-gray-300 flex items-center py-[2rem] pl-10 justify-center':
+                    product.stockQuantity <= 20,
+                }"
+              >
+                <div>{{ product.stockQuantity }}</div>
+
+                <Vue3Lottie
+                  v-if="
+                    product.stockQuantity <= 20 && product.stockQuantity > 0
+                  "
+                  :animationData="low"
+                  :height="47"
+                />
+                <Vue3Lottie
+                  v-if="product.stockQuantity === 0"
+                  :animationData="empty"
+                  :height="47"
+                />
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
               </td>
                 
 
@@ -325,12 +359,20 @@ import empty from "../assets/empty.json";
   import jsPDF from "jspdf";
   import "jspdf-autotable";
   import * as XLSX from "xlsx";
+<<<<<<< HEAD
+=======
+  // import { getDatabase,ref as stRef, get,orderByChild,} from "firebase/database";
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   // Define the Firestore database reference
   const db = firebase.firestore();
 
   // Define pagination state
   const currentPage = ref(1); // Current page
+<<<<<<< HEAD
   const itemsPerPage = 5; // Number of items to display per page
+=======
+  const itemsPerPage = 20; // Number of items to display per page
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   const searchQuery = ref("");
   const filterShow = ref(false);
   const filterclose = ref(true);
@@ -463,10 +505,26 @@ import empty from "../assets/empty.json";
 
 
   const totalQtySold = computed(() => {
+<<<<<<< HEAD
     return products.value.reduce((total, product) => total + product.sold, 0);;
 });
 
 
+=======
+    const num = products.value.reduce((total, product) => {
+        const sold = product.sold;
+        if (isNaN(sold)) {
+            console.log(`Invalid sold value for product:`, product);
+        }
+        return total + (isNaN(sold) ? 0 : sold);
+    }, 0);
+    console.log(num);
+    return num;
+});
+
+
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   const totalTesters = computed(() => {
     return products.value.reduce((total, product) => total + product.testers, 0);
   });
@@ -546,7 +604,35 @@ import empty from "../assets/empty.json";
       window.alert("Error fetching products");
     }
   };
+<<<<<<< HEAD
   
+=======
+//   const fetchProducts = async () => {
+//   try {
+//     const db = getDatabase();
+//     const productsDataRef = stRef(db, "/products");
+//         const prod =await get(productsDataRef)
+//     if (prod.val() !== null) {
+
+//       const productsArray= Object.values(prod.val()).map((product) => {
+//             return {
+//               ...product,
+//             };});
+//       // Sort the products by ranking in ascending order
+//       productsArray.sort((a, b) => a.ranking - b.ranking);
+
+//       // Set the products value
+//       products.value = productsArray;
+//     } else {
+//       // Handle the case where there are no products in the database
+//       products.value = [];
+//     }
+//   } catch (error) {
+//     window.alert("Error fetching products: " + error);
+//   }
+// };
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
   const sortProducts = () => {
     if (sortColumnRef.value && sortDirection.value) {
       products.value.sort((a, b) => {

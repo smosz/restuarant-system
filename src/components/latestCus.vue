@@ -45,7 +45,11 @@
           {{
             order.discountAmount > 0
               ? "UGX " + order.discountAmount.toLocaleString()
+<<<<<<< HEAD
               : "UGX " + order.totalAmount
+=======
+              : "UGX " + order.totalAmount.toLocaleString()
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
           }}
         </p>
       </div>
@@ -282,7 +286,11 @@
           {{
             order.discountAmount > 0
               ? "UGX " + order.discountAmount.toLocaleString()
+<<<<<<< HEAD
               : "UGX " + order.totalAmount
+=======
+              : "UGX " + order.totalAmount.toLocaleString()
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
           }}
         </p>
       </div>

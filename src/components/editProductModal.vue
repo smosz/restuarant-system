@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="editingProduct"
+    v-loading="loading"
     class="fixed inset-0 flex items-center justify-center z-50"
   >
     <div
@@ -95,7 +96,11 @@
                 type="number"
                 id="sold"
                 class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+<<<<<<< HEAD
                disabled
+=======
+               
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
               />
             </div>
           </div>
@@ -140,7 +145,11 @@
                 id="InitialStockQuantity"
                 class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 required
+<<<<<<< HEAD
                 disabled
+=======
+                
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
                 min="0"
               />
             </div>
@@ -156,6 +165,7 @@
                 class="appearance-none bg-gray-200 border-b border-teal-500 focus-visible:border-blue-500 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 required
                 disabled
+                
                 
               />
             </div>
@@ -321,6 +331,7 @@ import "firebase/compat/storage";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+// import { getDatabase,ref as stRef, set,push} from "firebase/database";
 // Define the Firestore database reference
 const db = firebase.firestore();
 // Define a prop to pass the editing product data
@@ -344,6 +355,10 @@ const showSuggestions = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 const updating = ref(false);
+<<<<<<< HEAD
+=======
+const loading = ref(false);
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 const newQuantity=ref(0);
 
 const suggestCategories = () => {
@@ -368,6 +383,7 @@ const selectSuggestion = (suggestion) => {
   showSuggestions.value = false; // Hide suggestions
 };
 
+<<<<<<< HEAD
 // Function to update the product
 const updateProduct = async () => {
   try {
@@ -438,6 +454,87 @@ const updateProduct = async () => {
   }
 };
 
+=======
+const getCurrentDateTime = () => {
+  const currentDateTime = new Date();
+  const formattedDate = `${currentDateTime.getDate()}-${currentDateTime.getMonth() + 1}-${currentDateTime.getFullYear()}`;
+  const hours = currentDateTime.getHours();
+  const minutes = currentDateTime.getMinutes();
+  const amOrPm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
+  return { formattedDate, formattedTime };
+};
+
+const addNewQuantityChange = (updatedProductData, newQuantityValue, newQuantityChange) => {
+  updatedProductData.quantityChanges = updatedProductData.quantityChanges || [];
+  updatedProductData.quantityChanges.push(newQuantityChange);
+  return updatedProductData;
+};
+
+const updateProductInFirestore = async (documentId, updatedProductData) => {
+  await firebase.firestore()
+    .collection("products")
+    .doc(documentId)
+    .update(updatedProductData);
+};
+
+// const updateProductInRealtimeDB = async (productRef, updatedProductData) => {
+//   await set(productRef, updatedProductData);
+// };
+
+const updateProduct = async () => {
+  try {
+    if (props.editingProduct) {
+      loading.value = true;
+      // const dbs = getDatabase();
+      const documentId = props.editingProduct.id;
+      // const productRef = stRef(dbs, 'products/' + documentId);
+      const { ...updatedProduct } = props.editingProduct;
+
+      // Create an object with the updated product data
+      let updatedProductData = {
+        ...updatedProduct,
+        category: props.editingProduct.category,
+        amount: amount.value,
+        testers: originalTesters.value,
+        damaged: originalDamaged.value,
+        newQuantity: newQuantity.value,
+        sold: originalSoldStock.value,
+      };
+
+      const { formattedDate, formattedTime } = getCurrentDateTime();
+
+      if (newQuantity.value > 0) {
+        // Add quantity change only when newQuantity is greater than zero
+        const newQuantityChange = {
+          quantityAdded: newQuantity.value,
+          date: formattedDate,
+          time: formattedTime,
+        };
+        updatedProductData = addNewQuantityChange(updatedProductData, newQuantity.value, newQuantityChange);
+      }
+
+      await updateProductInFirestore(documentId, updatedProductData);
+      // await updateProductInRealtimeDB(productRef, updatedProductData);
+
+      loading.value = false;
+      successMessage.value = "Product updated successfully";
+      // setTimeout(() => {
+      //   location.reload();
+      // }, 1000);
+    }
+  } catch (error) {
+    loading.value = false;
+    console.error(error)
+    errorMessage.value = "Failed to update the product. Please try again later.";
+  }
+};
+
+
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 const fetchCategoryNames = async () => {
   try {
     const categoriesSnapshot = await db.collection("categories").get();
@@ -503,6 +600,10 @@ const originalTesters=ref(0)
 const originalSoldStock=ref(0)
 const originalDamaged=ref(0)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
 // Watch for changes in the editingProduct prop
 
 watch(
