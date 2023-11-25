@@ -89,15 +89,17 @@ const router = createRouter({
       name: 'Roles',
       component: roles,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin' // This route requires the 'Admin' role
+        requiresAuth: true,
+        requiresAnyRole: ['Admin', 'Tech'] // This route requires either 'Admin' or 'Tech' role
       }
     },
+    
     {
       path: '/oders',
       name: 'Orders',
       component: Orders,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
       }
     },
     {
@@ -105,7 +107,7 @@ const router = createRouter({
       name: 'Users',
       component: users,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
       }
     },
     {
@@ -121,7 +123,7 @@ const router = createRouter({
       name: 'Allproducts',
       component: Allproducts,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
       }
     },
     {
@@ -129,7 +131,7 @@ const router = createRouter({
       name: 'Categories',
       component: Categories,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
       }
     },
     {
@@ -137,7 +139,7 @@ const router = createRouter({
       name: 'Addproduct',
       component: Addproduct,
       meta: {
-        requiresAuth: true, requiresRole: 'Admin'
+        requiresAuth: true, requiresAnyRole: ['Admin', 'Tech']
       }
     },
     {
@@ -175,9 +177,9 @@ router.beforeEach(async (to, from, next) => {
           redirect: to.fullPath
         }
       });
-    } else if (to.matched.some(record => record.meta.requiresRole === 'Admin')) {
+    } else if (to.matched.some(record => ['Admin', 'Tech'].includes(record.meta.requiresRole))){
       // Allow access for admin routes
-      if (userRole === 'Admin') {
+      if (userRole === 'Admin' || userRole === 'Tech') {
         next();
       } else {
         next('/pos'); // Redirect to an access denied page for non-admins

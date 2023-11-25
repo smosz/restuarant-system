@@ -76,6 +76,8 @@ import { useRouter } from "vue-router";
 import load from "../assets/load.json";
 import { useUserStore } from "../stores/user.js";
 import useValidate from "@vuelidate/core";
+
+
 import { email, helpers } from "@vuelidate/validators";
 const db = firebase.firestore();
 const state = reactive({
@@ -132,7 +134,12 @@ const btnColor = () => {
 };
 
 const v$ = useValidate(rules, state);
+
 const login = async () => {
+ 
+
+  try {
+    
   const userData = await v$.value.$validate();
   
   if (!userData) {
@@ -159,14 +166,13 @@ if (userDoc.exists) {
     return;
   }
 }
-  try {
     // Get the current date and time
   const currentDateTime = new Date();
 
 // Format the date as "dd-mm-yyyy"
 const formattedDate = `${currentDateTime.getDate()}-${
   currentDateTime.getMonth() + 1
-}-${currentDateTime.getFullYear()}`;
+}-${currentDateTime.getFullYear()}`
 
 // Format the time in 12-hour clock format
 const hours = currentDateTime.getHours();
@@ -178,7 +184,8 @@ const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
      // Update the lastLogin field in Firestore
      await firebase.firestore().collection("users").doc(user.uid).update({
       
-      lastLogin: `${formattedDate} - ${formattedTime}`
+      lastLoginDate: formattedDate ,
+        lastLoginTime: formattedTime
     });
     router.replace({ name: "Dashboard" });
   } catch (err) {
@@ -187,13 +194,16 @@ const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
     state.errorMsg = err.message;
     switch (err.code) {
       case "auth/invalid-email":
-        state.errorMsg = "Invalid email";
+        state.errorMsg = "Invalid email. Try again or Contact Admin";
         break;
       case "auth/user-not-found":
         state.errorMsg = "User doesn't exist";
         break;
       case "auth/wrong-password":
-        state.errorMsg = "Incorrect password";
+        state.errorMsg = "Incorrect password. Try again or Contact Admin";
+        break;
+      case "auth/invalid-login-credentials":
+        state.errorMsg = "Invalid Credentials. Try again or Contact Admin";
         break;
       default:
         state.errorMsg = "Connection to Server cut down";

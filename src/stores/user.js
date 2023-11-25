@@ -95,7 +95,8 @@ const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
        const user= firebase.auth().currentUser;
        await firebase.firestore().collection("users").doc(user.uid).update({
-        lastSignOut:`${formattedDate} - ${formattedTime}`
+        lastSignOutDate: formattedDate ,
+        lastSignOutTime: formattedTime
       });
         console.log(user)
         await firebase.auth().signOut(); // Sign out the user using Firebase Authentication

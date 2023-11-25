@@ -10,7 +10,8 @@ import { createPinia } from 'pinia';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import './firebase/firebaseInit';
-
+import VueChartkick from 'vue-chartkick'
+import 'chartkick/chart.js'
 
 const pinia = createPinia(); // Create the Pinia instance
 
@@ -20,6 +21,7 @@ firebase.auth().onAuthStateChanged(() => {
   
     app = createApp(App)
       .use(router)
+      .use(VueChartkick)
       .use(pinia)
       .use(Vue3Lottie)
       .use(ElementPlus)

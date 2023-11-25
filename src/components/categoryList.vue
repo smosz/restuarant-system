@@ -1,7 +1,7 @@
 <template>
   <div class="bgColor">
     <div class="max-w-screen-lg mx-auto py-6">
-      <div class="bg-white rounded-lg shadow-lg p-6 tab">
+      <div class="bg-white rounded-lg shadow-lg px-6 pt-6 tab">
         <div class="flex justify-between items-center mb-4 no-print">
           <h2 class="text-2xl font-semibold">Categories List</h2>
           <button
@@ -213,8 +213,17 @@
           </button>
         </div>
         <div class="mt-2 text-center no-print">
-          Total Categories: {{ sortedCategories.length }}
-        </div>
+            <div
+              class="bg-gray-200 p-4 rounded-sm shadow-sm flex items-center text-[20px] justify-center"
+            >
+              <p class="font-semibold text-black">
+                Total Categories:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                  > {{ sortedCategories.length }}</span
+                >
+              </p>
+            </div>
+          </div>
       </div>
     </div>
 

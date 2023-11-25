@@ -1,7 +1,7 @@
 <template>
   <div class="bgColor">
     <div class="max-w-screen-lg mx-auto py-6">
-      <div class="bg-white rounded-lg shadow-lg p-6 tab">
+      <div class="bg-white rounded-lg shadow-lg px-6 pt-6 tab">
         <div class="flex justify-between items-center mb-4 no-print">
           <h2 class="text-2xl font-semibold">Role List</h2>
           <button
@@ -162,9 +162,19 @@
             Next
           </button>
         </div>
+        
         <div class="mt-2 text-center no-print">
-          Total roles: {{ sortedRoles.length }}
-        </div>
+            <div
+              class="bg-gray-200 p-4 rounded-sm shadow-sm flex items-center text-[20px] justify-center"
+            >
+              <p class="font-semibold text-black">
+                Total roles:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                  > {{ sortedRoles.length }}</span
+                >
+              </p>
+            </div>
+          </div>
       </div>
     </div>
 
@@ -367,8 +377,7 @@ const deleteConfirmed = async () => {
     try {
       // Use Firebase to delete the Role from Firestore
       await db.collection("roles").doc(id).delete();
-      // Show a success message or perform any other actions if needed
-      console.log("Role deleted successfully");
+     
     } catch (error) {
       // Handle the error
       window.alert("Error deleting Role");
@@ -385,11 +394,17 @@ const deleteConfirmed = async () => {
 const fetchroles = async () => {
   try {
     const rolesSnapshot = await db.collection("roles").get();
-    roles.value = rolesSnapshot.docs.map((doc) => doc.data())
+    const allRoles = rolesSnapshot.docs.map((doc) => doc.data());
+
+    // Filter out the "Tech" role
+    const filteredRoles = allRoles.filter((role) => role.name !== "Tech");
+
+    roles.value = filteredRoles;
   } catch (error) {
     window.alert("Error fetching roles");
   }
 };
+
 
 // Function to open the Role registration modal
 const openRoleRegistrationModal = () => {

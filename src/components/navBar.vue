@@ -13,7 +13,7 @@
               >Dashboard</router-link
             >
             <div
-            v-if="userStore.loggedInUserData.Role === 'Admin'"
+            v-if="userStore.loggedInUserData.Role === 'Admin' || userStore.loggedInUserData.Role === 'Tech'"
               :class="{
                 'active-products': isAllProductsActive,
                 'active-add-product': isAddProductActive,
@@ -101,7 +101,7 @@
               >Pos</router-link
             >
             <router-link
-            v-if="userStore.loggedInUserData.Role === 'Admin'"
+            v-if="userStore.loggedInUserData.Role === 'Admin' || userStore.loggedInUserData.Role === 'Tech'"
               :to="{ name: 'Orders' }"
               class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Orders</router-link
@@ -113,13 +113,13 @@ class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medi
 >Expenses</router-link
 >
             <router-link
-            v-if="userStore.loggedInUserData.Role === 'Admin'"
+            v-if="userStore.loggedInUserData.Role === 'Admin' || userStore.loggedInUserData.Role === 'Tech'"
               :to="{ name: 'Roles' }"
               class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Roles</router-link
             >
             <router-link
-            v-if="userStore.loggedInUserData.Role === 'Admin'"
+            v-if="userStore.loggedInUserData.Role === 'Admin' || userStore.loggedInUserData.Role === 'Tech'"
               :to="{ name: 'Users' }"
               class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Users</router-link
