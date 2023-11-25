@@ -23,79 +23,9 @@
     </div>
     <div v-else-if="cartItems.length > 0 && !isReceiptModalVisible">
       <div class="mb-4">
-        <div class="flex justify-between">
-          <label for="customerSelect" class="block text-lg font-semibold">
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    Search Customer:
-  </label>
-  <label for="selectedCustomer" class="block text-lg font-semibold mr-[8%]">
-    Selected Customer:
-  </label>
-        </div>
-  
-  <div class="flex items-center w-[55%]">
-    <!-- Customer (Autocomplete Input) -->
-    <div>
-      <input
-        type="text"
-        id="customer"
-        placeholder="Look up Customer"
-        v-model="searchCus"
-        class="border border-gray-300 px-2 pb-1 pt-[0.2rem]"
-        @input="suggestCustomers"
-      />
-    </div>
-    <div
-      class="cursor-pointer bg-cyan-300 border border-gray-300"
-      @click="toggleCustomerInput"
-    >
-      <Icon
-        icon="majesticons:plus-line"
-        :height="31"
-        v-if="!showCustomerInput"
-      />
-      <Icon icon="codicon:dash" :height="31" v-else />
-    </div>
-    <!-- Field for selected customer -->
-<div v-if="selectedCustomer" class="ml-[12%]" >
-  <input
-    type="text"
-    id="selectedCustomer"
-    v-model="customerLookup"
-    class="border border-gray-300 px-2 pb-1 pt-[0.2rem]"
-    :disabled="true"
-  />
-</div>
-  </div>
-  <!-- Auto-suggested customers dropdown -->
-  <ul v-if="showSuggestions" class="border w-[44.4%] border-gray-300 rounded-b-md overflow-y-auto">
-    <li
-      v-for="suggestion in customerSuggestions"
-      :key="suggestion"
-      @click="selectSuggestion(suggestion)"
-      class="cursor-pointer px-2 py-1 hover:bg-gray-200"
-    >
-      {{ suggestion }}
-    </li>
-  </ul>
-</div>
-
-
-
-=======
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-            Search Customer:
-          </label>
-          <label
-            for="selectedCustomer"
-            class="block text-lg font-semibold mr-[8%]"
-          >
-            Selected Customer:
-          </label>
-        </div>
-
+        <label for="customerSelect" class="block text-lg font-semibold">
+          Search Customer:
+        </label>
         <div class="flex items-center w-[55%]">
           <!-- Customer (Autocomplete Input) -->
           <div>
@@ -103,7 +33,7 @@
               type="text"
               id="customer"
               placeholder="Look up Customer"
-              v-model="searchCus"
+              v-model="customerLookup"
               class="border border-gray-300 px-2 pb-1 pt-[0.2rem]"
               @input="suggestCustomers"
             />
@@ -119,18 +49,8 @@
             />
             <Icon icon="codicon:dash" :height="31" v-else />
           </div>
-          <!-- Field for selected customer -->
-          <div v-if="selectedCustomer" class="ml-[12%]">
-            <input
-              type="text"
-              id="selectedCustomer"
-              v-model="customerLookup"
-              class="border border-gray-300 px-2 pb-1 pt-[0.2rem]"
-              :disabled="true"
-            />
-          </div>
         </div>
-        <!-- Auto-suggested customers dropdown -->
+        <!-- Auto-suggested categories dropdown -->
         <ul
           v-if="showSuggestions"
           class="border w-[44.4%] border-gray-300 rounded-b-md overflow-y-auto"
@@ -156,70 +76,24 @@
           <input
             type="text"
             id="newCustomerName"
-            v-model="v$.newCustomerName.$model"
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-            :class="v$.newCustomerName.$error ? 'cus-error' : 'border border-gray-300 p-2 w-[45%]'"
-=======
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-            :class="
-              v$.newCustomerName.$error
-                ? 'cus-error'
-                : 'border border-gray-300 p-2 w-[45%]'
-            "
-<<<<<<< HEAD
-=======
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
+            v-model="newCustomerName"
+            class="border border-gray-300 p-2 w-[45%]"
             placeholder="Customer Name"
           />
           <input
             type="text"
             id="newCustomerPhone"
             placeholder="07 XX XXX XXX"
-            v-model="v$.newCustomerPhone.$model"
-<<<<<<< HEAD
-            :class="
-              v$.newCustomerPhone.$error
-                ? 'cus-error'
-                : 'border border-gray-300 p-2 w-[45%]'
-            "
+            v-model="newCustomerPhone"
+            class="border border-gray-300 p-2 w-[45%]"
           />
 
-=======
-<<<<<<< HEAD
-            :class="v$.newCustomerPhone.$error ? 'cus-error' : 'border border-gray-300 p-2 w-[45%]'"
-          />
-
-          <button v-if="!v$.newCustomerPhone.$error && !v$.newCustomerName.$error" @click="addCustomer" class="bg-cyan-500 text-white px-4 py-2">
-            <span v-if="loading"> Adding... </span
-                ><span v-else> Add </span>
-=======
-            :class="
-              v$.newCustomerPhone.$error
-                ? 'cus-error'
-                : 'border border-gray-300 p-2 w-[45%]'
-            "
-          />
-
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-          <button
-            v-if="!v$.newCustomerPhone.$error && !v$.newCustomerName.$error"
-            @click="addCustomer"
-            class="bg-cyan-500 text-white px-4 py-2"
-          >
-            <span v-if="loading"> Adding... </span><span v-else> Add </span>
-<<<<<<< HEAD
-=======
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
+          <button @click="addCustomer" class="bg-cyan-500 text-white px-4 py-2">
+            Add
           </button>
         </div>
         <div class="flex justify-between">
           <span class="error-text" v-if="v$.newCustomerName.$error">
-<<<<<<< HEAD
-=======
 <<<<<<< HEAD
               <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
               {{ v$.newCustomerName.$errors[0].$message }}</span
@@ -246,7 +120,6 @@
             >
             
 =======
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
             <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
             {{ v$.newCustomerName.$errors[0].$message }}</span
           >
@@ -303,10 +176,66 @@
             <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
             {{ v$.newCustomerPhone.$errors[0].$message }}</span
           >
-<<<<<<< HEAD
-=======
 >>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
+        </div>
+        <div class="flex justify-between">
+          <span class="error-text" v-if="v$.newCustomerName.$error">
+            <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+            {{ v$.newCustomerName.$errors[0].$message }}</span
+          >
+          <span
+            class="error-text mr-[20%]"
+            v-if="
+              v$.newCustomerPhone.$error &&
+              v$.newCustomerPhone.$errors[0].$message === 'Number required' &&
+              v$.newCustomerName.$error
+            "
+          >
+            <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+            {{ v$.newCustomerPhone.$errors[0].$message }}
+          </span>
+          <span
+            class="error-text mr-[8%]"
+            v-if="
+              v$.newCustomerPhone.$error &&
+              v$.newCustomerPhone.$errors[0].$message ===
+                'Number must be numeric' &&
+              v$.newCustomerName.$error
+            "
+          >
+            <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+            {{ v$.newCustomerPhone.$errors[0].$message }}
+          </span>
+          <span
+            class="error-text mr-[25%]"
+            v-if="
+              v$.newCustomerPhone.$error &&
+              v$.newCustomerPhone.$errors[0].$message === 'Invalid Format' &&
+              v$.newCustomerName.$error
+            "
+          >
+            <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+            {{ v$.newCustomerPhone.$errors[0].$message }}
+          </span>
+          <span
+            class="error-text mr-[-1%]"
+            v-if="
+              v$.newCustomerPhone.$error &&
+              v$.newCustomerPhone.$errors[0].$message ===
+                'Number must be 10 digits long' &&
+              v$.newCustomerName.$error
+            "
+          >
+            <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+            {{ v$.newCustomerPhone.$errors[0].$message }}
+          </span>
+          <span
+            class="error-text ml-[47%]"
+            v-if="v$.newCustomerPhone.$error && !v$.newCustomerName.$error"
+          >
+            <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+            {{ v$.newCustomerPhone.$errors[0].$message }}</span
+          >
         </div>
       </div>
       <!-- Cart Items -->
@@ -525,52 +454,8 @@ import { useProductStore } from "../stores/products.js";
 import { useCustomerStore } from "../stores/customers.js";
 import { computed, ref, watch, onMounted } from "vue";
 import firebase from "firebase/compat/app";
-<<<<<<< HEAD
-import axios from 'axios'
-=======
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-// import {
-//   getDatabase,
-//   ref as stRef,
-//   get,
-//   query,
-//   set,
-//   update,
-//   orderByChild,
-//   limitToLast,
-// } from "firebase/database";
 import "firebase/compat/firestore";
 import orderDisplay from "./orderDisplay.vue";
-import { useVuelidate } from "@vuelidate/core";
-import {
-  required,
-  email,
-  minLength,
-  numeric,
-  maxLength,
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-
-=======
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-  alpha,
-  helpers,
-} from "@vuelidate/validators";
-const error = ref(false);
-<<<<<<< HEAD
-const errorMsg = ref("");
-
-=======
-<<<<<<< HEAD
-    const errorMsg = ref("");
-  
-=======
-const errorMsg = ref("");
-
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const isReceiptModalVisible = ref(false);
 import { useCategoryStore } from "../stores/categories.js";
 const showReceiptModal = () => {
@@ -581,25 +466,6 @@ const closeReceiptModal = () => {
   isReceiptModalVisible.value = false;
   location.reload();
 };
-<<<<<<< HEAD
-
-=======
-// const clicks = ref(1);
-
-  
-//  const  product= {
-//   sku: "FB001", // Customize the SKU as needed
-//     name: "facebeat", // Set the name property
-//     price: 30000,
-//     stockQuantity: 100,
-//   }
-  
-// // Method to add the "facebeat" product
-// const addFaceBeatProduct = () => {
-//   clicks.value++;
-//   productStore.addToCart(product);
-// };
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const loading = ref(false);
 const categoryStore = useCategoryStore();
 const productStore = useProductStore();
@@ -612,15 +478,6 @@ const newCustomerPhone = ref("");
 const selectedCustomer = ref([]);
 // Handle input and category suggestions
 const customerLookup = ref("");
-<<<<<<< HEAD
-const searchCus = ref("");
-=======
-<<<<<<< HEAD
-const searchCus = ref("")
-=======
-const searchCus = ref("");
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 const customerSuggestions = ref([]);
 const showSuggestions = ref(false);
 const orderReceiptNumber = ref(null);
@@ -645,199 +502,24 @@ const generateRandomReceiptNumber = () => {
   const max = 9999;
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
-const formatPhoneNumber = () => {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-      const Regex = /07[0-9]/;
-      const num = newCustomerPhone.value;
-      if (Regex.test(num)) {
-        return true;
-      } else {
-        return false;
-      }
-    };
-    const rules = computed(() => {
-      return {
-        newCustomerName: {
-          required: helpers.withMessage("Name required", required),
-          
-          alpha: helpers.withMessage(
-            "Name contains only letters",
-            alpha
-          ),
-          $autoDirty: true,
-        },
-        newCustomerPhone: {
-          required: helpers.withMessage("Number required", required),
-          numeric: helpers.withMessage("Number must be numeric", numeric),
-          maxLength: helpers.withMessage(
-            "Number must be 10 digits long",
-            maxLength(10)
-          ),
-          formatPhoneNumber: helpers.withMessage("Invalid Format", formatPhoneNumber),
-          minLength: helpers.withMessage(
-            "Number must be 10 digits long",
-            minLength(10)
-          ),
-          $autoDirty: true,
-        },
-      };
-    });
-    const v$ = useVuelidate(rules, {newCustomerPhone,newCustomerName});
+
 const addCustomer = async () => {
-  const userData = await v$.value.$validate();
-  if(userData && !v$.value.$error){
-    loading.value = true;
-    try{
-      const db = firebase.firestore();
+  const db = firebase.firestore();
   const customerId = db.collection("customers").doc().id;
   // Add logic to add a new customer to your store
   const customer = {
     id: customerId,
     name: newCustomerName.value,
     number: newCustomerPhone.value,
-=======
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-  const Regex = /07[0-9]/;
-  const num = newCustomerPhone.value;
-  if (Regex.test(num)) {
-    return true;
-  } else {
-    return false;
-  }
-};
-const rules = computed(() => {
-  return {
-    newCustomerName: {
-      required: helpers.withMessage("Name required", required),
-<<<<<<< HEAD
-
-      alpha: helpers.withMessage("Name contains only letters", alpha),
-      $autoDirty: true,
-    },
-    newCustomerPhone: {
-      required: helpers.withMessage("Number required", required),
-      numeric: helpers.withMessage("Number must be numeric", numeric),
-      maxLength: helpers.withMessage(
-        "Number must be 10 digits long",
-        maxLength(10)
-      ),
-      formatPhoneNumber: helpers.withMessage(
-        "Invalid Format",
-        formatPhoneNumber
-      ),
-      minLength: helpers.withMessage(
-        "Number must be 10 digits long",
-        minLength(10)
-      ),
-      $autoDirty: true,
-    },
   };
-});
-const v$ = useVuelidate(rules, { newCustomerPhone, newCustomerName });
-const addCustomer = async () => {
-  const userData = await v$.value.$validate();
-  if (userData && !v$.value.$error) {
-    loading.value = true;
-    try {
-      const db = firebase.firestore();
-      const customerId = db.collection("customers").doc().id;
-      // Add logic to add a new customer to your store
-      const customer = {
-        id: customerId,
-        name: newCustomerName.value,
-        number: newCustomerPhone.value,
-      };
 
-=======
-
-      alpha: helpers.withMessage("Name contains only letters", alpha),
-      $autoDirty: true,
-    },
-    newCustomerPhone: {
-      required: helpers.withMessage("Number required", required),
-      numeric: helpers.withMessage("Number must be numeric", numeric),
-      maxLength: helpers.withMessage(
-        "Number must be 10 digits long",
-        maxLength(10)
-      ),
-      formatPhoneNumber: helpers.withMessage(
-        "Invalid Format",
-        formatPhoneNumber
-      ),
-      minLength: helpers.withMessage(
-        "Number must be 10 digits long",
-        minLength(10)
-      ),
-      $autoDirty: true,
-    },
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
-  };
-});
-const v$ = useVuelidate(rules, { newCustomerPhone, newCustomerName });
-const addCustomer = async () => {
-  const userData = await v$.value.$validate();
-  if (userData && !v$.value.$error) {
-    loading.value = true;
-    try {
-      const db = firebase.firestore();
-      const customerId = db.collection("customers").doc().id;
-      // Add logic to add a new customer to your store
-      const customer = {
-        id: customerId,
-        name: newCustomerName.value,
-        number: newCustomerPhone.value,
-      };
-
-<<<<<<< HEAD
   // Add the new customer data to Firestore with the generated ID
   await db.collection("customers").doc(customerId).set(customer);
   customerStore.fetchCustomers()
   customerLookup.value = newCustomerName.value + " - " + newCustomerPhone.value;
-  loading.value = false;
-  newCustomerName.value=false
-  newCustomerPhone.value=false
+  
   // Hide the new customer input fields
   showCustomerInput.value = false;
-    }catch(err){
-=======
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-      // Add the new customer data to Firestore with the generated ID
-      await db.collection("customers").doc(customerId).set(customer);
-      customerStore.fetchCustomers();
-      customerLookup.value =
-        newCustomerName.value + " - " + newCustomerPhone.value;
-      loading.value = false;
-      newCustomerName.value = false;
-      newCustomerPhone.value = false;
-      // Hide the new customer input fields
-      showCustomerInput.value = false;
-    } catch (err) {
-<<<<<<< HEAD
-=======
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-      loading.value = false;
-      error.value = true;
-      errorMsg.value = err.message;
-    }
-<<<<<<< HEAD
-  } else {
-    return;
-  }
-=======
-<<<<<<< HEAD
-  }else {
-    return
-  }
- 
-=======
-  } else {
-    return;
-  }
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
 };
 
 const suggestCustomers = () => {
@@ -979,259 +661,49 @@ const formattedDate = `${currentDateTime.getDate()}-${
   currentDateTime.getMonth() + 1
 }-${currentDateTime.getFullYear()}`;
 
-// Format the time in 12-hour clock format
-const hours = currentDateTime.getHours();
-const minutes = currentDateTime.getMinutes();
-const amOrPm = hours >= 12 ? "PM" : "AM";
-const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
-const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
-
-const updateCustomerData = async (
-  customerDocId,
-  totalItems,
-  totalAmount,
-  formattedDate,
-  formattedTime
-) => {
-  const customerRef = db.collection("customers").doc(customerDocId);
-  const customerSnapshot = await customerRef.get();
-  if (customerSnapshot.exists) {
-    const customerData = customerSnapshot.data();
-
-    const newProductCount = (customerData.ProductCount || 0) + totalItems;
-    const newAmountCount = (customerData.AmountCount || 0) + totalAmount;
-
-    const updates = {
-      ProductCount: newProductCount,
-      AmountCount: newAmountCount,
-      lastPurchaseDate: formattedDate,
-      lastPurchaseTime: formattedTime,
-      lastOrderReceipt: orderReceiptNumber.value,
-    };
-
-    if (!customerData.orderCount) {
-      updates.orderCount = 1;
-    } else {
-      updates.orderCount = firebase.firestore.FieldValue.increment(1);
+  // Format the time in 12-hour clock format
+  const hours = currentDateTime.getHours();
+  const minutes = currentDateTime.getMinutes();
+  const amOrPm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
+  // Create an order object containing all the information
+  const order = ref({
+  orderReceiptNumber: orderReceiptNumber.value,
+  customer: selectedCustomerObject,
+  // Create a modified cart that excludes the 'productImage' property
+  cart: cartItems.value.map((cartItem) => {
+    // Deep clone the cart item, excluding 'productImage'
+    const itemWithoutImage = JSON.parse(JSON.stringify(cartItem));
+    if (itemWithoutImage.product) {
+      delete itemWithoutImage.product.productImage;
     }
+    return itemWithoutImage;
+  }),
+  totalItems: totalItems.value,
+  totalAmount: totalPrice.value,
+  discount: discountPercentage,
+  discountAmount: discountedTotal.value,
+  cashGiven: moneyGiven.value,
+  change: change.value,
+  date: formattedDate,
+  time: formattedTime,
+  timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+});
 
-    await customerRef.update(updates);
-  }
-};
-
-const updateProductStock = async () => {
-  for (const cartItem of cartItems.value) {
-    if (cartItem.product.name === "FACEBEAT") {
-      continue; // Skip the "FACEBEAT" product
-<<<<<<< HEAD
-    } else {
-      const productId = cartItem.product.id;
-
-      try {
-        // Fetch the current product data from the server
-        const response = await axios.get(`http://localhost:8080/products/${productId}`);
-        const productData = response.data;
-
-        const currentStock = productData.stockQuantity;
-        const currentSold = productData.sold;
-
-        if (currentStock >= cartItem.quantity) {
-          const newStockQuantity = currentStock - cartItem.quantity;
-          const newSold = productData.sold + cartItem.quantity;
-
-          const previousSoldQty = currentSold;
-
-          const newCustomPrice = customPriceToUpdate.value;
-
-let updatedData = {
-        stockQuantity: newStockQuantity,
-            amount: newStockQuantity * productData.price,
-            prevSold: previousSoldQty,
-            sold: newSold,
-            customPrice: newCustomPrice,
-      };
-      
-          // Update the product data on the server
-          await axios.put(`http://localhost:8080/products/${productId}/update`, updatedData);
-        } else {
-          window.alert(`Insufficient stock for product: ${productData.name}`);
-          return;
-        }
-      } catch (error) {
-        console.error(`Error updating product stock for product ID ${productId}:`, error);
-        window.alert('Error updating product stock');
-        return;
-      }
-    }
-  }
-};
-
-
-const updateProductRanking = async () => {
-  try {
-    // Fetch the products from the server, ordered by sold in descending order
-  // Fetch all products from the server
-  const response = await axios.get('http://localhost:8080/products');
-    const products = response.data;
-
-    // Sort the products by sold in descending order
-    const sortedProducts = products.sort((a, b) => b.sold - a.sold);l
-    // Now you have the products sorted by sold in descending order
-    let rank = 1;
-    // Iterate through the fetched products and prepare updates
-    for (const product of sortedProducts) {
-      const productId = product.id;
-      const initialRanking = product.ranking || 0;
-      let updatedRank = {
-        ranking: rank,
-        initialRank: initialRanking,
-      };
-      rank++;
-       // Send individual update request
-  await axios.put(`http://localhost:8080/products/${productId}/update-ranking`, updatedRank);
-  
-    }
-    
-    
-  } catch (error) {
-    console.error('Error updating product ranking:', error);
-    window.alert('Error updating product ranking');
-  }
-};
-
-
-=======
-    }else{
-      const productId = cartItem.product.id;
-    const productRef = db.collection("products").doc(productId);
-
-    // const productsRef = stRef(dbs, "/products/" + productId);
-    // const productsSnapshot = await get(productsRef);
-
-    // const productsData = productsSnapshot.val();
-    const productSnapshot = await productRef.get();
-    const productData = productSnapshot.data();
-    // const currentProductStock = productsData.stockQuantity;
-    // const currentProductSold = productsData.sold;
-    const currentStock = productData.stockQuantity;
-    const currentSold = productData.sold;
-
-    if (
-      currentStock >= cartItem.quantity
-      // ||
-      // currentProductStock >= cartItem.quantity
-    ) {
-      const newStockQuantity = currentStock - cartItem.quantity;
-      const newSold = productData.sold + cartItem.quantity;
-      // const newProductStockQuantity = currentProductStock - cartItem.quantity;
-      // const newProductSold = productsData.sold + cartItem.quantity;
-
-      const previousSoldQty = currentSold;
-      // const previousProductSoldQty = currentProductSold;
-      // Calculate the customPrice based on your logic
-      const newCustomPrice = customPriceToUpdate.value;
-
-      // Update the Firestore document with the new customPrice
-      await productRef.update({
-        stockQuantity: newStockQuantity,
-        amount: newStockQuantity * productData.price,
-        pevSold: previousSoldQty,
-        sold: newSold,
-        customPrice: newCustomPrice, // Include the calculated customPrice
-      });
-
-      // await update(productsRef, {
-      //   stockQuantity: newProductStockQuantity,
-      //   amount: newProductStockQuantity * productsData.price,
-      //   pevSold: previousProductSoldQty,
-      //   sold: newProductSold,
-      //   customPrice: newCustomPrice, // Include the calculated customPrice
-
-      // });
-    } else {
-      window.alert(`Insufficient stock for product: ${productData.name}`);
-      return;
-    }
-    }
-    
-  }
-};
-
-const updateProductRanking = async () => {
-  // Update the ranking and initialRank fields for products
-  const productsRef = db.collection("products");
-  // const productsDataRef = stRef(dbs, "/products");
-  // const prod = await get(productsDataRef);
-  // const productSnapshot2 = Object.values(prod.val()).map((product) => ({
-  //   ...product,
-  // }));
-
-  // productSnapshot2.sort((a, b) => b.sold - a.sold);
-
-  let rank = 1;
-  const updates = [];
-
-  // for (const product of productSnapshot2) {
-  //   const productId = product.id;
-  //   const initialRank = product.ranking || null;
-  //   await update(stRef(dbs, "/products/" + productId), {
-  //     ranking: rank,
-  //     initialRank: initialRank,
-  //   });
-  //   rank++;
-  // }
-
-  const productsSnapshot = await productsRef.orderBy("sold", "desc").get();
-  productsSnapshot.forEach((doc) => {
-    const productData = doc.data();
-    const productId = doc.id;
-    const initialRank = productData.ranking || null;
-    updates.push({
-      id: productId,
-      ranking: rank,
-      initialRank: initialRank,
-    });
-    rank++;
-  });
-
-  const batch = db.batch();
-  updates.forEach((update) => {
-    const productRef = productsRef.doc(update.id);
-    batch.update(productRef, update);
-  });
-
-  await batch.commit();
-};
-
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-const checkout = async () => {
-  if (cartItems.value.length === 0) {
-    window.alert("Cart is empty. Cannot proceed with checkout.");
-    return;
-  }
-
-  if (change.value === null) {
-    window.alert("Insufficient cash provided for checkout.");
-    return;
-  }
-
-  const totalAmount = calculateOrderTotal();
-  const customerObject = {
-    id: customerorderid.value,
-    name: customerLookup.value ? customerLookup.value.split(" - ")[0] : "",
-    number: customerLookup.value ? customerLookup.value.split(" - ")[1] : "",
-  };
 
   try {
     isCheckoutLoading.value = true;
     loading.value = true;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
     const db = firebase.firestore();
-     // Check if there is a selected customer
-     if (selectedCustomerObject.number) {
+    // Store the order in the Firebase collection with the order receipt number as the document ID
+    await db
+      .collection("orders")
+      .doc(order.orderReceiptNumber)
+      .set(order.value);
+    // Check if there is a selected customer
+    if (selectedCustomerObject.number) {
       // Find the customer in the customers array whose number matches the selected customer's number
       const matchingCustomer = customerStore.customers.find((customer) => {
         return customer.number === selectedCustomerObject.number;
@@ -1271,9 +743,6 @@ const checkout = async () => {
           const updates = {
             ProductCount: newProductCount,
             AmountCount: newAmountCount,
-            lastPurchaseDate:formattedDate,
-            lastPurchaseTime:formattedTime,
-            lastOrderReceipt:order.value.orderReceiptNumber,
           };
 
           if (!customerData.orderCount) {
@@ -1297,29 +766,21 @@ const checkout = async () => {
         return;
       }
     }
-
-       // Iterate through cart items and reduce stock in the database
-       for (const cartItem of cartItems.value) {
+    // Iterate through cart items and reduce stock in the database
+    for (const cartItem of cartItems.value) {
       const productId = cartItem.product.id;
       const productRef = db.collection("products").doc(productId);
       const productSnapshot = await productRef.get();
       const productData = productSnapshot.data();
       const currentStock = productData.stockQuantity;
-      const currentSold = productData.sold; // Get the current sold quantity
-      
+console.log(productData);
       if (currentStock >= cartItem.quantity) {
-       // Reduce stock by the quantity in the cart
-    const newStockQuantity = currentStock - cartItem.quantity;
-    const newSold = productData.sold + cartItem.quantity; // Accumulate the sold value
-// Save the previous and new sold quantities if needed
-const previousSoldQty = currentSold;
+        // Reduce stock by the quantity in the carts
+        await productRef.update({
+          stockQuantity: currentStock - cartItem.quantity,
+          amount: (currentStock - cartItem.quantity) * productData.price,
+        });
 
-    await productRef.update({
-      stockQuantity: newStockQuantity,
-      amount: newStockQuantity * productData.price, // Update amount based on new stock
-      pevSold:previousSoldQty,
-      sold: newSold, // Accumulate the sold value
-    });
  
       } else {
         // Handle the case where there isn't enough stock to fulfill the order
@@ -1327,105 +788,7 @@ const previousSoldQty = currentSold;
         return;
       }
     }
-    // Initialize the ranking field for all products
-const productsRef = db.collection("products");
-
-// Query all products ordered by sales (sold quantity in descending order)
-const productsSnapshot = await productsRef.orderBy("sold", "desc").get();
-
-let rank = 1;
-const updates = [];
-
-productsSnapshot.forEach((doc) => {
-  const productData = doc.data();
-  const productId = doc.id;
-
-  // Set initialRank and ranking fields
-  const initialRank = productData.ranking || null; // Use null if no previous ranking
-  updates.push({
-    id: productId,
-    ranking: rank,
-    initialRank: initialRank,
-  });
-  rank++;
-});
-
-// Batch update the ranking and initialRank fields for all products
-const batch = db.batch();
-updates.forEach((update) => {
-  const productRef = productsRef.doc(update.id);
-  batch.update(productRef, update);
-});
-
-await batch.commit();
-
-
-    // Store the order in the Firebase collection with the order receipt number as the document ID
-=======
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-
-    if (customerObject.number) {
-      const matchingCustomer = customerStore.customers.find(
-        (customer) => customer.number === customerObject.number
-      );
-
-      if (matchingCustomer) {
-        const customerDocId = matchingCustomer.id;
-        await updateCustomerData(
-          customerDocId,
-          totalItems.value,
-          totalAmount,
-          formattedDate,
-          formattedTime
-        );
-      } else {
-        window.alert("Selected customer not found in the customers ");
-        return;
-      }
-    }
-
-    await updateProductStock();
-    await updateProductRanking();
-    const discountPercentage = discount.value || 0;
-    // Create an order object containing all the information
-    const order = ref({
-      orderReceiptNumber: orderReceiptNumber.value,
-      customer: customerObject,
-      // Create a modified cart that excludes the 'productImage' property
-      cart: cartItems.value.map((cartItem) => {
-        // Deep clone the cart item, excluding 'productImage'
-        const itemWithoutImage = JSON.parse(JSON.stringify(cartItem));
-        if (itemWithoutImage.product) {
-          delete itemWithoutImage.product.productImage;
-        }
-        return itemWithoutImage;
-      }),
-      totalItems: totalItems.value,
-      totalAmount: totalAmount,
-      discount: discountPercentage,
-      discountAmount: discountedTotal.value,
-      cashGiven: moneyGiven.value,
-      change: change.value,
-      date: formattedDate,
-      time: formattedTime,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    });
-
-<<<<<<< HEAD
-=======
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
-    await db
-      .collection("orders")
-      .doc(order.orderReceiptNumber)
-      .set(order.value);
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
     // Clear the cart and money input
-=======
->>>>>>> 9156ac0f0df5aac935aeb34399cac8c28282e2f6
->>>>>>> 868b9b0e63871cce18fc0ae7d8bd79e63a7fd462
     productStore.clearCart();
     moneyGiven.value = null;
     isCheckoutLoading.value = false;
