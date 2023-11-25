@@ -23,48 +23,64 @@
     </div>
     <div v-else-if="cartItems.length > 0 && !isReceiptModalVisible">
       <div class="mb-4">
-        <label for="customerSelect" class="block text-lg font-semibold">
-          Search Customer:
-        </label>
-        <div class="flex items-center w-[55%]">
-          <!-- Customer (Autocomplete Input) -->
-          <div>
-            <input
-              type="text"
-              id="customer"
-              placeholder="Look up Customer"
-              v-model="customerLookup"
-              class="border border-gray-300 px-2 pb-1 pt-[0.2rem]"
-              @input="suggestCustomers"
-            />
-          </div>
-          <div
-            class="cursor-pointer bg-cyan-300 border border-gray-300"
-            @click="toggleCustomerInput"
-          >
-            <Icon
-              icon="majesticons:plus-line"
-              :height="31"
-              v-if="!showCustomerInput"
-            />
-            <Icon icon="codicon:dash" :height="31" v-else />
-          </div>
+        <div class="flex justify-between">
+          <label for="customerSelect" class="block text-lg font-semibold">
+    Search Customer:
+  </label>
+  <label for="selectedCustomer" class="block text-lg font-semibold mr-[8%]">
+    Selected Customer:
+  </label>
         </div>
-        <!-- Auto-suggested categories dropdown -->
-        <ul
-          v-if="showSuggestions"
-          class="border w-[44.4%] border-gray-300 rounded-b-md"
-        >
-          <li
-            v-for="suggestion in customerSuggestions"
-            :key="suggestion"
-            @click="selectSuggestion(suggestion)"
-            class="cursor-pointer px-2 py-1 hover:bg-gray-200"
-          >
-            {{ suggestion }}
-          </li>
-        </ul>
-      </div>
+  
+  <div class="flex items-center w-[55%]">
+    <!-- Customer (Autocomplete Input) -->
+    <div>
+      <input
+        type="text"
+        id="customer"
+        placeholder="Look up Customer"
+        v-model="searchCus"
+        class="border border-gray-300 px-2 pb-1 pt-[0.2rem]"
+        @input="suggestCustomers"
+      />
+    </div>
+    <div
+      class="cursor-pointer bg-cyan-300 border border-gray-300"
+      @click="toggleCustomerInput"
+    >
+      <Icon
+        icon="majesticons:plus-line"
+        :height="31"
+        v-if="!showCustomerInput"
+      />
+      <Icon icon="codicon:dash" :height="31" v-else />
+    </div>
+    <!-- Field for selected customer -->
+<div v-if="selectedCustomer" class="ml-[12%]" >
+  <input
+    type="text"
+    id="selectedCustomer"
+    v-model="customerLookup"
+    class="border border-gray-300 px-2 pb-1 pt-[0.2rem]"
+    :disabled="true"
+  />
+</div>
+  </div>
+  <!-- Auto-suggested customers dropdown -->
+  <ul v-if="showSuggestions" class="border w-[44.4%] border-gray-300 rounded-b-md overflow-y-auto">
+    <li
+      v-for="suggestion in customerSuggestions"
+      :key="suggestion"
+      @click="selectSuggestion(suggestion)"
+      class="cursor-pointer px-2 py-1 hover:bg-gray-200"
+    >
+      {{ suggestion }}
+    </li>
+  </ul>
+</div>
+
+
+
 
       <!-- Add New Customer (if needed) -->
       <div v-if="showCustomerInput" class="mb-4">
@@ -75,21 +91,49 @@
           <input
             type="text"
             id="newCustomerName"
-            v-model="newCustomerName"
-            class="border border-gray-300 p-2 w-[45%]"
+            v-model="v$.newCustomerName.$model"
+            :class="v$.newCustomerName.$error ? 'cus-error' : 'border border-gray-300 p-2 w-[45%]'"
             placeholder="Customer Name"
           />
           <input
             type="text"
             id="newCustomerPhone"
             placeholder="07 XX XXX XXX"
-            v-model="newCustomerPhone"
-            class="border border-gray-300 p-2 w-[45%]"
+            v-model="v$.newCustomerPhone.$model"
+            :class="v$.newCustomerPhone.$error ? 'cus-error' : 'border border-gray-300 p-2 w-[45%]'"
           />
 
-          <button @click="addCustomer" class="bg-cyan-500 text-white px-4 py-2">
-            Add
+          <button v-if="!v$.newCustomerPhone.$error && !v$.newCustomerName.$error" @click="addCustomer" class="bg-cyan-500 text-white px-4 py-2">
+            <span v-if="loading"> Adding... </span
+                ><span v-else> Add </span>
           </button>
+        </div>
+        <div class="flex justify-between">
+          <span class="error-text" v-if="v$.newCustomerName.$error">
+              <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+              {{ v$.newCustomerName.$errors[0].$message }}</span
+            >
+            <span class="error-text mr-[20%]" v-if="v$.newCustomerPhone.$error && v$.newCustomerPhone.$errors[0].$message === 'Number required' && v$.newCustomerName.$error">
+  <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+  {{ v$.newCustomerPhone.$errors[0].$message }}
+</span>
+<span class="error-text mr-[8%]" v-if="v$.newCustomerPhone.$error && v$.newCustomerPhone.$errors[0].$message === 'Number must be numeric' && v$.newCustomerName.$error">
+  <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+  {{ v$.newCustomerPhone.$errors[0].$message }}
+</span>
+<span class="error-text mr-[25%]" v-if="v$.newCustomerPhone.$error && v$.newCustomerPhone.$errors[0].$message === 'Invalid Format' && v$.newCustomerName.$error">
+  <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+  {{ v$.newCustomerPhone.$errors[0].$message }}
+</span>
+<span class="error-text mr-[-1%]" v-if="v$.newCustomerPhone.$error && v$.newCustomerPhone.$errors[0].$message === 'Number must be 10 digits long' && v$.newCustomerName.$error">
+  <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+  {{ v$.newCustomerPhone.$errors[0].$message }}
+</span>
+            <span class="error-text ml-[47%]" v-if="v$.newCustomerPhone.$error && !v$.newCustomerName.$error">
+              <Icon icon="mdi:warning-circle" class="text-red-600 inline-block" />
+              {{ v$.newCustomerPhone.$errors[0].$message }}</span
+            >
+            
         </div>
       </div>
       <!-- Cart Items -->
@@ -232,7 +276,7 @@
             @click="toggleDiscountInput"
             class="bg-blue-500 text-white px-4 py-2 mt-4"
           >
-            {{ showDiscountInput ? "Hide Discount" : "Apply Discount" }}
+            {{ showDiscountInput ? "Cancel Discount" : "Apply Discount" }}
           </button>
         </div>
 
@@ -296,6 +340,20 @@ import { computed, ref, watch, onMounted } from "vue";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import orderDisplay from "./orderDisplay.vue";
+import { useVuelidate } from "@vuelidate/core";
+import {
+  required,
+  email,
+  minLength,
+  numeric,
+  maxLength,
+
+  alpha,
+  helpers,
+} from "@vuelidate/validators";
+const error = ref(false);
+    const errorMsg = ref("");
+  
 const isReceiptModalVisible = ref(false);
 import { useCategoryStore } from "../stores/categories.js";
 const showReceiptModal = () => {
@@ -318,6 +376,7 @@ const newCustomerPhone = ref("");
 const selectedCustomer = ref([]);
 // Handle input and category suggestions
 const customerLookup = ref("");
+const searchCus = ref("")
 const customerSuggestions = ref([]);
 const showSuggestions = ref(false);
 const orderReceiptNumber = ref(null);
@@ -330,15 +389,59 @@ const discount = ref(null);
 const showDiscountInput = ref(false);
 const toggleDiscountInput = () => {
   showDiscountInput.value = !showDiscountInput.value;
+  if (!showDiscountInput.value) {
+    // If the user is canceling the discount, reset the discount to null
+    discount.value = null;
+  }
 };
 const generateRandomReceiptNumber = () => {
   const min = 1000;
   const max = 9999;
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
-
+const formatPhoneNumber = () => {
+      const Regex = /07[0-9]/;
+      const num = newCustomerPhone.value;
+      if (Regex.test(num)) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+    const rules = computed(() => {
+      return {
+        newCustomerName: {
+          required: helpers.withMessage("Name required", required),
+          
+          alpha: helpers.withMessage(
+            "Name contains only letters",
+            alpha
+          ),
+          $autoDirty: true,
+        },
+        newCustomerPhone: {
+          required: helpers.withMessage("Number required", required),
+          numeric: helpers.withMessage("Number must be numeric", numeric),
+          maxLength: helpers.withMessage(
+            "Number must be 10 digits long",
+            maxLength(10)
+          ),
+          formatPhoneNumber: helpers.withMessage("Invalid Format", formatPhoneNumber),
+          minLength: helpers.withMessage(
+            "Number must be 10 digits long",
+            minLength(10)
+          ),
+          $autoDirty: true,
+        },
+      };
+    });
+    const v$ = useVuelidate(rules, {newCustomerPhone,newCustomerName});
 const addCustomer = async () => {
-  const db = firebase.firestore();
+  const userData = await v$.value.$validate();
+  if(userData && !v$.value.$error){
+    loading.value = true;
+    try{
+      const db = firebase.firestore();
   const customerId = db.collection("customers").doc().id;
   // Add logic to add a new customer to your store
   const customer = {
@@ -351,17 +454,28 @@ const addCustomer = async () => {
   await db.collection("customers").doc(customerId).set(customer);
   customerStore.fetchCustomers()
   customerLookup.value = newCustomerName.value + " - " + newCustomerPhone.value;
-  
+  loading.value = false;
+  newCustomerName.value=false
+  newCustomerPhone.value=false
   // Hide the new customer input fields
   showCustomerInput.value = false;
+    }catch(err){
+      loading.value = false;
+      error.value = true;
+      errorMsg.value = err.message;
+    }
+  }else {
+    return
+  }
+ 
 };
 
 const suggestCustomers = () => {
-  if (customerLookup.value) {
+  if (searchCus.value) {
     // Filter available customers for suggestions and format them
     customerSuggestions.value = customerStore.customers
       .filter((customer) =>
-        customer.name.toLowerCase().includes(customerLookup.value.toLowerCase())
+        customer.name.toLowerCase().includes(searchCus.value.toLowerCase())
       )
       .map((customer) => `${customer.name} - ${customer.number}`); // Format as "name - number"
     showSuggestions.value = true;
@@ -529,13 +643,8 @@ const checkout = async () => {
     isCheckoutLoading.value = true;
     loading.value = true;
     const db = firebase.firestore();
-    // Store the order in the Firebase collection with the order receipt number as the document ID
-    await db
-      .collection("orders")
-      .doc(order.orderReceiptNumber)
-      .set(order.value);
-    // Check if there is a selected customer
-    if (selectedCustomerObject.number) {
+     // Check if there is a selected customer
+     if (selectedCustomerObject.number) {
       // Find the customer in the customers array whose number matches the selected customer's number
       const matchingCustomer = customerStore.customers.find((customer) => {
         return customer.number === selectedCustomerObject.number;
@@ -575,6 +684,9 @@ const checkout = async () => {
           const updates = {
             ProductCount: newProductCount,
             AmountCount: newAmountCount,
+            lastPurchaseDate:formattedDate,
+            lastPurchaseTime:formattedTime,
+            lastOrderReceipt:order.value.orderReceiptNumber,
           };
 
           if (!customerData.orderCount) {
@@ -598,21 +710,29 @@ const checkout = async () => {
         return;
       }
     }
-    // Iterate through cart items and reduce stock in the database
-    for (const cartItem of cartItems.value) {
+
+       // Iterate through cart items and reduce stock in the database
+       for (const cartItem of cartItems.value) {
       const productId = cartItem.product.id;
       const productRef = db.collection("products").doc(productId);
       const productSnapshot = await productRef.get();
       const productData = productSnapshot.data();
       const currentStock = productData.stockQuantity;
-console.log(productData);
+      const currentSold = productData.sold; // Get the current sold quantity
+      
       if (currentStock >= cartItem.quantity) {
-        // Reduce stock by the quantity in the carts
-        await productRef.update({
-          stockQuantity: currentStock - cartItem.quantity,
-          amount: (currentStock - cartItem.quantity) * productData.price,
-        });
+       // Reduce stock by the quantity in the cart
+    const newStockQuantity = currentStock - cartItem.quantity;
+    const newSold = productData.sold + cartItem.quantity; // Accumulate the sold value
+// Save the previous and new sold quantities if needed
+const previousSoldQty = currentSold;
 
+    await productRef.update({
+      stockQuantity: newStockQuantity,
+      amount: newStockQuantity * productData.price, // Update amount based on new stock
+      pevSold:previousSoldQty,
+      sold: newSold, // Accumulate the sold value
+    });
  
       } else {
         // Handle the case where there isn't enough stock to fulfill the order
@@ -620,6 +740,44 @@ console.log(productData);
         return;
       }
     }
+    // Initialize the ranking field for all products
+const productsRef = db.collection("products");
+
+// Query all products ordered by sales (sold quantity in descending order)
+const productsSnapshot = await productsRef.orderBy("sold", "desc").get();
+
+let rank = 1;
+const updates = [];
+
+productsSnapshot.forEach((doc) => {
+  const productData = doc.data();
+  const productId = doc.id;
+
+  // Set initialRank and ranking fields
+  const initialRank = productData.ranking || null; // Use null if no previous ranking
+  updates.push({
+    id: productId,
+    ranking: rank,
+    initialRank: initialRank,
+  });
+  rank++;
+});
+
+// Batch update the ranking and initialRank fields for all products
+const batch = db.batch();
+updates.forEach((update) => {
+  const productRef = productsRef.doc(update.id);
+  batch.update(productRef, update);
+});
+
+await batch.commit();
+
+
+    // Store the order in the Firebase collection with the order receipt number as the document ID
+    await db
+      .collection("orders")
+      .doc(order.orderReceiptNumber)
+      .set(order.value);
     // Clear the cart and money input
     productStore.clearCart();
     moneyGiven.value = null;

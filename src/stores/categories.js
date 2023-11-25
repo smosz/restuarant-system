@@ -9,22 +9,20 @@ export const useCategoryStore = defineStore('category', {
     categories: [],
     selectedCategory: "",
     availableCategories: [],
+    visibleCategoriesIndex: 0,
   }),
 
   actions: {
-    
     async fetchCategories() {
       try {
         const categoriesSnapshot = await db.collection('categories').get();
         const categoriesData = categoriesSnapshot.docs.map((doc) => doc.data().name);
-        
         // Sort the categories alphabetically
         this.categories = categoriesData.sort();
       } catch (error) {
         window.alert('Error fetching categories');
       }
     },
-    
     
     async fetchCategoryNames() {
       try {
@@ -39,7 +37,7 @@ export const useCategoryStore = defineStore('category', {
     
     async fetchAvailableCategories() {
       try {
-        const categoryNames = await this.fetchCategoryNames(); // Corrected
+        const categoryNames = await this.fetchCategoryNames();
         this.availableCategories = categoryNames.sort();
       } catch (error) {
         window.alert("Error fetching available categories");
@@ -49,6 +47,20 @@ export const useCategoryStore = defineStore('category', {
     async selectCategory(category) {
       // Set the selected category
       this.selectedCategory = category;
+    },
+
+    navigateLeft() {
+      const currentIndex = this.availableCategories.indexOf(this.selectedCategory);
+      if (currentIndex > 0) {
+        this.selectedCategory = this.availableCategories[currentIndex - 4];
+      }
+    },
+
+    navigateRight() {
+      const currentIndex = this.availableCategories.indexOf(this.selectedCategory);
+      if (currentIndex < this.availableCategories.length - 4) {
+        this.selectedCategory = this.availableCategories[currentIndex + 4];
+      }
     },
   },
 });

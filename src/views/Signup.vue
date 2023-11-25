@@ -97,7 +97,7 @@
               <input
                 type="tel"
                 name="number"
-                placeholder="Phone Number (E.g.07XXXXXXXX)"
+                placeholder="Phone Number "
                 v-model="NewState.number"
                 :class="v$.number.$error === true ? 'text-fields-error' : 'input-fields'"
               />
@@ -226,17 +226,17 @@ emit("close");
           $autoDirty: true,
         },
         number: {
-          required: helpers.withMessage("Phone number required", required),
-          numeric: helpers.withMessage("Phone number must be numeric", numeric),
-          maxLength: helpers.withMessage(
-            "Phone number must be 10 digits long",
-            maxLength(10)
-          ),
-          formatPhoneNumber: helpers.withMessage("Invalid Format", formatPhoneNumber),
-          minLength: helpers.withMessage(
-            "Phone number must be 10 digits long",
-            minLength(10)
-          ),
+          
+          // numeric: helpers.withMessage("Phone number must be numeric", numeric),
+          // maxLength: helpers.withMessage(
+          //   "Phone number must be 10 digits long",
+          //   maxLength(10)
+          // ),
+          // formatPhoneNumber: helpers.withMessage("Invalid Format", formatPhoneNumber),
+          // minLength: helpers.withMessage(
+          //   "Phone number must be 10 digits long",
+          //   minLength(10)
+          // ),
           $autoDirty: true,
         },
         password: {

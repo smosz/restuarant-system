@@ -1,11 +1,6 @@
 <template>
     <div class="inset-0 flex flex-wrap items-center  max-h-[437px] overflow-y-auto  justify-center z-50 ml-10 mt-10" id="mainContainer" >
-      <div class="p-[1.05rem] rounded-lg shadow-lg relative" style="
-    background-image: url('/hot.jpg');
-    background-size: cover; /* Adjust to 'contain' or custom dimensions if needed */
-    background-position: center; /* Adjust if needed */
-    background-repeat: no-repeat;
-  ">
+      <div class="p-[1.05rem] rounded-lg shadow-lg relative bg-white" >
 <div class="text-center">
    <!-- receipt logo  -->
    <img
@@ -73,52 +68,15 @@
   
         <!-- Order Confirmation Message -->
         <div>
-          <div class="text-center">
-   <!-- receipt logo  -->
-   <img
-    src="/ord.png" 
-    alt="Receipt Logo"
-    class=" h-24 mx-auto" 
-  />
-</div>
-          <p class="text-sm text-[#0d0814] italic text-right">Served by: {{ userStore.username }}</p>
+        
+          <p class="text-sm text-[#0d0814] italic text-right">Served by: {{ userStore.loggedInUserData.Username }}</p>
         </div>
         
-      <!-- Contact Information -->
-      <div class="mt-4 text-center text-[#0d0814]">
-        
-
-        <!-- Address -->
-        
-        <div class="flex space-x-2 justify-center">
-            <Icon icon="mdi:address-marker" color="red" />
-            <h1 class="!mt-[-14px] !ml-[0]">Ntinda Shopping Centre, 1st Floor, Shop B17</h1>
-          </div>
-          <!-- Phone Numbers -->
-        <div class="my-2 flex justify-center space-x-2">
-          <div class="flex items-center space-x-2 justify-center">
-            <Icon icon="logos:whatsapp-icon" />
-            <span class="!mt-[-14px] ]">+256 70 614 1880</span> 
-          </div>
-          <div class="flex items-center space-x-2 justify-center">
-            <Icon icon="logos:whatsapp-icon"   />
-            <span class="!mt-[-14px] ">+256 77 276 7895</span> 
-          </div>
-        </div>
-        <!-- Social Media Handles -->
-        <div class="flex justify-center items-center space-x-2 mt-2">
-          <a href="https://www.facebook.com" target="_blank">
-            <Icon icon="logos:facebook" />
-          </a>
-          <a href="https://www.instagram.com" target="_blank">
-            <Icon icon="skill-icons:instagram" />
-          </a>
-        </div>
-      </div>
+     
       <img
-    src="/see.png" 
+    src="/art3.png" 
     alt="Receipt Logo"
-    class=" h-24 mx-auto mt-4" 
+    class="mx-auto mt-4" 
   />
          
             
@@ -151,6 +109,7 @@ import "firebase/compat/auth";
   import { onMounted,ref,defineEmits } from "vue";
   import { useUserStore } from '../stores/user.js';
   import html2pdf from 'html2pdf.js';
+  import html2canvas from 'html2canvas'
   const orderStore = useOrdersStore();
   const orderReceiptNumber = ref("");
   const date = ref("");
@@ -175,21 +134,8 @@ const closeReceipt = () => {
   emit("close");
 };
 
-const exportToPDF = async () => {
-//   const accountSid = 'ACb48230c87344edfe722e881f4d9d550a';
-// const authToken = '01b18153ae408cb17b34a7f2228f18e5';
+const exportToPDsF = async () => {
 
-// const client = require('twilio')(accountSid, authToken);
-//   client.messages
-//   .create({
-//     mediaUrl: [
-//       'https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80',
-//     ],
-//     from: 'whatsapp:+14155238886',
-//     to: 'whatsapp:+256764667439',
-//   })
-//   .then((message) => console.log('WhatsApp message sent:', message.sid))
-//   .catch((error) =>window.alert('Error sending WhatsApp message:', error));
   //  Select the HTML element to be converted to PDF
   const element = document.getElementById('mainContainer');
 // Remove the buttons container
@@ -247,12 +193,39 @@ const buttonsContainer = document.getElementById('buttonsContainer');
    window.alert('PDF generation error');
   }
 };
+const exportToPDF = () => {
+    const element = document.getElementById('mainContainer');
+    const buttonsContainer = document.getElementById('buttonsContainer');
+
+    if (buttonsContainer) {
+      buttonsContainer.style.display = 'none';
+    }
+    if (element) {
+    element.classList.remove('max-h-[437px]')
+    element.classList.remove('overflow-y-auto');
+    }
+    html2canvas(element, {
+      scale: 2, // You can adjust the scale as needed
+    }).then((canvas) => {
+      // Create an image from the canvas
+      const imgData = canvas.toDataURL('image/png');
+
+      // Create a download link for the image
+      const a = document.createElement('a');
+      a.href = imgData;
+      a.download = `${customerName.value} receipt.png`;
+      a.click();
+
+      if (buttonsContainer) {
+        buttonsContainer.style.display = 'flex';
+      }
+    });
+  };
   // Fetch orders and set the current order on component mount
   onMounted(async () => {
   
     await orderStore.fetchOrders();
     userStore.initializeUser();
-    
 
   // Set the current order (replace '0' with the index of the order you want to display)
   const initialOrderIndex = 0; // Replace with the desired index

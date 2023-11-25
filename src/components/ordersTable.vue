@@ -122,13 +122,12 @@
                   </div>
                 </th>
                 <th
-                :class="{
-          'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]':
-          hideDiscounts,
-            'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]':
-            showDiscounts,
-        }"
-              
+                  :class="{
+                    'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]':
+                      hideDiscounts,
+                    'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]':
+                      showDiscounts,
+                  }"
                 >
                   <div class="flex items-center justify-center">
                     <span>Total Items</span>
@@ -147,12 +146,12 @@
                   </div>
                 </th>
                 <th
-                :class="{
-          'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]':
-          hideDiscounts,
-            'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[12%]':
-            showDiscounts,
-        }"
+                  :class="{
+                    'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]':
+                      hideDiscounts,
+                    'px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[12%]':
+                      showDiscounts,
+                  }"
                 >
                   <div class="flex items-center justify-center">
                     <span>Total Amount</span>
@@ -171,21 +170,19 @@
                   </div>
                 </th>
                 <th
-                v-if="hideDiscounts"
+                  v-if="hideDiscounts"
                   class="px-1 py-1 bg-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]"
                 >
                   <div class="flex items-center justify-center">
                     <span>% Discount</span>
-                    
                   </div>
                 </th>
                 <th
-                v-if="hideDiscounts"
+                  v-if="hideDiscounts"
                   class="px-1 py-1 bg-gray-200 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[7%]"
                 >
                   <div class="flex items-center justify-center">
                     <span>Discount Amount</span>
-                    
                   </div>
                 </th>
               </tr>
@@ -265,10 +262,16 @@
                 <td class="px-1 py-4 border border-gray-300 text-center">
                   {{ orderItem.totalAmount }}
                 </td>
-                <td v-if="hideDiscounts" class="px-1 py-4 border border-gray-300 text-center">
+                <td
+                  v-if="hideDiscounts"
+                  class="px-1 py-4 border border-gray-300 text-center"
+                >
                   {{ orderItem.discount }}
                 </td>
-                <td v-if="hideDiscounts" class="px-1 py-4 border border-gray-300 text-center">
+                <td
+                  v-if="hideDiscounts"
+                  class="px-1 py-4 border border-gray-300 text-center"
+                >
                   {{ discountAmountWithCommas[index] }}
                 </td>
               </tr>
@@ -310,31 +313,40 @@
             </button>
           </div>
           <div class="mt-2 text-center no-print">
-  <div
-  class="bg-gray-200 p-4 rounded-sm shadow-sm flex items-center text-[20px] justify-between"
- >
-    <p class=" font-semibold text-gray-700">
-      Total Orders:<span 
-      class="ml-4 text-3xl font-semibold text-orange-500"
-      >{{ sortedOrders.length }}</span>
-    </p>
-    <p class="  font-semibold text-gray-700">
-      Total Discounted Orders:<span class="ml-4 text-3xl font-semibold text-orange-500">{{ totalDiscountedOrders }}</span>
-    </p>
-    <p class=" font-semibold text-gray-700">
-      Total Items Ordered:<span class="ml-4 text-3xl font-semibold text-orange-500"> {{ totalItemsOrdered }}</span> 
-    </p>
-    <p class=" font-semibold text-black">
-      Total Orders Price:<span class="ml-4 text-3xl font-semibold text-orange-500">UGX {{ totalOrdersPrice }}</span>
-    </p>
-    
-  </div>
-</div>
-
+            <div
+              class="bg-gray-200 p-4 rounded-sm shadow-sm flex items-center text-[20px] justify-between"
+            >
+              <p class="font-semibold text-gray-700">
+                Total Orders:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                  >{{ sortedOrders.length }}</span
+                >
+              </p>
+              <p class="font-semibold text-gray-700">
+                Total Discounted Orders:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                  >{{ totalDiscountedOrders }}</span
+                >
+              </p>
+              <p class="font-semibold text-gray-700">
+                Total Items Ordered:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                >
+                  {{ totalItemsOrdered }}</span
+                >
+              </p>
+              <p class="font-semibold text-black">
+                Total Orders Price:<span
+                  class="ml-4 text-3xl font-semibold text-orange-500"
+                  >UGX {{ totalOrdersPrice }}</span
+                >
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        v-if="filterShow && sortedOrders.length >=5"
+        v-if="filterShow && sortedOrders.length >= 5"
         class="demo-date-picker col-span-1 justify-center border-collapse border border-[aquamarine]"
       >
         <div class="container">
@@ -394,7 +406,7 @@
               <input
                 v-model="maxItems"
                 type="number"
-                class="border-solid border-[1px] ml-2 border-black w-24 "
+                class="border-solid border-[1px] ml-2 border-black w-24"
                 placeholder="Max Items"
               />
             </div>
@@ -653,7 +665,7 @@ const filterBtn = () => {
         return totalItemsFilter && totalAmountFilter;
       });
     } catch (error) {
-     window.alert("Error during filtering");
+      window.alert("Error during filtering");
     }
   }
 };
@@ -688,12 +700,12 @@ const totalItemsOrdered = computed(() => {
 // Computed property to calculate total items ordered
 const totalDiscountedOrders = computed(() => {
   return orderItems.value.reduce((count, orderItem) => {
-      // Assuming you have a property like "discount" in each order object
-      if (orderItem.discountAmount > 0) {
-        count++;
-      }
-      return count;
-    }, 0);
+    // Assuming you have a property like "discount" in each order object
+    if (orderItem.discountAmount > 0) {
+      count++;
+    }
+    return count;
+  }, 0);
 });
 // Calculate the total number of pages based on itemsPerPage and orderItems
 const totalPages = computed(() => {
@@ -791,7 +803,7 @@ const printTable = () => {
 const exportToExcel = () => {
   // Check if 'orderItems' is an array
   if (!Array.isArray(orderItems.value)) {
-   window.alert("orderItems is not an array.");
+    window.alert("orderItems is not an array.");
     return;
   }
 

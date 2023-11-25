@@ -76,6 +76,8 @@ import { useRouter } from "vue-router";
 import load from "../assets/load.json";
 import { useUserStore } from "../stores/user.js";
 import useValidate from "@vuelidate/core";
+
+
 import { email, helpers } from "@vuelidate/validators";
 const db = firebase.firestore();
 const state = reactive({
@@ -132,7 +134,10 @@ const btnColor = () => {
 };
 
 const v$ = useValidate(rules, state);
+
 const login = async () => {
+ 
+
   const userData = await v$.value.$validate();
   
   if (!userData) {
@@ -166,7 +171,7 @@ if (userDoc.exists) {
 // Format the date as "dd-mm-yyyy"
 const formattedDate = `${currentDateTime.getDate()}-${
   currentDateTime.getMonth() + 1
-}-${currentDateTime.getFullYear()}`;
+}-${currentDateTime.getFullYear()}`
 
 // Format the time in 12-hour clock format
 const hours = currentDateTime.getHours();
@@ -178,7 +183,8 @@ const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
      // Update the lastLogin field in Firestore
      await firebase.firestore().collection("users").doc(user.uid).update({
       
-      lastLogin: `${formattedDate} - ${formattedTime}`
+      lastLoginDate: formattedDate ,
+        lastLoginTime: formattedTime
     });
     router.replace({ name: "Dashboard" });
   } catch (err) {
@@ -194,6 +200,9 @@ const formattedTime = `${formattedHours}:${formattedMinutes} ${amOrPm}`;
         break;
       case "auth/wrong-password":
         state.errorMsg = "Incorrect password";
+        break;
+      case "auth/invalid-login-credentials":
+        state.errorMsg = "Invalid Credentials";
         break;
       default:
         state.errorMsg = "Connection to Server cut down";

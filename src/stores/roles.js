@@ -35,12 +35,13 @@ export const useRoleStore = defineStore('role', {
     
     async fetchAvailableRoles() {
       try {
-        const roleNames = await this.fetchRoleNames(); // Corrected
-        this.availableRoles = roleNames;
+        const roleNames = await this.fetchRoleNames(); // Replace with your actual function to fetch role names
+        this.availableRoles = roleNames.filter(role => role !== "Tech");
       } catch (error) {
         window.alert("Error fetching available roles");
       }
     },
+    
     
     async selectrole(role) {
       // Set the selected role
